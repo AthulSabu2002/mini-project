@@ -1,0 +1,290 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Times New Roman', Times, serif;
+    width: 100%;
+    margin:1rem;
+
+}
+
+
+.main{
+    width: 80%;
+    position: absolute;
+}
+
+.page-1,.page-2{
+    margin-bottom: 3rem;
+    height: auto;
+}
+
+.newspaper-name{
+    display: flex;
+    padding: .5rem;
+    justify-content: space-between;
+}
+
+.day{
+    float: left;
+    white-space: pre-line; 
+    font-weight: 500;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.date{
+    position: relative;
+    left: 0;
+    font-weight: 500;
+    margin-top: 10px;
+    font-size: 20px;
+    margin: auto;
+}
+
+.news-link{
+    margin-top: 10px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    width: 10%;
+    padding: 5px;
+    margin-left: 30px;
+}
+
+.ad{
+    font-size: 8px;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-style: italic;
+    background-color: black;
+    color: white;
+    width: 70%;
+    margin: auto;
+}
+
+.hr2{
+    margin-top: .2rem;
+}
+
+.main-heading{
+    margin: .5rem;
+}
+
+.page-1-list{
+    width: max-content;
+    margin: 1rem;
+}
+
+.container-1{
+    display: grid;
+    grid-gap: 20px;
+    grid-template-areas: 
+    'p-1 break image-1';
+}
+
+.image-1{
+    grid-area: image-1;
+    min-height: 200px;
+    min-width: 350px;
+    background-color: grey;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+
+.news-area-1{
+    height: 60vh;
+    width: 100%;
+    background-color: khaki;
+}
+
+.ad-area-1{
+    height: 60vh;
+    width: 40%;
+    background-color:  #DDA0DD;
+    border-style: solid;
+    border-width: .1rem;
+    border-color: black;
+}
+
+.page-no{
+    background-color: black;
+    color: white;
+    text-align: center;
+    width: 5%;
+    padding: 3px;
+    position: absolute;
+    right: 0;
+    margin-bottom: .5rem;
+}
+
+.news-area-2{
+    height: 60vh;
+    width: 100%;
+    background-color: khaki;
+}
+
+.ad-area-2{
+    height: 60vh;
+    width: 40%;
+    background-color: #DDA0DD;
+    border-style: solid;
+    border-width: .1rem;
+    border-color: black;
+}
+
+
+.end-of-page{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px dotted black;
+    padding: 0;
+}
+
+
+.news-area-3{
+    margin-top:	.5rem;
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-areas: 'ad-area-3 p-5 p-5';
+}
+
+
+.ad-area-3{
+    width:  450px;
+    height: 500px;
+    background-color: #DDA0DD;
+    border-style: solid;
+    border-width: .1rem;
+    border-color: black;
+}
+
+.container-6{
+    display: grid;
+    grid-gap: 20px;
+    grid-template-areas: 
+    'image-1 p-1 break';
+}
+
+
+.news-area-4{
+    margin-top:	.5rem;
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-areas: 'ad-area-3 p-5 p-5';
+}
+
+
+
+.control-panel{
+    margin: 2rem;
+    width: 15%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    right: 0;
+}
+
+.control-panel div{
+    margin: 1rem;
+    display: flex;
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    height: 2rem;
+    width: 2rem;
+}
+
+.selected{
+    background-color: rgb(56, 247, 56);
+}
+
+.bestseller{
+    background-color: khaki;
+}
+
+
+.available{
+   background-color: #DDA0DD;
+}
+
+.sold{
+    background-color: rgb(213, 213, 213);
+}
+
+
+.full-div{
+    display: flex;
+}
+
+
+.control-panel label{
+    color: black;
+    font-size: small;
+    font-weight: 100;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.container-5{
+    display: grid;
+    grid-template-areas: 'ad-slot1 content-5' ;
+}
+
+
+.ad-slot1{
+    margin: .5rem;
+    height: 400px;
+    width: 600px;
+    border-style: solid;
+    border-color: black;
+    border-width: .2rem;
+}
+
+
+.sticky-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 10px;
+    display: none;
+}
+
+.selected-names {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pay-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pay-button:hover {
+    background-color: #45a049;
+}
+
+
+.light-green {
+    background-color: lightgreen !important;
+}
+
