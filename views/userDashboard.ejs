@@ -1,0 +1,40 @@
+<!-- views/dashboard.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .newspaper {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .logout-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome <%= users[0].name %>!</h1>
+        <p>Select a newspaper:</p>
+        <div class="newspapers">
+            <% newspapers.forEach(newspaper => { %>
+                <div class="newspaper">
+                    <%= newspaper.name %>
+                </div>
+            <% }); %>
+        </div>
+        <!-- Logout button -->
+        <form action=""/auth/logout"" method="post">
+            <button type="submit" class="btn btn-danger logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
