@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/admin-dashboard.css">
+</head>
+<body>
+<%- include('partials/admin-sidebar.ejs') %>
+
+	<section id="content">
+		
+    	<%- include('partials/admin-navbar.ejs') %>
+			<main>
+
+				<ul class="box-info">
+					<li>
+						<i class='bx bxs-calendar-check' ></i>
+						<span class="text">
+							<h3>0</h3>
+							<p>New Requests</p>
+						</span>
+					</li>
+					<li>
+						<i class='bx bxs-group' ></i>
+						<span class="text">
+							<h3>0</h3>
+							<p>Publishers</p>
+						</span>
+					</li>
+					<li>
+						<i class='bx bxs-dollar-circle' ></i>
+						<span class="text">
+							<h3>0</h3>
+							<p>Revenue</p>
+							</span>
+					</li>
+				</ul>
+
+				<div class="table-data">
+					<div class="order">
+						<div class="head">
+							<h3>Recent Requests</h3>
+						</div>
+						<table>
+							<thead>
+								<tr>
+									<th>User</th>
+									<th>Date Of Requests</th>
+									<th>Status</th>
+									</tr>
+							</thead>
+							<tbody>
+							
+								
+						</tbody>
+					</table>
+				</div>
+				
+		</main>
+
+	</section>
+    
+	<script src="/javascripts/admin-dashboard.js"></script>
+</body>
+</html>
