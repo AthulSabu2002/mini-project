@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Publisher</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Add Publisher</h1>
+        <form action="/admin/add-publisher" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="newspaperName" class="form-label">Newspaper Name</label>
+                <input type="text" class="form-control" id="newspaperName" name="newspaperName" required>
+            </div>
+            <div class="mb-3">
+                <label for="language" class="form-label">Newspaper Language</label>
+                <input type="text" class="form-control" id="language" name="language" required>
+            </div>
+            <button type="submit" class="btn btn-primary me-2">Add Publisher</button>
+        </form>
+    </div>
+
+    <div class="footer">
+        <a href="/admin/dashboard" class="btn btn-secondary">Admin Dashboard</a>
+    </div>
+
+    <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Pre-fill form fields with query parameters
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('username').value = getUrlParameter('name');
+            document.getElementById('email').value = getUrlParameter('email');
+            document.getElementById('newspaperName').value = getUrlParameter('newspaper');
+            document.getElementById('language').value = getUrlParameter('language');
+        });
+    </script>
+</body>
+</html>
