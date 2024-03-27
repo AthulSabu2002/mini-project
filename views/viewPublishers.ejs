@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/admin-dashboard.css">
+</head>
+<body>
+<%- include('partials/admin-sidebar.ejs') %>
+
+<section id="content">
+		
+<%- include('partials/admin-navbar.ejs') %>
+
+	<main>
+
+		<div class="table-data">
+			<div class="order">
+				<div class="head">
+					<h3>Recent Orders</h3>
+					<i class='bx bx-search' ></i>
+					<i class='bx bx-filter' ></i>
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Email</th>
+							<th>Newspaper Name</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<% publishers.forEach(publisher => { %>
+							<tr>
+								<td><%= publisher.username %></td>
+								<td><%= publisher.email %></td>
+								<td><%= publisher.newspaperName %></td>
+								<td>
+									<form action="/admin/delete-publisher/<%= publisher._id %>" method="POST">
+										<button type="submit" class="btn-danger">Delete</button>
+									</form>
+								</td>
+							</tr>
+						<% }) %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+</section>
+<script src="/javascripts/admin-dashboard.js"></script>
+</body>
+</html>
