@@ -3,45 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Publisher</title>
-    <link rel="stylesheet" href="/stylesheets/add-publisher.css">
+    <title>Admin</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/admin-dashboard.css">
+    <link rel="stylesheet" href="/stylesheets/form.css">
 </head>
-<body>
+<body> 
     <%- include('partials/admin-sidebar.ejs') %>
 
     <section id="content">
         <%- include('partials/admin-navbar.ejs') %>
         <main>
-            
-            <div class="container">
-                <form action="/admin/add-publisher" method="POST">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="newspaperName">Newspaper Name</label>
-                        <input type="text" id="newspaperName" name="newspaperName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="language">Newspaper Language</label>
-                        <input type="text" id="language" name="language" required>
-                    </div>
-                    <button type="submit">Add Publisher</button>
-                </form>
-            </div>
+            <%- include('partials/form.ejs') %>
         </main>
     </section>
 
-    <script>
+    <!-- <script>
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -55,6 +32,8 @@
             document.getElementById('newspaperName').value = getUrlParameter('newspaper');
             document.getElementById('language').value = getUrlParameter('language');
         });
-    </script>
+    </script> -->
+    <script src="/javascripts/form.js"></script>
+    <script src="/javascripts/admin-dashboard.js"></script>
 </body>
 </html>

@@ -21,16 +21,16 @@
 			<div class="table-data">
 				<div class="order">
 					<div class="head">
-						<h3>Recent Orders</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
+						<h3>Recent Requests</h3>
 					</div>
 					<table>
 						<thead>
 							<tr>
 								<th>User</th>
-								<th>Date Order</th>
-								<th>Status</th>
+								<th>Email</th>
+								<th>Newspaper</th>
+								<th>Language</th>
+								<th></th>
 							</tr>
 						</thead>
 
@@ -45,6 +45,9 @@
                                         <td><%= request.language %></td>
                                         <td>
                                             <button class="btn-success" onclick="approveRequest('<%= request.id %>','<%= request.name %>','<%= request.email %>','<%= request.newspaper %>','<%= request.language %>')">Approve</button>
+                                        </td>
+										<td>
+                                            <button class="btn-success" onclick="approveRequest('<%= request.id %>','<%= request.name %>','<%= request.email %>','<%= request.newspaper %>','<%= request.language %>')">Reject</button>
                                         </td>
                                         
         
