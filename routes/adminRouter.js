@@ -3,26 +3,25 @@ var router = express.Router();
 const {
     addPublisher,
     viewPublishers,
+    renderDashboard,
+    renderAddPublisher,
     deletePublisher,
+    deleteRequest,
     viewRequest
     } = require("../controllers/adminController");
 
 
-router.get('/dashboard', function(req, res, next) {
-  res.render('adminDashboard', { activeTab: 'dashboard' })
-});
+router.route('/dashboard').get(renderDashboard);
 
-
-router.get('/add-publisher', function(req, res, next) {
-    res.render('addPublisher', { activeTab: 'add-publisher' })
-});
-
+router.route('/add-publisher').get(renderAddPublisher);
 
 router.route('/view-publishers').get(viewPublishers);
 
 router.route('/view-requests').get(viewRequest);
 
 router.route('/add-publisher').post(addPublisher);
+
+router.route('/delete-request/:id').post(deleteRequest);
 
 router.route('/delete-publisher/:id').post(deletePublisher);
 
