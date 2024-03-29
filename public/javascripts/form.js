@@ -9,10 +9,9 @@ const form = document.querySelector("form"),
         allInput.forEach(input => {
             if (input.value !== "") {
                 form.classList.add('secActive'); 
-                console.log('hiii'); 
             } else {
                 form.classList.remove('secActive'); 
-                alert('please fill the fields')
+                alert('please fill the fields..')
                 exit();
             }
         });

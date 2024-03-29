@@ -17,16 +17,16 @@
 
 				<ul class="box-info">
 					<li>
-						<i class='bx bxs-calendar-check' ></i>
+						<i class='bx bx-user-plus'></i>
 						<span class="text">
-							<h3>0</h3>
+							<h3><%= requestCount %></h3>
 							<p>New Requests</p>
 						</span>
 					</li>
 					<li>
 						<i class='bx bxs-group' ></i>
 						<span class="text">
-							<h3>0</h3>
+							<h3><%= publisherCount %></h3>
 							<p>Publishers</p>
 						</span>
 					</li>
@@ -39,25 +39,40 @@
 					</li>
 				</ul>
 
+				<% if (requests.length === 0) { %>
+					<p>No new requests.</p>
+				<% } else { %>
 				<div class="table-data">
 					<div class="order">
 						<div class="head">
-							<h3>Recent Requests</h3>
+							<h3>New Requests</h3>
 						</div>
 						<table>
 							<thead>
 								<tr>
 									<th>User</th>
-									<th>Date Of Requests</th>
-									<th>Status</th>
-									</tr>
+									<th>email</th>
+									<th>Newspaper</th>
+									<th>Language</th>
+								</tr>
 							</thead>
+	
 							<tbody>
-							
-								
-						</tbody>
-					</table>
+	
+								<tbody>
+									<% requests.forEach(function(request) { %>
+										<tr>
+											<td><%= request.fullName %></td>
+											<td><%= request.email %></td>
+											<td><%= request.newspaperName %></td>
+											<td><%= request.language %></td>
+										</tr>
+									<% }); %>
+							</tbody>
+						</table>
+					</div>
 				</div>
+				<% }; %>
 				
 		</main>
 

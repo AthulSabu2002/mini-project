@@ -17,22 +17,8 @@
             <%- include('partials/form.ejs') %>
         </main>
     </section>
-
-    <!-- <script>
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('username').value = getUrlParameter('name');
-            document.getElementById('email').value = getUrlParameter('email');
-            document.getElementById('newspaperName').value = getUrlParameter('newspaper');
-            document.getElementById('language').value = getUrlParameter('language');
-        });
-    </script> -->
+    
+    <script src="/javascripts/add-publisher.js"></script>
     <script src="/javascripts/form.js"></script>
     <script src="/javascripts/admin-dashboard.js"></script>
 </body>

@@ -19,9 +19,8 @@
 		<div class="table-data">
 			<div class="order">
 				<div class="head">
-					<h3>Recent Orders</h3>
-					<i class='bx bx-search' ></i>
-					<i class='bx bx-filter' ></i>
+					<h3>Publishers</h3>
+					
 				</div>
 				<table>
 					<thead>
@@ -41,7 +40,7 @@
 								<td><%= publisher.newspaperName %></td>
 								<td>
 									<form action="/admin/delete-publisher/<%= publisher._id %>" method="POST">
-										<button type="submit" class="btn-danger">Delete</button>
+										<button type="submit" class="btn-danger">Remove</button>
 									</form>
 								</td>
 							</tr>

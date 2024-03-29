@@ -21,16 +21,17 @@
 			<div class="table-data">
 				<div class="order">
 					<div class="head">
-						<h3>Recent Requests</h3>
+						<h3>New Requests</h3>
+						<i class='bx bx-search' ></i>
+						<i class='bx bx-filter' ></i>
 					</div>
 					<table>
 						<thead>
 							<tr>
 								<th>User</th>
-								<th>Email</th>
+								<th>email</th>
 								<th>Newspaper</th>
 								<th>Language</th>
-								<th></th>
 							</tr>
 						</thead>
 
@@ -39,17 +40,43 @@
 							<tbody>
                                 <% requests.forEach(function(request) { %>
                                     <tr>
-                                        <td><%= request.name %></td>
+                                        <td><%= request.fullName %></td>
                                         <td><%= request.email %></td>
-                                        <td><%= request.newspaper %></td>
+                                        <td><%= request.newspaperName %></td>
                                         <td><%= request.language %></td>
                                         <td>
-                                            <button class="btn-success" onclick="approveRequest('<%= request.id %>','<%= request.name %>','<%= request.email %>','<%= request.newspaper %>','<%= request.language %>')">Approve</button>
+                                            <button class="btn-success" onclick="approveRequest(
+																					'<%= request.fullName %>',
+																					'<%= request.organizationName %>',
+																					'<%= request.email %>',
+																					'<%= request.newspaperName %>',
+																					'<%= request.username %>',
+																					'<%= request.password %>',
+																					'<%= request.confirmPassword %>',
+																					'<%= request.mobileNumber %>',
+																					'<%= request.state %>',
+																					'<%= request.district %>',
+																					'<%= request.buildingName %>',
+																					'<%= request.pincode %>',
+																					'<%= request.advertisementSlots %>',
+																					'<%= request.fileFormat %>',
+																					'<%= request.paymentmethods %>',
+																					'<%= request.customerService %>',
+																					'<%= request.bookingDeadline %>',
+																					'<%= request.cancellationRefundPolicy %>',
+																					'<%= request.contentGuidelines %>',
+																					'<%= request.advertisementSubmissionGuidelines %>',
+																					'<%= request.cancellationDeadline %>',
+																					'<%= request.language %>'
+																				)">Approve</button>
+
                                         </td>
+
 										<td>
-                                            <button class="btn-success" onclick="approveRequest('<%= request.id %>','<%= request.name %>','<%= request.email %>','<%= request.newspaper %>','<%= request.language %>')">Reject</button>
-                                        </td>
-                                        
+											<form action="/admin/delete-publisher/<%= request._id %>" method="POST">
+												<button type="submit" class="btn-danger">Remove</button>
+											</form>
+										</td>     
         
                                     </tr>
                                 <% }); %>
