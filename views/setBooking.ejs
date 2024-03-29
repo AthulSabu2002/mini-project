@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Dates</title>
+</head>
+<body>
+    <h1>Set Layout Dates</h1>
+
+    <form action="/publisher/set-booking-date" method="POST">
+        <label for="layoutDate">Booking Opening Date:</label>
+        <input type="date" id="layoutDate" name="layoutDate" required>
+
+        <label for="bookingCloseDate">Booking Close Date:</label>
+        <input type="date" id="bookingCloseDate" name="bookingCloseDate" required>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Layout Dates:</h2>
+    <% if (layoutDates.length > 0) { %>
+        <ul>
+            <% layoutDates.forEach(date => { %>
+                <li><%= date.layoutDate %> - Booking Close: <%= date.bookingCloseDate %></li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>No dates set.</p>
+    <% } %>
+</body>
+</html>

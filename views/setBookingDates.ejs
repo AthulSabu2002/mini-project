@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publisher</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/admin-dashboard.css">
+</head>
+<body>
+<%- include('partials/publisher-sidebar.ejs') %>
+
+<section id="content">
+		
+<%- include('partials/publisher-navbar.ejs') %>
+
+	<main>
+        <h1>Set Layout Dates</h1>
+
+        <form action="/publisher/set-booking-date" method="POST">
+            <label for="layoutDate">Booking Opening Date:</label>
+            <input type="date" id="layoutDate" name="layoutDate" required>
+    
+            <label for="bookingCloseDate">Booking Close Date:</label>
+            <input type="date" id="bookingCloseDate" name="bookingCloseDate" required>
+    
+            <button type="submit">Submit</button>
+        </form>
+        
+		<div class="table-data">
+			<div class="order">
+				<div class="head">
+					<h3>Booking Dates</h3>
+					
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<th>Opening Date</th>
+							<th>Closing Date</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+
+					<tbody>
+                        <% if (layoutDates.length > 0) { %>
+                            <% layoutDates.forEach(date => { %>
+                                <tr>
+                                    <td><%= new Date(date.bookingOpenDate).toLocaleString() %></td>
+                                    <td><%= new Date(date.bookingCloseDate).toLocaleString() %></td>
+                                    <td>
+                                        <form action="/publisher/close-booking/<%= date._id %>" method="POST">
+                                            <button type="submit" class="btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="2">No dates set.</td>
+                            </tr>
+                        <% } %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+</section>
+<script src="/javascripts/admin-dashboard.js"></script>
+</body>
+</html>

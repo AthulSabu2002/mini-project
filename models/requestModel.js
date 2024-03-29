@@ -1,7 +1,5 @@
-// requestModel.js
 const mongoose = require('mongoose');
 
-// Define the schema for publisher request
 const requestSchema = new mongoose.Schema({
     fullName: {
         type: String,
@@ -93,7 +91,6 @@ const requestSchema = new mongoose.Schema({
     }
 });
 
-// Create the model based on the schema
 const Request = mongoose.model('Request', requestSchema);
 
 module.exports = Request;

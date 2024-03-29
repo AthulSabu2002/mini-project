@@ -52,7 +52,6 @@ router.route("/registerUserWithOTP").get((req,res) => {
     }
 });
 
-router.route("/dashboard")
 
 router.route("/forgot").get((req, res) => {
   try{

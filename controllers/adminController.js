@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Publisher = require("../models/publisherModel");
 const Request = require("../models/requestModel");
 const bcrypt = require('bcrypt')
-
+const Layout = require("../models/newsPaperLayout");
 
 const renderAddPublisher = asyncHandler(async (req, res) => {
     try {
@@ -50,6 +50,7 @@ const viewRequest = async(req, res) => {
 }
 
 
+
 const addPublisher = asyncHandler(async (req, res) => {
 
     try {
@@ -94,7 +95,30 @@ const addPublisher = asyncHandler(async (req, res) => {
             cancellationDeadline
         });
 
+
         await newPublisher.save();
+
+        const existingLayout = await Layout.findOne({ $or: [{ email }, { newspaperName }] });
+
+        console.log(existingLayout);
+
+        if (existingLayout) {
+            console.log('Layout with the same email or newspaper name already exists.')
+            return res.status(400).json({ error: 'Publisher with the same email or newspaper name already exists.' });
+        }
+
+        const layout = new Layout({
+            newspaperName,
+            email,
+            layoutName: newspaperName
+        });
+
+        try{
+            await layout.save();
+        }
+        catch(error){
+            consolr.log('Cannot save layout')
+        }
 
         try {
             await Request.deleteOne({ email, newspaperName: newspaperName });
@@ -108,7 +132,7 @@ const addPublisher = asyncHandler(async (req, res) => {
         console.error(error);
         return res.status(500).json({ error: 'Error adding publisher.' });
     }
-});
+})
 
 
 const deleteRequest = asyncHandler(async (req, res) => {

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 const publisherSchema = new mongoose.Schema({
     fullName: {
@@ -87,6 +89,30 @@ const publisherSchema = new mongoose.Schema({
     }
 });
 
+
+publisherSchema.plugin(passportLocalMongoose);
+
 const Publisher = mongoose.model('Publisher', publisherSchema);
+
+passport.use(Publisher.createStrategy());
+
+passport.serializeUser((user, done) => {
+    done(null, user.id); // Serialize user ID into the session
+});
+
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        console.log('Deserializing user with ID:', id);
+        const user = await User.findById(id);
+        console.log('Deserialized user:', user);
+        done(null, user);
+    } catch (error) {
+        console.error('Error deserializing user:', error);
+        done(error);
+    }
+});
+
+
 
 module.exports = Publisher;

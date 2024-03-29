@@ -1,46 +1,63 @@
 <section id="sidebar">
+
     <a href="#" class="brand">
         <i class='bx bx-user'></i>
         <span class="text">Publisher</span>
     </a>
+
     <ul class="side-menu top">
         <li class="<%= activeTab === 'dashboard' ? 'active' : '' %>">
-            <a href="#">
+            <a href="/publisher/dashboard">
                 <i class='bx bxs-dashboard' ></i>
                 <span class="text">Dashboard</span>
             </a>
         </li>
-        <li class="<%= activeTab === 'set-bookings' ? 'active' : '' %>">
-            <a href="#">
-                <i class='bx bxs-shopping-bag-alt' ></i>
+
+        <li class="<%= activeTab === 'set-booking-date' ? 'active' : '' %>">
+            <a href="/publisher/set-booking-date">
+                <i class='bx bx-book-open'></i>
                 <span class="text">Set-Bookings</span>
             </a>
         </li>
+
         <li class="<%= activeTab === 'view-bookings' ? 'active' : '' %>">
-            <a href="#">
-                <i class='bx bx-wallet-alt'></i>
+            <a href="/publisher/view-bookings">
+                <i class='bx bx-add-to-queue' ></i>
                 <span class="text">View-Bookings</span>
             </a>
         </li>
-        <li class="<%= activeTab === 'set-slots' ? 'active' : '' %>">
-            <a href="#">
-                <i class='bx bx-reset' ></i>
-                <span class="text">Set-Slots</span>
+
+        <li class="<%= activeTab === 'view-layout' ? 'active' : '' %>">
+            <a href="/publisher/view-layout">
+                <i class='bx bx-low-vision' ></i>
+                <span class="text">View-Layout</span>
             </a>
         </li>
+
         <li class="<%= activeTab === 'add-templates' ? 'active' : '' %>">
-            <a href="#">
+            <a href="/publisher/add-templates">
                 <i class='bx bx-image-add'></i>
                 <span class="text">Add-Templates</span>
             </a>
         </li>
+
+        <li class="<%= activeTab === 'account-details' ? 'active' : '' %>">
+            <a href="/publisher/account-details">
+                <i class='bx bxs-user-account'></i>
+                <span class="text">Account-Details</span>
+            </a>
+        </li>
     </ul>
+
+
     <ul class="side-menu">
         <li>
-            <a href="/auth/logout" class="logout">
+            <a href="/publisher/logout" class="logout">
                 <i class='bx bxs-log-out-circle' ></i>
                 <span class="text">Logout</span>
             </a>
         </li>
     </ul>
+
+
 </section>
