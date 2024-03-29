@@ -32,4 +32,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const allInputs = document.querySelectorAll('input');
     allInputs.forEach(input => input.disabled = true);
+
+
+    document.getElementById('submit').addEventListener('click', function(event) {
+        event.preventDefault(); 
+        console.log('saving publisher');
+        const publisherData = {
+            fullName: document.getElementById('fullName').value,
+            organizationName: document.getElementById('organizationName').value,
+            email: document.getElementById('email').value,
+            newspaperName: document.getElementById('newspaperName').value,
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+            mobileNumber: document.getElementById('mobileNumber').value,
+            state: document.getElementById('state').value,
+            district: document.getElementById('district').value,
+            buildingName: document.getElementById('buildingName').value,
+            pincode: document.getElementById('pincode').value,
+            advertisementSlots: document.getElementById('advertisementSlots').value,
+            fileFormat: document.getElementById('fileFormat').value,
+            paymentmethods: document.getElementById('paymentmethods').value,
+            customerService: document.getElementById('customerService').value,
+            bookingDeadline: document.getElementById('bookingDeadline').value,
+            cancellationRefundPolicy: document.getElementById('cancellationRefundPolicy').value,
+            contentGuidelines: document.getElementById('contentGuidelines').value,
+            advertisementSubmissionGuidelines: document.getElementById('advertisementSubmissionGuidelines').value,
+            cancellationDeadline: document.getElementById('cancellationDeadline').value,
+            language: document.getElementById('language').value
+        };
+
+        // Send AJAX request to server
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/add-publisher', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Handle success response from server
+                    alert('Publisher saved successfully!');
+                    window.location.href = '/admin/view-requests';
+                } else {
+                    alert('Failed to save publisher!');
+                    console.error('Failed to save publisher:', xhr.responseText);
+                }
+            }
+        };
+        xhr.send(JSON.stringify(publisherData));
+
+    });
 });

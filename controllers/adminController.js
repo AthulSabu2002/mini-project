@@ -49,34 +49,6 @@ const viewRequest = async(req, res) => {
     }
 }
 
-// const addPublisher = asyncHandler(async (req, res) => {
-//     const { username, email, password, newspaperName, language } = req.body;
-
-//     try {
-//         const existingPublisher = await Publisher.findOne({ $or: [{ email }, { newspaperName }] });
-
-//         if (existingPublisher) {
-//             return res.status(400).send("<script>alert('Publisher with the same email or newspaper name already exists.'); window.location='/admin/add-publisher';</script>");
-//         }
-
-//         const hashedPassword = await bcrypt.hash(password, 10);
-//         const publisher = await Publisher.create({
-//             username,
-//             email,
-//             password: hashedPassword,
-//             newspaperName,
-//             language
-//         });
-
-//         await Request.deleteOne({ email, newspaper: newspaperName });
-
-//         return res.status(201).send("<script>alert('Publisher added successfully.'); window.location='/admin/add-publisher';</script>");
-//     } catch (error) {
-//         console.error(error);
-//         return res.status(500).send("<script>alert('Error adding publisher.'); window.location='/admin/add-publisher';</script>");
-//     }
-// });
-
 
 const addPublisher = asyncHandler(async (req, res) => {
 
@@ -91,12 +63,11 @@ const addPublisher = asyncHandler(async (req, res) => {
 
         const existingPublisher = await Publisher.findOne({ $or: [{ email }, { newspaperName }] });
 
-        if (existingPublisher) {
-            return res.status(400).send("<script>alert('Publisher with the same email or newspaper name already exists.'); window.location='/admin/add-publisher';</script>");
-        }
+        console.log(existingPublisher);
 
-        if (password !== confirmPassword) {
-            return res.status(400).json({ error: "Passwords do not match" });
+        if (existingPublisher) {
+            console.log('Publisher with the same email or newspaper name already exists.')
+            return res.status(400).json({ error: 'Publisher with the same email or newspaper name already exists.' });
         }
 
         const newPublisher = new Publisher({
@@ -125,14 +96,29 @@ const addPublisher = asyncHandler(async (req, res) => {
 
         await newPublisher.save();
 
-        await Request.deleteOne({ email, newspaper: newspaperName });
+        try {
+            await Request.deleteOne({ email, newspaperName: newspaperName });
+            console.log('Request deleted successfully');
+        } catch (error) {
+            console.error('Error deleting request:', error);
+        }
 
-        return res.status(201).send("<script>alert('Publisher added successfully.'); window.location='/admin/add-publisher';</script>");
+        return res.status(200).json({ message: 'Publisher added successfully.' });
     } catch (error) {
-
         console.error(error);
-        return res.status(500).send("<script>alert('Error adding publisher.'); window.location='/admin/add-publisher';</script>");
+        return res.status(500).json({ error: 'Error adding publisher.' });
+    }
+});
 
+
+const deleteRequest = asyncHandler(async (req, res) => {
+    const requestId = req.params.id;
+    try {
+        await Request.findByIdAndDelete(requestId);
+        return res.status(200).send("<script>alert('Request deleted successfully.'); window.location='/admin/view-requests';</script>");
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("<script>alert('Err removing publisher'); window.location='/admin/view-requests';</script>");
     }
 });
 
