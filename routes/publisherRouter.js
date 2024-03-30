@@ -9,6 +9,9 @@ const {
     renderDashboard,
     renderSetBookings,
     setBookingDates,
+    deleteDate,
+    renderPublisherAccountDetails,
+    updatePublisherAccountDetails,
     publisherRequest,
     viewRequest,
     viewLayout
@@ -31,9 +34,15 @@ router.get('/request', function(req, res, next) {
 });
 
 
+router.route('/account-details').get(renderPublisherAccountDetails);
+
+router.route('/account-details').post(updatePublisherAccountDetails);
+
 router.route('/set-booking-date').get(renderSetBookings);
 
 router.route('/set-booking-date').post(setBookingDates);
+
+router.route('/close-booking-date/:id').post(deleteDate);
 
 router.route('/view-layout').get(viewLayout);
 

@@ -9,8 +9,8 @@ const BookingDates = require("../models/bookingDates");
 
 const renderDashboard = asyncHandler(async (req, res) => {
     try {
-        console.log(req.session.loggedIn);
-        if(req.session.loggedIn){
+        const userId = req.cookies.userId;
+        if (userId) {
             res.render('publisherDashboard', { activeTab: 'dashboard' });
         }
         else{
@@ -21,7 +21,78 @@ const renderDashboard = asyncHandler(async (req, res) => {
         console.error('Error fetching requests:', error);
         res.status(500).send('Error fetching requests');
     }
-})
+});
+
+
+const renderPublisherAccountDetails = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        if (userId) {
+            try {
+                const publisher = await Publisher.findById(userId);
+                if (publisher) {
+                    res.render('publisherAccountDetails', { publisher: publisher, activeTab: 'account-details' });
+                } else {
+                    res.status(404).send('User not found');
+                }
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                res.status(500).send('Error fetching user');
+            }
+        }
+        else{
+            console.log(req.user);
+            res.redirect('/publisher/login');
+        }
+    } catch (error) {
+        console.error('Error fetching requests:', error);
+        res.status(500).send('Error fetching requests');
+    }
+});
+
+
+const updatePublisherAccountDetails = asyncHandler(async (req, res) => {
+    console.log('helloooo');
+    const userId = req.cookies.userId;
+    if (!userId) {
+        return res.status(400).send('User ID cookie not found');
+    }
+
+    try {
+        const user = await Publisher.findById(userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        user.fullName = req.body.fullName;
+        user.organizationName = req.body.organizationName;
+        user.newspaperName = req.body.newspaperName;
+        user.mobileNumber = req.body.mobileNumber;
+        user.email = req.body.email;
+        user.state = req.body.state;
+        user.district = req.body.district;
+        user.buildingName = req.body.buildingName;
+        user.pincode = req.body.pincode;
+        user.advertisementSlots = req.body.advertisementSlots;
+        user.fileFormat = req.body.fileFormat;
+        user.paymentmethods = req.body.paymentmethods;
+        user.customerService = req.body.customerService;
+        user.language = req.body.language;
+        user.bookingDeadline = req.body.bookingDeadline;
+        user.cancellationRefundPolicy = req.body.cancellationRefundPolicy;
+        user.contentGuidelines = req.body.contentGuidelines;
+        user.advertisementSubmissionGuidelines = req.body.advertisementSubmissionGuidelines;
+        user.cancellationDeadline = req.body.cancellationDeadline;
+
+        await user.save();
+        await user.save();
+        res.status(200).send("<script>alert('Account details updated');</script>")
+    } catch (error) {
+        console.error('Error updating user details:', error);
+        res.status(500).send('Error updating user details');
+    }
+});
 
 
 const renderSetBookings = asyncHandler(async (req, res) => {
@@ -210,4 +281,15 @@ const publisherRequest = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { loginPublisher,renderDashboard,renderSetBookings,setBookingDates, logoutPublisher, publisherRequest, viewLayout }
+const deleteDate = asyncHandler(async (req, res) => {
+    const requestId = req.params.id;
+    try {
+        await BookingDates.findByIdAndDelete(requestId);
+        return res.status(200).send("<script>alert('Booking Date Closed successfully.'); window.location='/publisher/set-booking-date';</script>");
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("<script>alert('Err removing date'); window.location='/publisher/set-booking-date';</script>");
+    }
+});
+
+module.exports = { loginPublisher, renderDashboard, renderSetBookings, setBookingDates, deleteDate, renderPublisherAccountDetails,updatePublisherAccountDetails, logoutPublisher, publisherRequest, viewLayout }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publisher</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
+    <link rel="stylesheet" href="/stylesheets/form.css">
+</head>
+<body> 
+    <%- include('partials/publisher-sidebar.ejs') %>
+
+    <section id="content">
+        <%- include('partials/publisher-navbar.ejs') %>
+        <main>
+            <%- include('partials/account-details-form.ejs') %>
+        </main>
+    </section>
+    
+
+    <script src="/javascripts/accountDetails.js"></script>
+    <script src="/javascripts/publisherDashboard.js"></script>
+</body>
+</html>

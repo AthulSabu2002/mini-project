@@ -49,7 +49,7 @@
                                     <td><%= new Date(date.bookingOpenDate).toLocaleString() %></td>
                                     <td><%= new Date(date.bookingCloseDate).toLocaleString() %></td>
                                     <td>
-                                        <form action="/publisher/close-booking/<%= date._id %>" method="POST">
+                                        <form action="/publisher/close-booking-date/<%= date._id %>" method="POST">
                                             <button type="submit" class="btn-danger">Delete</button>
                                         </form>
                                     </td>
