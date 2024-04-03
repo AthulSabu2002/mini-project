@@ -63,6 +63,10 @@ const publisherSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    layout: {
+        data: Buffer,
+        contentType: String
+    },
     language: {
         type: String,
         required: true

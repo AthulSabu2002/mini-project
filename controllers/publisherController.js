@@ -23,7 +23,6 @@ const renderDashboard = asyncHandler(async (req, res) => {
     }
 });
 
-
 const renderPublisherAccountDetails = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
@@ -49,6 +48,7 @@ const renderPublisherAccountDetails = asyncHandler(async (req, res) => {
         res.status(500).send('Error fetching requests');
     }
 });
+
 
 
 const updatePublisherAccountDetails = asyncHandler(async (req, res) => {
@@ -93,6 +93,7 @@ const updatePublisherAccountDetails = asyncHandler(async (req, res) => {
         res.status(500).send('Error updating user details');
     }
 });
+
 
 
 const renderSetBookings = asyncHandler(async (req, res) => {
@@ -225,8 +226,65 @@ const logoutPublisher = asyncHandler(async (req, res) => {
 })
 
 
-const publisherRequest = asyncHandler(async (req, res) => {
+// const publisherRequest = asyncHandler(async (req, res) => {
+//     try {
+//         const { fullName, organizationName, newspaperName, username, password, confirmPassword, 
+//                 mobileNumber, email, state, district, buildingName, pincode,
+//                 advertisementSlots, fileFormat, paymentmethods, customerService,
+//                 language,
+//                 bookingDeadline, cancellationRefundPolicy, contentGuidelines,
+//                 advertisementSubmissionGuidelines, cancellationDeadline } = req.body;
+
+//         const existingPublisher = await Request.findOne({ $or: [{ email }, { newspaperName }] });
+
+//         if (existingPublisher) {
+//             return res.status(400).send("<script>alert('Publisher with the same email or newspaper name already requested.'); window.location='/publisher/request';</script>");
+//         }
+
+//         if (password !== confirmPassword) {
+//             return res.status(400).send("<script>alert('Passwords do not match'); window.location='/publisher/request';</script>");
+//         }
+
+//         const hashedPassword = await bcrypt.hash(password, 10);
+
+//         const newRequest = new Request({
+//             fullName,
+//             organizationName,
+//             newspaperName,
+//             username,
+//             password: hashedPassword,
+//             mobileNumber,
+//             email,
+//             state,
+//             district,
+//             buildingName,
+//             pincode,
+//             advertisementSlots,
+//             fileFormat,
+//             paymentmethods,
+//             customerService,
+//             language,
+//             bookingDeadline,
+//             cancellationRefundPolicy,
+//             contentGuidelines,
+//             advertisementSubmissionGuidelines,
+//             cancellationDeadline
+//         });
+
+//         await newRequest.save();
+//         return res.status(200).json({ message: 'Requested successfully! Status will be updated via email provided' });
+
+//     } catch (error) {
+//         console.error('Error saving request:', error);
+//         res.status(500).json({ success: false, error: 'Error saving request' });
+//     }
+// });
+
+const publisherRequest = async (req, res) => {
     try {
+        console.log('Received publisher request');
+        console.log('Request body:', req.body);
+
         const { fullName, organizationName, newspaperName, username, password, confirmPassword, 
                 mobileNumber, email, state, district, buildingName, pincode,
                 advertisementSlots, fileFormat, paymentmethods, customerService,
@@ -234,18 +292,32 @@ const publisherRequest = asyncHandler(async (req, res) => {
                 bookingDeadline, cancellationRefundPolicy, contentGuidelines,
                 advertisementSubmissionGuidelines, cancellationDeadline } = req.body;
 
+        // Check if file is uploaded
+        if (!req.file) {
+            console.error('No file uploaded');
+            return res.status(400).json({ error: 'Please upload a PDF file' });
+        }
+
+        // Check if publisher with the same email or newspaper name already exists
         const existingPublisher = await Request.findOne({ $or: [{ email }, { newspaperName }] });
-
         if (existingPublisher) {
-            return res.status(400).send("<script>alert('Publisher with the same email or newspaper name already requested.'); window.location='/publisher/request';</script>");
+            console.error('Publisher with the same email or newspaper name already exists');
+            return res.status(400).json({ error: 'Publisher with the same email or newspaper name already requested' });
         }
 
+        // Check if passwords match
         if (password !== confirmPassword) {
-            return res.status(400).send("<script>alert('Passwords do not match'); window.location='/publisher/request';</script>");
+            console.error('Passwords do not match');
+            return res.status(400).json({ error: 'Passwords do not match' });
         }
 
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Extract file details from req.file
+        const { originalname, buffer, mimetype } = req.file;
+
+        // Create new request document
         const newRequest = new Request({
             fullName,
             organizationName,
@@ -267,17 +339,25 @@ const publisherRequest = asyncHandler(async (req, res) => {
             cancellationRefundPolicy,
             contentGuidelines,
             advertisementSubmissionGuidelines,
-            cancellationDeadline
+            cancellationDeadline,
+            layout: {
+                data: buffer,
+                contentType: mimetype
+            }
         });
 
+        // Save the new request document
         await newRequest.save();
+
+        console.log('Publisher request saved successfully');
         return res.status(200).json({ message: 'Requested successfully! Status will be updated via email provided' });
 
     } catch (error) {
         console.error('Error saving request:', error);
-        res.status(500).json({ success: false, error: 'Error saving request' });
+        return res.status(500).json({ error: 'Error saving request' });
     }
-});
+};
+
 
 
 
@@ -291,5 +371,7 @@ const deleteDate = asyncHandler(async (req, res) => {
         return res.status(500).send("<script>alert('Err removing date'); window.location='/publisher/set-booking-date';</script>");
     }
 });
+
+
 
 module.exports = { loginPublisher, renderDashboard, renderSetBookings, setBookingDates, deleteDate, renderPublisherAccountDetails,updatePublisherAccountDetails, logoutPublisher, publisherRequest, viewLayout }

@@ -45,31 +45,9 @@
                                         <td><%= request.newspaperName %></td>
                                         <td><%= request.language %></td>
                                         <td>
-                                            <button class="btn-success" onclick="approveRequest(
-																					'<%= request.fullName %>',
-																					'<%= request.organizationName %>',
-																					'<%= request.email %>',
-																					'<%= request.newspaperName %>',
-																					'<%= request.username %>',
-																					'<%= request.password %>',
-																					'<%= request.confirmPassword %>',
-																					'<%= request.mobileNumber %>',
-																					'<%= request.state %>',
-																					'<%= request.district %>',
-																					'<%= request.buildingName %>',
-																					'<%= request.pincode %>',
-																					'<%= request.advertisementSlots %>',
-																					'<%= request.fileFormat %>',
-																					'<%= request.paymentmethods %>',
-																					'<%= request.customerService %>',
-																					'<%= request.bookingDeadline %>',
-																					'<%= request.cancellationRefundPolicy %>',
-																					'<%= request.contentGuidelines %>',
-																					'<%= request.advertisementSubmissionGuidelines %>',
-																					'<%= request.cancellationDeadline %>',
-																					'<%= request.language %>'
-																				)">Approve</button>
-
+                                            <form action="/admin/view-request-details/<%= request._id %>" method="get">
+												<button class="btn-success">View Details</button>
+											</form>
                                         </td>
 
 										<td>

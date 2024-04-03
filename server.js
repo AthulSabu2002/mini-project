@@ -8,7 +8,10 @@ const connectDb = require("./config/dbConnection");
 const dotenv = require('dotenv').config();
 const createError = require('http-errors');
 const flash = require('connect-flash');
+const bodyParser = require('body-parser');
 
+
+const landingPageRouter = require('./routes/landingPageRouter')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/usersRouter');
 const adminRouter = require('./routes/adminRouter');
@@ -23,6 +26,7 @@ app.set('view engine', 'ejs');
 app.use(flash());
 app.use(logger('dev'));
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
@@ -52,6 +56,8 @@ app.use((req, res, next) => {
   res.header('Expires', '0');
   next();
 });
+
+app.use('/', landingPageRouter);
 
 app.use('/profile', indexRouter);
 

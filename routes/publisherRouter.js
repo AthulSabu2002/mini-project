@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const bodyParser = require('body-parser');
+const multer = require('multer');
 
 
 const {
@@ -19,6 +20,16 @@ const {
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true })
 
+
+const storage = multer.memoryStorage();
+
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 10 * 1024 * 1024,
+    },
+}).single('layout');
 
 
 router.get('/login', function(req, res, next) {
@@ -46,7 +57,7 @@ router.route('/close-booking-date/:id').post(deleteDate);
 
 router.route('/view-layout').get(viewLayout);
 
-router.route('/request').post(publisherRequest);
+router.route('/request').post(upload, publisherRequest);
 
 router.route('/login').post(loginPublisher);
 

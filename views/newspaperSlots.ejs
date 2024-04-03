@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newspaper Entry Form</title>
+    <link rel="stylesheet" href="/stylesheets/newspaperSlots.css">
+</head>
+<body>
+    <h1>Newspaper Entry Form</h1>
+    <form id="newspaperForm">
+        <label for="newspaperName">Newspaper Name:</label><br>
+        <input type="text" id="newspaperName" name="newspaperName"><br><br>
+        
+        <div id="slotFields">
+            <div class="slot">
+                <h3>Slot 1</h3>
+                <label for="slot1_html_id">Slot HTML ID:</label><br>
+                <input type="text" id="slot1_html_id" name="slot_html_id[]"><br>
+                <label for="slot1_width">Width:</label><br>
+                <input type="number" id="slot1_width" name="width[]"><br>
+                <label for="slot1_height">Height:</label><br>
+                <input type="number" id="slot1_height" name="height[]"><br>
+                <label for="slot1_price">Price:</label><br>
+                <input type="number" id="slot1_price" name="price[]"><br>
+                <label for="slot1_specifications">Specifications:</label><br>
+                <input type="text" id="slot1_specifications" name="specifications[]"><br><br>
+            </div>
+        </div>
+        
+        <button type="button" id="addSlot">Add Slot</button><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    <script src="/javascripts/newspaperSlots.js"></script>
+</body>
+</html>

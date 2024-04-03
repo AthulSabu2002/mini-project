@@ -4,6 +4,9 @@ const User = require("../models/userModel");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const Publisher = require('../models/publisherModel');
+const Layout = require('../models/layout');
+const BookingDates = require('../models/bookingDates');
 
 
 
@@ -290,6 +293,58 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 
+const renderBookSlot = asyncHandler( async(req, res) => {
+  try{
+    res.render('defaultLayout');
+  }catch(error){
+    console.log(error);
+  }
+});
+
+
+const renderBookSlotByDate = asyncHandler(async (req, res) => {
+    try {
+        const { day, date, month } = req.body;
+        console.log(req.body);
+
+        const selectedDate = new Date(`${month} ${date}, ${new Date().getFullYear()}`);
+
+        console.log(selectedDate);
+
+        const booking = await BookingDates.findOne({
+            bookingOpenDate: { $lte: selectedDate },
+            bookingCloseDate: { $gte: selectedDate }
+        });
+
+        console.log(booking);
+
+        if (booking) {
+            const publisherId = booking.publisher;
+            const publisherLayout = await Publisher.findOne({ _id: publisherId });
+            console.log(publisherLayout);
+            if (publisherLayout) {
+                const layoutName = publisherLayout.newspaperName;
+                res.status(200).json({ layoutName }); // Send layout name as JSON response
+            } else {
+                const layoutName = 'defaultLayout';
+                res.status(200).json({ layoutName }); // Send default layout name as JSON response
+            }
+        } else {
+            const layoutName = 'defaultLayout';
+            res.status(200).json({ layoutName }); // Send default layout name as JSON response
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+
+
+
+
+
 module.exports = {
                   loginUser,  
                   resetPassword, 
@@ -298,5 +353,7 @@ module.exports = {
                   logoutUser, 
                   renderDashboard ,
                   registerUserWithOTP,
-                  verifyOtp
+                  verifyOtp,
+                  renderBookSlot,
+                  renderBookSlotByDate
                 };
