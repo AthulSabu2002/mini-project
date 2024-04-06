@@ -9,7 +9,8 @@ const {
       verifyOtp,
       registerUserWithOTP,
       renderBookSlot,
-      renderBookSlotByDate } = require("../controllers/userController");
+      renderBookSlotByDate,
+      bookSlot } = require("../controllers/userController");
 
 
 const router = express.Router();
@@ -22,19 +23,29 @@ const app = express();
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true })
 
+const multer = require('multer');
+const storage = multer.memoryStorage();
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static("public"));
 
-// router.route("/").get((req,res) => {
-//   try{
-//     res.send('hi')
-//   }
-//   catch(err){
-//     res.send(err);
-//     }
-// });
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 10 * 1024 * 1024, // Limit file size to 10 MB
+    },
+}).single('file');
+
+const authCheck = (req, res, next) => {
+  if(!req.user){
+    res.redirect('/auth/login')
+  }
+  else{
+    next()
+  }
+}
 
 router.route("/login").get((req,res) => {
     try{
@@ -45,8 +56,7 @@ router.route("/login").get((req,res) => {
       }
   });
 
-  router.route("/viewSlot/:layoutName").get((req,res) => {
-    console.log('Hii ftom route');
+  router.route("/viewSlot/:layoutName").get(authCheck, (req,res) => {
     try{
       const layoutName = req.params.layoutName; // Retrieve layoutName from URL parameter
       res.render(layoutName);
@@ -89,6 +99,8 @@ router.route("/verifyOtp").get((req, res) =>{
     const userEmail = req.query.email;
     res.render('user/verify-otp', { email: userEmail });
 });
+
+router.route('/book-slot').post(upload, bookSlot);
 
 router.route("/viewSlot").get(renderBookSlot);
 

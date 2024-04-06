@@ -1,0 +1,82 @@
+
+/* Customize calendar appearance */
+.ui-datepicker {
+       
+    width: 270px; /* Adjust the width as needed */
+    height: 240px;
+    font-size: 1em; /* Adjust the font size */
+    border-radius: 5px;
+    background-color: #4ce3e8; /* Change the header background color */
+  
+  }
+  .ui-datepicker-header {
+    background-color: #ffffff; /* Change the header background color */
+    color: #050404; /* Change the header text color */
+    font-style: italic; /* Make the font italic */
+    font-weight:500; /* Set font weight to normal */
+    border: none;
+  }
+  .ui-datepicker-title {
+    font-weight: bold; /* Make the title bold */
+  }
+  .ui-datepicker-prev, .ui-datepicker-next {
+  
+    background-color: #ffffff; /* Change the prev/next button background color */
+    color: #fff; /* Change the prev/next button text color */
+    border: none; /* Remove border */
+    border-radius: 50%; /* Make button circular */
+    width: 20px; /* Set button width */
+    height: 20px; /* Set button height */
+    font-size: 1em; /* Adjust the font size */
+   
+  
+  }
+  .ui-datepicker-calendar {
+    background-color: #4ce3e8; /* Change the calendar background color */
+    border-radius: 7px;
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .ui-datepicker-calendar td a.ui-state-default {
+    background-color: transparent; /* Make date background transparent */
+    border: none; /* Remove border */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    text-align: center; /* Center text */
+    display: block; /* Convert to block element */
+    line-height: 2em; /* Set line height for vertical centering */
+    border-radius: 10px;
+    
+  }
+  .ui-datepicker-calendar td a.ui-state-default:hover {
+    background-color: #ebf4f8; /* Change the hover date background color */
+    color: #060505; /* Change the hover date text color */
+  }
+  .ui-datepicker-prev:hover,
+  .ui-datepicker-next:hover {
+  background-color: initial; /* Change the hover background color to transparent */
+  color: initial; /* Change the hover text color to default */
+  border: none;
+  transform: none !important; /* Remove the transformation on hover */
+  
+  }
+  .ui-datepicker-calendar td a.ui-state-active {
+    background-color: #ffffff; /* Change the active date background color */
+    color: #06ffe6; /* Change the active date text color */
+  }
+  
+  
+  @media only screen and (max-width: 767px) {
+    /* CSS rules for mobile phones */
+    .ui-datepicker {
+         
+        width: 280px; /* Adjust the width as needed */
+        height: 300px;
+        font-size: 1.2em; /* Adjust the font size */
+        border-radius: 5px;
+        background-color: #b8d4df; /* Change the header background color */
+    
+    }
+  }
+  

@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const Publisher = require('../models/publisherModel');
 const Layout = require('../models/layout');
 const BookingDates = require('../models/bookingDates');
+const Booking = require("../models/bookedSlots");
 
 
 
@@ -23,7 +24,9 @@ const renderDashboard = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
   req.logOut(function(err) {
     if (err) { return next(err); }
-    req.session.loggedIn = false; 
+      req.session.loggedIn = false;
+      req.session.destroy()
+      res.clearCookie('userId');
     res.redirect('/auth/login'); 
   });
 });
@@ -134,6 +137,7 @@ const loginUser = asyncHandler(async (req, res) => {
         return res.status(500).send("<script>alert('username and password fields are mandatory'); window.location='/auth/login';</script>");
       }
       const user = await User.findOne({ username }, 'username email password');
+      console.log(user);
       console.log(user.password)
       if (user) {
           const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -143,6 +147,12 @@ const loginUser = asyncHandler(async (req, res) => {
                       console.error('Error logging in:', err);
                       return res.status(500).send("<script>alert('Internal Server error'); window.location='/auth/login';</script>");
                   }
+                    req.session.loggedIn = true;
+                    const userId = req.user.id;
+                    res.cookie('userId', userId, { 
+                        maxAge: 24 * 60 * 60 * 1000,
+                        httpOnly: true 
+                    });
                   console.log('User logged in:', user);
                   return res.redirect('/profile');
               });
@@ -208,7 +218,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
           smtpTrans.sendMail({
             to: user.email,
             from: process.env.MYEMAIL,
-            subject: 'ContactManagerWebApp',
+            subject: 'aDColumn password reset',
             text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
             'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
             'http://' + req.headers.host + '/users/reset/' + user.resetPasswordToken + '\n\n' +
@@ -243,7 +253,9 @@ const changePassword = asyncHandler(async (req, res) => {
         return res.status(400).send('Password reset token is invalid or has expired.');
       }
 
-      user.password = req.body.password;
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+      user.password = hashedPassword;
 
       try {
         console.log("saving..")
@@ -270,7 +282,7 @@ const changePassword = asyncHandler(async (req, res) => {
       var mailOptions = {
         to: user.email,
         from: process.env.MYEMAIL,
-        subject: 'ContactManagerWebApp',
+        subject: 'aDColumn',
         text: 'Hello,\n\n' +
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
@@ -339,9 +351,30 @@ const renderBookSlotByDate = asyncHandler(async (req, res) => {
     }
 });
 
+const bookSlot = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.cookies.userId;
+    const file = req.file;
+    const { slotId, newspaperName } = req.body;
 
+    const booking = new Booking({
+      userId: userId,
+      slotId: slotId,
+      newspaperName: newspaperName,
+      file: {
+        data: file.buffer, 
+        contentType: file.mimetype
+      }
+    });
 
+    await booking.save();
 
+    res.status(201).json({ success: true, message: 'Slot booked successfully.' });
+  } catch (error) {
+    console.error('Error booking slot:', error);
+    res.status(500).json({ success: false, error: 'Failed to book slot. Please try again.' });
+  }
+});
 
 
 
@@ -355,5 +388,6 @@ module.exports = {
                   registerUserWithOTP,
                   verifyOtp,
                   renderBookSlot,
-                  renderBookSlotByDate
+                  renderBookSlotByDate,
+                  bookSlot
                 };

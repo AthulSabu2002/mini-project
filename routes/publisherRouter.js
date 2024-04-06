@@ -15,7 +15,7 @@ const {
     updatePublisherAccountDetails,
     publisherRequest,
     viewRequest,
-    viewLayout
+    viewLayout,
 } = require("../controllers/publisherController");
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true })

@@ -288,3 +288,32 @@ body{
     background-color: lightgreen !important;
 }
 
+
+.upload-div {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+.upload-div input[type="file"] {
+    display: block;
+    margin-bottom: 10px;
+}
+/* Other styles */
+.upload-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.close-icon {
+    cursor: pointer;
+}

@@ -44,7 +44,7 @@
             </section>
 
             <section class="news-area-1">
-                <div class="ad-area-1">
+                <div id="slot1" class="ad-area-1">
 
                 </div>
             </section>
@@ -106,11 +106,11 @@
                     <h3>Section 1.10.32 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC</h3>
                     <p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</p>
                 </div>
-                <div class="ad-area-3"></div>
+                <div id="slot2" class="ad-area-3"></div>
             </section>
 
             <section class="news-area-4">
-                <div class="ad-area-3"></div>
+                <div id="slot3" class="ad-area-3"></div>
                 <div class="p-5">
                     <h3>Section 1.10.32 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC</h3>
                     <p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</p>
@@ -142,11 +142,28 @@
 
     <div id="sticky-container" class="sticky-container">
         <div id="selected-names" class="selected-names"></div>
-        <button id="pay-button" class="pay-button">Pay</button>
+        <button id="preview-button" class="preview-button">Preview Ad</button>
+        <button id="book-slot-button" class="pay-button">Book Now</button>
     </div>
 
+    <!-- <button id="showUploadBtn" class="upload-button">Upload Ad</button> -->
 
+    <!-- Hidden div for uploading ad -->
+    <div id="uploadDiv" class="upload-div">
+        <span class="close-icon" id="closeUploadDiv">&times;</span>
+        <input type="file" id="imageInput" accept="image/*">
+        <button id="uploadButton" class="upload-button">Upload</button>
+    </div>
+    <div id="confirmUploadDiv" class="upload-div" style="display:none;">
+        <span class="close-icon" id="closeConfirmUploadDiv">&times;</span>
+        <input type="file" id="confirmImageInput" accept="image/*">
+        <button id="confirmBookingButton" class="confirm-booking-button">Confirm Booking</button>
+    </div>
+    
+
+    <script src="/javascripts/interact.js"></script>
     <script src="/javascripts/indianExpress.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs@1.10.11/dist/interact.min.js"></script>
 
 
 </body>
