@@ -109,7 +109,6 @@ body{
 .ad-area-1{
     height: 60vh;
     width: 40%;
-    background-color:  #DDA0DD;
     border-style: solid;
     border-width: .1rem;
     border-color: black;
@@ -135,7 +134,6 @@ body{
 .ad-area-2{
     height: 60vh;
     width: 40%;
-    background-color: #DDA0DD;
     border-style: solid;
     border-width: .1rem;
     border-color: black;
@@ -164,7 +162,6 @@ body{
 .ad-area-3{
     width:  450px;
     height: 500px;
-    background-color: #DDA0DD;
     border-style: solid;
     border-width: .1rem;
     border-color: black;
@@ -288,3 +285,10 @@ body{
     background-color: lightgreen !important;
 }
 
+.unbooked {
+    background-color: #DDA0DD;
+}
+
+.booked {
+    background-color: red;
+}

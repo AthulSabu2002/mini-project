@@ -6,6 +6,10 @@ const bookingDatesSchema = new mongoose.Schema({
     ref: 'Publisher',
     required: true
   },
+  publishingDate: {
+    type: Date,
+    required: true
+  },
   bookingOpenDate: {
     type: Date,
     required: true

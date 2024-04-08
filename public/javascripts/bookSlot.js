@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log(document.cookie);
     var selectedDivs = []; 
+    var adAreas = document.querySelectorAll('[class^="ad-area-"]');
 
-    // var adAreas = document.querySelectorAll('[class^="ad-area-"]');
-    var unbookedAreas = document.querySelectorAll('.unbooked');
-
-    unbookedAreas.forEach(function(adArea) {
+    adAreas.forEach(function(adArea) {
         adArea.addEventListener('click', function() {
             if (selectedDivs.includes(adArea)) {
                 adArea.style.backgroundColor = '';
@@ -69,10 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         var adAreaWidth = selectedAdArea.offsetWidth;
                         var adAreaHeight = selectedAdArea.offsetHeight;
                         img.style.width = adAreaWidth + 'px';
-                        selectedAdArea.style.backgroundSize = 'contain'
                         img.style.height = adAreaHeight + 'px';
                         
-                        // img.style.objectFit = 'cover';
+                        img.style.objectFit = 'cover';
                         
                         selectedAdArea.innerHTML = '';
                         selectedAdArea.appendChild(img);

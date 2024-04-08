@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
-// Define the schema for booked slots
 const bookedSlotSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true
     },
+    publishingDate: {
+        type: Date,
+        required: true
+      },
     slotId: {
         type: String,
         required: true

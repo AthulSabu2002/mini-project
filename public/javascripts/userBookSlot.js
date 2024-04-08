@@ -22,7 +22,6 @@ function populateNavbar() {
                 month: monthLine
             };
 
-            // Send the selected details to the server
             sendSelectedDetails(selectedDetails);
         });
     }
@@ -41,8 +40,12 @@ async function sendSelectedDetails(selectedDetails) {
         if (response.ok) {
             const responseData = await response.json();
             const layoutName = responseData.layoutName;
+            let publishingDate = responseData.publishingDate.split('T')[0]; 
+            publishingDate = publishingDate.replace(/-/g, ''); 
 
-            window.location.href = `/users/viewSlot/${layoutName}`;
+            const url = `/users/viewSlot/${layoutName}/${publishingDate}`;
+
+            window.location.href = url;
         } else {
             console.error('Failed to send selected details to the server.');
         }

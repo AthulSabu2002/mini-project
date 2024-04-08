@@ -18,6 +18,9 @@
         <h1>Set Layout Dates</h1>
 
         <form action="/publisher/set-booking-date" method="POST">
+            <label for="publishingDate">Publishing Date:</label>
+            <input type="date" id="publishingDate" name="publishingDate" required>
+            
             <label for="layoutDate">Booking Opening Date:</label>
             <input type="date" id="layoutDate" name="layoutDate" required>
     
@@ -36,6 +39,7 @@
 				<table>
 					<thead>
 						<tr>
+                            <th>Publishing Date</th>
 							<th>Opening Date</th>
 							<th>Closing Date</th>
 							<th>Action</th>
@@ -46,6 +50,7 @@
                         <% if (layoutDates.length > 0) { %>
                             <% layoutDates.forEach(date => { %>
                                 <tr>
+                                    <td><%= new Date(date.publishingDate).toLocaleString() %></td>
                                     <td><%= new Date(date.bookingOpenDate).toLocaleString() %></td>
                                     <td><%= new Date(date.bookingCloseDate).toLocaleString() %></td>
                                     <td>

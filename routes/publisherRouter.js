@@ -16,6 +16,9 @@ const {
     publisherRequest,
     viewRequest,
     viewLayout,
+    renderViewBookings,
+    renderBookedLayout,
+    sendBookedDetails
 } = require("../controllers/publisherController");
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true })
@@ -56,6 +59,13 @@ router.route('/set-booking-date').post(setBookingDates);
 router.route('/close-booking-date/:id').post(deleteDate);
 
 router.route('/view-layout').get(viewLayout);
+
+router.route('/view-bookings').get(renderViewBookings);
+
+router.route('/view-layout/:newspaperName/:publishingDate').post(renderBookedLayout);
+
+router.route('/view-layout/:newspaperName/:publishingDate').get(sendBookedDetails);
+
 
 router.route('/request').post(upload, publisherRequest);
 

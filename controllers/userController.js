@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const Publisher = require('../models/publisherModel');
 const Layout = require('../models/layout');
 const BookingDates = require('../models/bookingDates');
-const Booking = require("../models/bookedSlots");
+const BookedSlots = require("../models/bookedSlots");
 
 
 
@@ -314,36 +314,83 @@ const renderBookSlot = asyncHandler( async(req, res) => {
 });
 
 
+// const renderBookSlotByDate = asyncHandler(async (req, res) => {
+//     try {
+//         const { day, date, month } = req.body;
+//         console.log(req.body);
+
+//         const selectedDate = new Date(`${month} ${date}, ${new Date().getFullYear()}`);
+
+//         console.log(selectedDate);
+
+//         const booking = await BookingDates.findOne({
+//             bookingOpenDate: { $lte: selectedDate },
+//             bookingCloseDate: { $gte: selectedDate }
+//         });
+
+//         console.log(booking);
+
+//         if (booking) {
+//             const publisherId = booking.publisher;
+//             const publisherLayout = await Publisher.findOne({ _id: publisherId });
+//             console.log(publisherLayout);
+//             if (publisherLayout) {
+//                 const layoutName = publisherLayout.newspaperName;
+//                 res.status(200).json({ layoutName }); // Send layout name as JSON response
+//             } else {
+//                 const layoutName = 'defaultLayout';
+//                 res.status(200).json({ layoutName }); // Send default layout name as JSON response
+//             }
+//         } else {
+//             const layoutName = 'defaultLayout';
+//             res.status(200).json({ layoutName }); // Send default layout name as JSON response
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
+
+
 const renderBookSlotByDate = asyncHandler(async (req, res) => {
-    try {
-        const { day, date, month } = req.body;
-        console.log(req.body);
+  try {
+    const { day, date, month } = req.body;
+    const monthNumber = getMonthNumber(month);
 
-        const selectedDate = new Date(`${month} ${date}, ${new Date().getFullYear()}`);
+    const publishingDate = new Date(Date.UTC(new Date().getFullYear(), monthNumber, date));
 
-        console.log(selectedDate);
+    res.cookie('publishingDate', publishingDate.toISOString(), { maxAge: 365 * 24 * 60 * 60 * 1000 });
 
-        const booking = await BookingDates.findOne({
-            bookingOpenDate: { $lte: selectedDate },
-            bookingCloseDate: { $gte: selectedDate }
-        });
+    const requestedDate = new Date();
 
-        console.log(booking);
+    const booking = await BookingDates.findOne({
+        bookingOpenDate: { $lte: requestedDate },
+        bookingCloseDate: { $gte: requestedDate },
+        publishingDate: publishingDate
+    });
 
-        if (booking) {
-            const publisherId = booking.publisher;
-            const publisherLayout = await Publisher.findOne({ _id: publisherId });
-            console.log(publisherLayout);
-            if (publisherLayout) {
-                const layoutName = publisherLayout.newspaperName;
-                res.status(200).json({ layoutName }); // Send layout name as JSON response
+
+      if (booking) {
+          const publisherId = booking.publisher;
+          const publisherLayout = await Publisher.findOne({ _id: publisherId });
+          if (publisherLayout) {
+              const layoutName = publisherLayout.newspaperName;
+
+              const bookedSlots = await BookedSlots.find({
+                newspaperName: layoutName,
+                publishingDate: publishingDate
+              });
+
+              const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
+              
+              res.status(200).json({ layoutName, bookedSlotIds, publishingDate }); 
             } else {
                 const layoutName = 'defaultLayout';
-                res.status(200).json({ layoutName }); // Send default layout name as JSON response
+                res.status(200).json({ layoutName, publishingDate }); 
             }
         } else {
             const layoutName = 'defaultLayout';
-            res.status(200).json({ layoutName }); // Send default layout name as JSON response
+            res.status(200).json({ layoutName, publishingDate }); 
         }
     } catch (error) {
         console.log(error);
@@ -351,16 +398,46 @@ const renderBookSlotByDate = asyncHandler(async (req, res) => {
     }
 });
 
+
+const renderBookinglayout = asyncHandler(async (req, res) => {
+  try {
+      const layoutName = req.params.layoutName;
+      const publishingDateOldFormat = req.params.publishingDate;
+
+      const year = publishingDateOldFormat.slice(0, 4);
+      const month = publishingDateOldFormat.slice(4, 6);
+      const day = publishingDateOldFormat.slice(6, 8);
+      const publishingDateISO8601 = `${year}-${month}-${day}T00:00:00.000Z`;
+
+      const bookedSlots = await BookedSlots.find({
+        newspaperName: layoutName,
+        publishingDate: publishingDateISO8601
+      });
+
+      const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
+      console.log('booked slots : ', bookedSlotIds);
+
+      res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
+    } catch (err) {
+      res.send(err);
+  }
+});
+
+
+
 const bookSlot = asyncHandler(async (req, res) => {
   try {
     const userId = req.cookies.userId;
     const file = req.file;
     const { slotId, newspaperName } = req.body;
 
-    const booking = new Booking({
+    const publishingDate = req.cookies.publishingDate;
+
+    const booking = new BookedSlots({
       userId: userId,
       slotId: slotId,
       newspaperName: newspaperName,
+      publishingDate: new Date(publishingDate),
       file: {
         data: file.buffer, 
         contentType: file.mimetype
@@ -378,6 +455,13 @@ const bookSlot = asyncHandler(async (req, res) => {
 
 
 
+function getMonthNumber(monthAbbreviation) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months.indexOf(monthAbbreviation);
+}
+
+
+
 module.exports = {
                   loginUser,  
                   resetPassword, 
@@ -389,5 +473,6 @@ module.exports = {
                   verifyOtp,
                   renderBookSlot,
                   renderBookSlotByDate,
+                  renderBookinglayout,
                   bookSlot
                 };

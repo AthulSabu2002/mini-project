@@ -10,6 +10,7 @@ const {
       registerUserWithOTP,
       renderBookSlot,
       renderBookSlotByDate,
+      renderBookinglayout,
       bookSlot } = require("../controllers/userController");
 
 
@@ -56,16 +57,6 @@ router.route("/login").get((req,res) => {
       }
   });
 
-  router.route("/viewSlot/:layoutName").get(authCheck, (req,res) => {
-    try{
-      const layoutName = req.params.layoutName; // Retrieve layoutName from URL parameter
-      res.render(layoutName);
-      console.log('Hii ftom route');
-    }
-    catch(err){
-      res.send(err);
-      }
-  });
 
 router.route("/registerUserWithOTP").get((req,res) => {
   try{
@@ -100,9 +91,11 @@ router.route("/verifyOtp").get((req, res) =>{
     res.render('user/verify-otp', { email: userEmail });
 });
 
+router.route("/viewSlot/:layoutName/:publishingDate").get(authCheck, renderBookinglayout);
+
 router.route('/book-slot').post(upload, bookSlot);
 
-router.route("/viewSlot").get(renderBookSlot);
+router.route("/viewSlot").get(authCheck, renderBookSlot);
 
 router.route("/viewSlot").post(renderBookSlotByDate);
 

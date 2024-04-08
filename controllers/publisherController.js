@@ -4,7 +4,8 @@ const async = require('async');
 const Request = require("../models/requestModel");
 const Layout = require("../models/newsPaperLayout");
 const Publisher = require("../models/publisherModel");
-const BookingDates = require("../models/bookingDates");
+const BookingDates = require('../models/bookingDates');
+const BookedSlots = require("../models/bookedSlots");
 
 
 const renderDashboard = asyncHandler(async (req, res) => {
@@ -125,7 +126,7 @@ const setBookingDates = asyncHandler(async (req, res) => {
             return res.redirect('/publisher/login'); 
         }
         
-        const { layoutDate, bookingCloseDate } = req.body;
+        const { publishingDate, layoutDate, bookingCloseDate } = req.body;
         
         if (!layoutDate || !bookingCloseDate) {
             return res.status(400).send('Layout date and booking close date are required');
@@ -133,6 +134,7 @@ const setBookingDates = asyncHandler(async (req, res) => {
         
         const newBookingDate = new BookingDates({
             publisher: userId,
+            publishingDate: publishingDate,
             bookingOpenDate: layoutDate,
             bookingCloseDate: bookingCloseDate
         });
@@ -169,6 +171,189 @@ const viewLayout = asyncHandler(async (req, res) => {
         } else {
             res.status(404).send('Layout not found');
         }
+    } catch (error) {
+        console.error('Error fetching layout:', error);
+        res.status(500).send('Error fetching layout');
+    }
+});
+
+// const renderBookedLayout = asyncHandler(async (req, res) => {
+//     try {
+//         const userId = req.cookies.userId;
+//         if (!userId) {
+//             return res.redirect('/publisher/login'); 
+//         }
+
+//         const user = await Publisher.findById(userId);
+//         if (!user) {
+//             return res.redirect('/publisher/login'); 
+//         }
+
+//         const newspaperName = req.params.newspaperName;
+//         const publishingDateOldFormat = req.params.publishingDate;
+
+//         const [day, month, year] = publishingDateOldFormat.split('-');
+
+//         const paddedDay = day.length < 2 ? day.padStart(2, '0') : day;
+//         const paddedMonth = month.length < 2 ? month.padStart(2, '0') : month;
+
+//         const publishingDateISO8601 = `${year}-${paddedDay}-${paddedMonth}T00:00:00.000Z`;
+
+
+//         const bookedSlots = await BookedSlots.find({
+//             newspaperName: newspaperName,
+//             publishingDate: publishingDateISO8601
+//         });
+
+//         const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
+//         console.log('booked slots : ', bookedSlotIds);
+
+
+//         const bookedLayout = `${newspaperName}-booked`
+
+//         res.render(bookedLayout, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
+        
+//     } catch (error) {
+//         console.error('Error fetching layout:', error);
+//         res.status(500).send('Error fetching layout');
+//     }
+// });
+
+const renderBookedLayout = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        if (!userId) {
+            return res.redirect('/publisher/login');
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login');
+        }
+
+        const newspaperName = req.params.newspaperName;
+        const publishingDateOldFormat = req.params.publishingDate;
+
+        const [month, day, year] = publishingDateOldFormat.split('-');
+
+        const paddedDay = day.length < 2 ? day.padStart(2, '0') : day;
+        const paddedMonth = month.length < 2 ? month.padStart(2, '0') : month;
+
+        const publishingDateISO8601 = `${year}-${paddedMonth}-${paddedDay}T00:00:00.000Z`;
+
+        console.log(publishingDateISO8601);
+
+        const bookedSlots = await BookedSlots.find({
+            newspaperName: newspaperName,
+            publishingDate: publishingDateISO8601
+        });
+
+        console.log(bookedSlots);
+
+        const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
+        const adIds = bookedSlots.map(slot => slot.adId);
+
+        // Fetch ad details for each adId
+        const adDetailsPromises = adIds.map(adId => BookedSlots.findById(adId));
+        const adDetails = await Promise.all(adDetailsPromises);
+
+        // Construct an object mapping slot IDs to ad details
+        const slotAdDetails = {};
+        bookedSlots.forEach((slot, index) => {
+            slotAdDetails[slot.slotId] = {
+                adId: slot.adId,
+                adDetails: adDetails[index]
+            };
+        });
+
+        const bookedLayout = `${newspaperName}-booked`;
+        res.render(bookedLayout, {
+            publishingDate: publishingDateOldFormat,
+            bookedSlotDetails: slotAdDetails,
+            bookedSlotIds: bookedSlotIds
+        });
+
+    } catch (error) {
+        console.error('Error fetching layout:', error);
+        res.status(500).send('Error fetching layout');
+    }
+});
+
+
+const sendBookedDetails = asyncHandler(async (req, res) => {
+    try {
+        // Extract parameters from the request URL
+        const userId = req.cookies.userId;
+        if (!userId) {
+            return res.redirect('/publisher/login');
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login');
+        }
+
+        const newspaperName = req.params.newspaperName;
+        const publishingDateOldFormat = req.params.publishingDate;
+
+        const [month, day, year] = publishingDateOldFormat.split('-');
+
+        const paddedDay = day.length < 2 ? day.padStart(2, '0') : day;
+        const paddedMonth = month.length < 2 ? month.padStart(2, '0') : month;
+
+        const publishingDateISO8601 = `${year}-${paddedMonth}-${paddedDay}T00:00:00.000Z`;
+
+        console.log(publishingDateISO8601);
+
+        const bookedSlots = await BookedSlots.find({
+            newspaperName: newspaperName,
+            publishingDate: publishingDateISO8601
+        });
+  
+        // Send the booked slot details as JSON response
+        res.json(bookedSlots);
+    } catch (error) {
+        // Handle errors and send appropriate response
+        console.error('Error fetching booked slot details:', error);
+        res.status(500).json({ error: 'Error fetching booked slot details' });
+    }
+});
+
+
+
+
+
+
+const renderViewBookings = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        if (!userId) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const newspaperName = user.newspaperName;
+
+        const bookings = await BookedSlots.find({ newspaperName });
+
+        const formattedBookings = bookings.map(booking => {
+            const createdAt = new Date(booking.createdAt).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).replace(/\//g, '-');
+            const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+            return {
+                createdAt: createdAt,
+                publishingDate: publishingDate,
+                slotId: booking.slotId,
+                newspaperName: newspaperName
+            };
+        });        
+
+        res.render('publisherViewBookings', { bookings: formattedBookings, activeTab: 'view-bookings' });
+        
+        
     } catch (error) {
         console.error('Error fetching layout:', error);
         res.status(500).send('Error fetching layout');
@@ -213,6 +398,7 @@ const loginPublisher = asyncHandler(async (req, res) => {
         return res.status(500).send("<script>alert('Internal Server error'); window.location='/publisher/login';</script>");
     }
 });
+
 
 
 const logoutPublisher = asyncHandler(async (req, res) => {
@@ -374,4 +560,17 @@ const deleteDate = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { loginPublisher, renderDashboard, renderSetBookings, setBookingDates, deleteDate, renderPublisherAccountDetails,updatePublisherAccountDetails, logoutPublisher, publisherRequest, viewLayout }
+module.exports = {  loginPublisher,
+                    renderDashboard,
+                    renderSetBookings,
+                    setBookingDates,
+                    deleteDate,
+                    renderPublisherAccountDetails,
+                    updatePublisherAccountDetails,
+                    logoutPublisher, 
+                    publisherRequest, 
+                    viewLayout, 
+                    renderViewBookings, 
+                    renderBookedLayout,
+                    sendBookedDetails 
+                }
