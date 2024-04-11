@@ -15,6 +15,9 @@ body{
 .main{
     width: 80%;
     position: absolute;
+    margin-left: 1rem;
+    padding: .5rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .page-1,.page-2{
@@ -169,8 +172,6 @@ body{
 
 .booked{
     background-color: lightgrey;
-    width:  450px;
-    height: 500px;
     border-style: none;
     border-width: 0;
     border-color: none;
@@ -178,11 +179,6 @@ body{
 
 .unbooked{
     background-color: #DDA0DD;
-    width:  450px;
-    height: 500px;
-    border-style: solid;
-    border-width: .1rem;
-    border-color: black;
 }
 
 .container-6{
@@ -203,13 +199,16 @@ body{
 
 
 .control-panel{
-    margin: 2rem;
+    margin: 1rem;
     width: 15%;
-    height: 100vh;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    justify-self: center;
+    border-radius: 1rem;
     position: fixed;
     right: 0;
 }

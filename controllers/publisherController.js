@@ -11,13 +11,18 @@ const BookedSlots = require("../models/bookedSlots");
 const renderDashboard = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
-        if (userId) {
+        if (!userId) {
+            return res.redirect('/publisher/login'); 
+        }
+    
+        const user = await Publisher.findById(userId);
+        
+        if (!user) {
+            return res.redirect('/publisher/login'); 
+        }
+
             res.render('publisherDashboard', { activeTab: 'dashboard' });
-        }
-        else{
-            console.log(req.user);
-            res.redirect('/publisher/login');
-        }
+
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).send('Error fetching requests');

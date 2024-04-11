@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 stickyContainer.style.display = 'none';
             }
 
-            var selectedNames = document.getElementById('selected-names');
-            selectedNames.textContent = selectedDivs.map(function(div) {
-                return div.getAttribute('class').split(' ')[1];
-            }).join('');
+            // var selectedNames = document.getElementById('selected-names');
+            // selectedNames.textContent = selectedDivs.map(function(div) {
+            //     return div.getAttribute('class').split(' ')[1];
+            // }).join('');
         });
     });
 
