@@ -81,6 +81,8 @@ app.use('/auth', authRouter);
 
 // app.use('/verifyOtp',require("./routes/usersRouter.js"));
 
+
+
 // app.use('/registerUserWithOTP',require("./routes/usersRouter.js"));
 
 app.use(function(req, res, next) {
