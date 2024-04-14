@@ -211,15 +211,24 @@ const SaveSlotsPricing = asyncHandler(async (req, res) => {
         const newspaperName = user.newspaperName;
         const slotPrice = req.body.slotPrices;
 
-        const slotPrices = new SlotPrices({
-            newspaperName: newspaperName,
-            slots: slotPrice.map((price, index) => ({
+        let existingSlotPrices = await SlotPrices.findOne({ newspaperName });
+
+        if (existingSlotPrices) {
+            existingSlotPrices.slots = slotPrice.map((price, index) => ({
                 name: `Slot ${index + 1}`,
                 price: parseInt(price)
-            }))
-        });
-
-        await slotPrices.save();
+            }));
+            await existingSlotPrices.save();
+        } else {
+            const newSlotPrices = new SlotPrices({
+                newspaperName: newspaperName,
+                slots: slotPrice.map((price, index) => ({
+                    name: `Slot ${index + 1}`,
+                    price: parseInt(price)
+                }))
+            });
+            await newSlotPrices.save();
+        }
 
         res.status(200).json({ message: 'price updated successfully' });
     } catch (error) {
@@ -227,6 +236,7 @@ const SaveSlotsPricing = asyncHandler(async (req, res) => {
         res.status(500).send('Error saving prices document');
     }
 });
+
 
 
 

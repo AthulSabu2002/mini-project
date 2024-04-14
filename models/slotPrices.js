@@ -21,6 +21,6 @@ const SlotInitializationSchema = new mongoose.Schema({
     }
 });
 
-const SlotPrices = mongoose.model('SlotInitialization', SlotInitializationSchema);
+const SlotPrices = mongoose.model('SlotPrices', SlotInitializationSchema);
 
 module.exports = SlotPrices;
