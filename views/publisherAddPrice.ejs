@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
+    <link rel="stylesheet" href="/stylesheets/publisherSlotPrices.css">
+	<title>set-price</title>
+</head>
+<body>
+	<%- include('partials/publisher-sidebar.ejs') %>
+	<section id="content">
+
+		<%- include('partials/publisher-navbar.ejs') %>
+
+		<main>
+			<div class="form-container">
+				<form id="slotForm">
+					<div class="form-group">
+						<label for="newspaperName">Newspaper Name:</label>
+						<input type="text" id="newspaperName" name="newspaperName" value="<%= data[0].newspaperName %>" required>
+					</div>
+			
+					<div id="slotPrices">
+						<% for (let i = 0; i < data[0].slotNames.length; i++) { %>
+							<div class="slot-row">
+								<label>Slot <%= i + 1 %> Name:</label>
+								<input type="text" name="slotName<%= i + 1 %>" value="<%= data[0].slotNames[i] %>" disabled>
+								<label>Price:</label>
+								<input type="number" name="slotPrice<%= i + 1 %>" required>
+							</div>
+						<% } %>
+					</div>
+			
+					<button type="submit">Save</button>
+				</form>
+			</div>
+								
+		</main>
+	</section>
+	
+    <script src="/javascripts/publisherSlotPrices.js"></script>
+    <script src="/javascripts/publisherDashboard.js"></script>
+</body>
+</html>

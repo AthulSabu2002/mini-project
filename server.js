@@ -9,6 +9,7 @@ const dotenv = require('dotenv').config();
 const createError = require('http-errors');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
+const stripe = require('stripe');
 
 
 const landingPageRouter = require('./routes/landingPageRouter')
@@ -17,6 +18,8 @@ const usersRouter = require('./routes/usersRouter');
 const adminRouter = require('./routes/adminRouter');
 const publisherRouter = require('./routes/publisherRouter');
 const authRouter = require('./routes/auth');
+const checkoutRouter = require('./routes/checkoutRouter');
+const webHookRouter = require('./routes/webHookRouter');
 
 const app = express();
 
@@ -69,6 +72,10 @@ app.use('/publisher', publisherRouter);
 
 app.use('/auth', authRouter);
 
+app.use('/stripe-checkout', checkoutRouter);
+
+app.use('/webhook', webHookRouter);
+
 // app.use('/forgot',require("./routes/usersRouter.js"));
 
 // app.use('/resetPassword',require("./routes/usersRouter.js"));
@@ -81,9 +88,10 @@ app.use('/auth', authRouter);
 
 // app.use('/verifyOtp',require("./routes/usersRouter.js"));
 
-
-
 // app.use('/registerUserWithOTP',require("./routes/usersRouter.js"));
+
+let stripeGateway = stripe(process.env.stripe_api)
+
 
 app.use(function(req, res, next) {
   next(createError(404));

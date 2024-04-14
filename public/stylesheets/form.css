@@ -14,6 +14,7 @@
     align-items: center;
     justify-content: center;
     background-color: #4070f4;
+    margin: 1rem;
 } */
 
 
@@ -120,7 +121,10 @@ form .fields .input-field{
 }
 
 
-.input-field input{
+.input-field input[type="text"],
+.input-field input[type="number"],
+.input-field input[type="email"],
+.input-field input[type="password"]{
     outline: none;
     font-size: 14px;
     font-weight: 400;

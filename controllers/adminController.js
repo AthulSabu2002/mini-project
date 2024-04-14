@@ -3,6 +3,7 @@ const Publisher = require("../models/publisherModel");
 const Request = require("../models/requestModel");
 const bcrypt = require('bcrypt')
 const Layout = require("../models/newsPaperLayout");
+const Newspaper = require("../models/newspaperSlots");
 
 
 
@@ -105,6 +106,44 @@ const renderNewspaperSlots = asyncHandler(async (req, res) => {
 })
 
 
+const renderSaveAddSlots = asyncHandler(async (req, res) => {
+    try {
+        res.render('adminAddSlots', { activeTab: 'add-slots' })
+    } catch (error) {
+        console.error('Error fetching requests:', error);
+        res.status(500).send('Error fetching requests');
+    }
+})
+
+const saveAdSlots = asyncHandler(async (req, res) => {
+    try {
+        const { newspaperName, slotNames } = req.body;
+
+        let newspaper = await Newspaper.findOne({ newspaperName });
+
+        if (!newspaper) {
+            newspaper = new Newspaper({
+                newspaperName,
+                slots: []
+            });
+        }
+
+        if (slotNames && Array.isArray(slotNames)) {
+            slotNames.forEach(slotName => {
+                newspaper.slots.push({ slotName });
+            });
+        }
+
+        await newspaper.save();
+
+        res.status(201).json({ message: 'Slots initialized successfully' });
+    } catch (error) {
+        console.error('Error initializing slots:', error);
+        res.status(500).json({ error: 'Failed to initialize slots' });
+    }
+})
+
+
 const addPublisher = asyncHandler(async (req, res) => {
     try {
         const { username, email, newspaperName } = req.body;
@@ -191,4 +230,16 @@ const deletePublisher = asyncHandler(async (req, res) => {
 
 
 
- module.exports = { addPublisher,  viewPublishers, deletePublisher, viewRequest,viewPublisherDetails, renderDashboard, renderAddPublisher,renderNewspaperSlots, deleteRequest}
+ module.exports = { 
+                    addPublisher,  
+                    viewPublishers, 
+                    deletePublisher, 
+                    viewRequest,
+                    viewPublisherDetails, 
+                    renderDashboard, 
+                    renderAddPublisher,
+                    renderNewspaperSlots, 
+                    deleteRequest,
+                    renderSaveAddSlots,
+                    saveAdSlots
+                }

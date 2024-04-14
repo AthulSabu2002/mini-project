@@ -8,6 +8,7 @@ const Publisher = require('../models/publisherModel');
 const Layout = require('../models/layout');
 const BookingDates = require('../models/bookingDates');
 const BookedSlots = require("../models/bookedSlots");
+const stripe = require('stripe');
 
 
 
@@ -415,7 +416,6 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
       });
 
       const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
-      console.log('booked slots : ', bookedSlotIds);
 
       res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
     } catch (err) {
@@ -423,17 +423,78 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
   }
 });
 
+const renderSuccessPage = asyncHandler( async(req, res) => {
+  try{
+    const temporaryBooking = req.session.temporaryBooking;
+
+    const booking = new BookedSlots({
+      userId: temporaryBooking.userId,
+      slotId: temporaryBooking.slotId,
+      newspaperName: temporaryBooking.newspaperName,
+      publishingDate: temporaryBooking.publishingDate,
+      file: temporaryBooking.file,
+      sessionId: temporaryBooking.sessionId
+    });
+
+    await booking.save();
+
+    req.session.temporaryBooking = null;
+
+    res.render('bookingSuccess');
+  }catch(error){
+    console.log(error);
+  }
+}); 
 
 
+const renderCancelPage = asyncHandler( async(req, res) => {
+  try{
+    req.session.temporaryBooking = null;
+    res.send('failure');
+  }catch(error){
+    console.log(error);
+  }
+}); 
+
+
+
+let stripeGateway = stripe(process.env.stripe_api)
+let DOMAIN = process.env.USER_DOMAIN
+
+
+//stripe-checkout
 const bookSlot = asyncHandler(async (req, res) => {
   try {
     const userId = req.cookies.userId;
     const file = req.file;
     const { slotId, newspaperName } = req.body;
-
     const publishingDate = req.cookies.publishingDate;
 
-    const booking = new BookedSlots({
+    const lineItems = [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: newspaperName,
+            description: `Slot ${slotId} - ${newspaperName} (${publishingDate})`, 
+          },
+          unit_amount: 100,
+        },
+        quantity: 1, 
+      }
+    ];
+    
+    const session = await stripeGateway.checkout.sessions.create({
+      currency: 'usd',
+      payment_method_types: ['card'],
+      mode: 'payment',
+      success_url: `${DOMAIN}/book-slot/success`,
+      cancel_url: `${DOMAIN}/book-slot/cancel`,
+      line_items: lineItems, 
+      billing_address_collection: 'required'
+    });    
+
+    req.session.temporaryBooking = {
       userId: userId,
       slotId: slotId,
       newspaperName: newspaperName,
@@ -441,17 +502,62 @@ const bookSlot = asyncHandler(async (req, res) => {
       file: {
         data: file.buffer, 
         contentType: file.mimetype
-      }
-    });
+      },
+      sessionId: session.id 
+    };
 
-    await booking.save();
 
-    res.status(201).json({ success: true, message: 'Slot booked successfully.' });
+    res.status(201).json(session.url);
   } catch (error) {
     console.error('Error booking slot:', error);
     res.status(500).json({ success: false, error: 'Failed to book slot. Please try again.' });
   }
 });
+
+
+const webHook =  asyncHandler(async (request, response) => {
+  const sig = request.headers['stripe-signature'];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+  } catch (err) {
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const checkoutSessionCompleted = event.data.object;
+      const userId = checkoutSessionCompleted.client_reference_id;
+      
+      const user = await getUserDetails(userId);
+      
+      if (user) {
+        console.log('User Details:', user);
+      } else {
+        console.error('User not found');
+      }
+
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  response.send();
+});
+
+async function getUserDetails(userId) {
+  try {
+    const user = await User.findOne({ _id: userId });
+    console.log(user);
+    return user;
+  } catch (error) {
+    console.error('Error retrieving user details:', error);
+    return null; 
+  }
+}
 
 
 
@@ -474,5 +580,8 @@ module.exports = {
                   renderBookSlot,
                   renderBookSlotByDate,
                   renderBookinglayout,
-                  bookSlot
+                  bookSlot,
+                  renderSuccessPage,
+                  renderCancelPage,
+                  webHook
                 };

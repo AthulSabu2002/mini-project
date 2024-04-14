@@ -18,7 +18,9 @@ const {
     viewLayout,
     renderViewBookings,
     renderBookedLayout,
-    sendBookedDetails
+    sendBookedDetails,
+    renderSlotsPricing,
+    SaveSlotsPricing
 } = require("../controllers/publisherController");
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true })
@@ -66,6 +68,9 @@ router.route('/view-layout/:newspaperName/:publishingDate').post(renderBookedLay
 
 router.route('/view-layout/:newspaperName/:publishingDate').get(sendBookedDetails);
 
+router.route('/slots-pricing').get(renderSlotsPricing);
+
+router.route('/slots-pricing').post(SaveSlotsPricing);
 
 router.route('/request').post(upload, publisherRequest);
 

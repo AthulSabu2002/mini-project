@@ -9,7 +9,9 @@ const {
     renderAddPublisher,
     renderNewspaperSlots,
     deletePublisher,
-    deleteRequest
+    deleteRequest,
+    renderSaveAddSlots,
+    saveAdSlots
     } = require("../controllers/adminController");
 
 
@@ -26,6 +28,10 @@ router.route('/view-requests').get(viewRequest);
 router.route('/view-request-details/:id').get(viewPublisherDetails);
 
 router.route('/add-publisher').post(addPublisher);
+
+router.route('/add-slots').get(renderSaveAddSlots);
+
+router.route('/initialize-slots').post(saveAdSlots);
 
 router.route('/delete-publisher/:id').post(deletePublisher);
 

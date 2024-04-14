@@ -12,20 +12,27 @@
         </li>
         <li class="<%= activeTab === 'view-publishers' ? 'active' : '' %>">
             <a href="/admin/view-publishers">
-                <i class='bx bxs-shopping-bag-alt' ></i>
+                <i class='bx bxs-group' ></i>
                 <span class="text">View-Publishers</span>
             </a>
         </li>
         <li class="<%= activeTab === 'add-publisher' ? 'active' : '' %>">
             <a href="/admin/add-publisher">
-                <i class='bx bx-wallet-alt'></i>
+                <i class='bx bx-add-to-queue' ></i>
                 <span class="text">Add Publishers</span>
             </a>
         </li>
         <li class="<%= activeTab === 'view-requests' ? 'active' : '' %>">
             <a href="/admin/view-requests">
-                <i class='bx bx-reset' ></i>
+                <i class='bx bx-user-plus'></i>
                 <span class="text">View-Requests</span>
+            </a>
+        </li>
+
+        <li class="<%= activeTab === 'add-slots' ? 'active' : '' %>">
+            <a href="/admin/add-slots">
+                <i class='bx bx-user-plus'></i>
+                <span class="text">Add-slots</span>
             </a>
         </li>
     </ul>

@@ -11,7 +11,10 @@ const {
       renderBookSlot,
       renderBookSlotByDate,
       renderBookinglayout,
-      bookSlot } = require("../controllers/userController");
+      bookSlot,
+      renderSuccessPage,
+      renderCancelPage
+     } = require("../controllers/userController");
 
 
 const router = express.Router();
@@ -94,6 +97,10 @@ router.route("/verifyOtp").get((req, res) =>{
 router.route("/viewSlot/:layoutName/:publishingDate").get(authCheck, renderBookinglayout);
 
 router.route('/book-slot').post(upload, bookSlot);
+
+router.route('/book-slot/success').get(renderSuccessPage);
+
+router.route('/book-slot/cancel').get(renderCancelPage);
 
 router.route("/viewSlot").get(authCheck, renderBookSlot);
 

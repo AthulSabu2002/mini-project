@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 formData.append('slotId', slotId);
                 formData.append('newspaperName', newspaperName); 
     
-                fetch('/users/book-slot', {
+                fetch('/stripe-checkout', {
                     method: 'POST',
                     body: formData
                 })
@@ -119,8 +119,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     throw new Error('Failed to book slot.');
                 })
-                .then(data => {
-
+                .then(url => {
+                    window.location.href = url;
+                    console.log(url);
                     alert('Slot booked successfully.');
                 })
                 .catch(error => {
