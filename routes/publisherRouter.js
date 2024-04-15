@@ -14,6 +14,8 @@ const {
     renderPublisherAccountDetails,
     updatePublisherAccountDetails,
     publisherRequest,
+    renderSuccessPage,
+    renderCancelPage,
     viewRequest,
     viewLayout,
     renderViewBookings,
@@ -72,7 +74,11 @@ router.route('/slots-pricing').get(renderSlotsPricing);
 
 router.route('/slots-pricing').post(SaveSlotsPricing);
 
-router.route('/request').post(upload, publisherRequest);
+router.route('/stripe-checkout').post(upload, publisherRequest);
+
+router.route('/publisher-request/success').get(renderSuccessPage);
+
+router.route('/publisher-request/cancel').get(renderCancelPage);
 
 router.route('/login').post(loginPublisher);
 

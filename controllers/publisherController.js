@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const asyncHandler = require("express-async-handler");
 const async = require('async');
+const stripe = require('stripe');
+
 const Request = require("../models/requestModel");
 const Layout = require("../models/newsPaperLayout");
 const Publisher = require("../models/publisherModel");
@@ -8,7 +10,7 @@ const BookingDates = require('../models/bookingDates');
 const BookedSlots = require("../models/bookedSlots");
 const SlotPrices = require("../models/slotPrices");
 const Newspapers = require("../models/newspaperSlots");
-
+const TemporaryRequest = require('../models/temporaryPublisherRequest');
 
 const renderDashboard = asyncHandler(async (req, res) => {
     try {
@@ -20,7 +22,36 @@ const renderDashboard = asyncHandler(async (req, res) => {
 
                 const bookingsCount = await BookedSlots.countDocuments({ newspaperName });
 
-                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount });
+                const bookings = await BookedSlots.find({ newspaperName });
+
+                const distinctUsersCount = await BookedSlots.aggregate([
+                    {
+                        $match: { newspaperName: newspaperName }
+                    },
+                    {
+                        $group: {
+                            _id: "$userId"
+                        }
+                    },
+                    {
+                        $count: "count"
+                    }
+                ]);
+                
+                const count = distinctUsersCount.length > 0 ? distinctUsersCount[0].count : 0;
+
+                const formattedBookings = bookings.map(booking => {
+                    const createdAt = new Date(booking.createdAt).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).replace(/\//g, '-');
+                    const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+                    return {
+                        createdAt: createdAt,
+                        publishingDate: publishingDate,
+                        slotId: booking.slotId,
+                        newspaperName: newspaperName
+                    };
+                });
+
+                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount, bookings: formattedBookings, count: count });
             }
             else{
                 res.redirect('/publisher/login');
@@ -215,7 +246,7 @@ const SaveSlotsPricing = asyncHandler(async (req, res) => {
 
         if (existingSlotPrices) {
             existingSlotPrices.slots = slotPrice.map((price, index) => ({
-                name: `Slot ${index + 1}`,
+                name: `slot${index + 1}`,
                 price: parseInt(price)
             }));
             await existingSlotPrices.save();
@@ -449,7 +480,72 @@ const logoutPublisher = asyncHandler(async (req, res) => {
         res.clearCookie('userId');
         res.redirect('/publisher/login')
       });
-})
+});
+
+
+const renderSuccessPage = asyncHandler( async(req, res) => {
+    try{
+  
+        const sessionId = req.session.sessionId;
+  
+        const temporaryRequest = await TemporaryRequest.findOne({ sessionId: sessionId });
+    
+        if (!temporaryRequest) {
+            return res.status(404).send('Temporary request not found');
+        }
+
+        const newRequest = new Request({
+            fullName: temporaryRequest.fullName,
+            organizationName: temporaryRequest.organizationName,
+            newspaperName: temporaryRequest.newspaperName,
+            username: temporaryRequest.username,
+            password: temporaryRequest.password,
+            mobileNumber: temporaryRequest.mobileNumber,
+            email: temporaryRequest.email,
+            state: temporaryRequest.state,
+            district: temporaryRequest.district,
+            buildingName: temporaryRequest.buildingName,
+            pincode: temporaryRequest.pincode,
+            advertisementSlots: temporaryRequest.advertisementSlots,
+            fileFormat: temporaryRequest.fileFormat,
+            paymentmethods: temporaryRequest.paymentmethods,
+            customerService: temporaryRequest.customerService,
+            language: temporaryRequest.language,
+            bookingDeadline: temporaryRequest.bookingDeadline,
+            cancellationRefundPolicy: temporaryRequest.cancellationRefundPolicy,
+            contentGuidelines: temporaryRequest.contentGuidelines,
+            advertisementSubmissionGuidelines: temporaryRequest.advertisementSubmissionGuidelines,
+            cancellationDeadline: temporaryRequest.cancellationDeadline,
+            layout: temporaryRequest.layout,
+            sessionId: sessionId
+        });
+    
+        await newRequest.save();
+    
+        await TemporaryRequest.deleteOne({ sessionId: sessionId });
+    
+    
+        res.render('bookingSuccess');
+        }catch(error){
+        console.log(error);
+        }
+}); 
+
+
+const renderCancelPage = asyncHandler( async(req, res) => {
+    try{
+      const sessionId = req.session.sessionId;
+  
+      await TemporaryRequest.deleteOne({ sessionId: sessionId });
+  
+      res.send('failure');
+    }catch(error){
+      console.log(error);
+    }
+}); 
+
+let stripeGateway = stripe(process.env.stripe_api)
+let PUBLISHER_DOMAIN = process.env.PUBLISHER_DOMAIN
 
 
 const publisherRequest = async (req, res) => {
@@ -468,6 +564,7 @@ const publisherRequest = async (req, res) => {
         }
 
         const existingPublisher = await Request.findOne({ $or: [{ email }, { newspaperName }] });
+
         if (existingPublisher) {
             console.error('Publisher with the same email or newspaper name already exists');
             return res.status(400).json({ error: 'Publisher with the same email or newspaper name already requested' });
@@ -482,7 +579,33 @@ const publisherRequest = async (req, res) => {
 
         const { originalname, buffer, mimetype } = req.file;
 
-        const newRequest = new Request({
+        const lineItems = [
+            {
+              price_data: {
+                currency: 'usd',
+                product_data: {
+                  name: fullName,
+                  description: `${username} - ${newspaperName} (${organizationName})`, 
+                },
+                unit_amount: 10000,
+              },
+              quantity: 1, 
+            }
+          ];
+          
+          const session = await stripeGateway.checkout.sessions.create({
+            currency: 'usd',
+            payment_method_types: ['card'],
+            mode: 'payment',
+            success_url: `${PUBLISHER_DOMAIN}/publisher-request/success`,
+            cancel_url: `${PUBLISHER_DOMAIN}/publisher-request/cancel`,
+            line_items: lineItems, 
+            billing_address_collection: 'required'
+          });  
+          
+          req.session.sessionId = session.id;
+      
+        const newTemporaryRequest = new TemporaryRequest({
             fullName,
             organizationName,
             newspaperName,
@@ -504,16 +627,16 @@ const publisherRequest = async (req, res) => {
             contentGuidelines,
             advertisementSubmissionGuidelines,
             cancellationDeadline,
+            sessionId: session.id,
             layout: {
                 data: buffer,
                 contentType: mimetype
             }
         });
 
-        await newRequest.save();
+        await newTemporaryRequest.save();
 
-        console.log('Publisher request saved successfully');
-        return res.status(200).json({ message: 'Requested successfully! Status will be updated via email provided' });
+        res.status(201).json(session.url);
 
     } catch (error) {
         console.error('Error saving request:', error);
@@ -552,5 +675,7 @@ module.exports = {  loginPublisher,
                     renderBookedLayout,
                     sendBookedDetails,
                     renderSlotsPricing,
-                    SaveSlotsPricing
+                    SaveSlotsPricing,
+                    renderSuccessPage,
+                    renderCancelPage
                 }

@@ -96,7 +96,7 @@ router.route("/verifyOtp").get((req, res) =>{
 
 router.route("/viewSlot/:layoutName/:publishingDate").get(authCheck, renderBookinglayout);
 
-router.route('/book-slot').post(upload, bookSlot);
+router.route('/stripe-checkout').post(upload, bookSlot);
 
 router.route('/book-slot/success').get(renderSuccessPage);
 

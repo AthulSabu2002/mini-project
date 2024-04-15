@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const requestSchema = new mongoose.Schema({
+const temporaryRequestSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required: true
@@ -99,6 +99,6 @@ const requestSchema = new mongoose.Schema({
     }
 });
 
-const Request = mongoose.model('Request', requestSchema);
+const TemporaryRequest = mongoose.model('TemporaryRequest', temporaryRequestSchema);
 
-module.exports = Request;
+module.exports = TemporaryRequest;

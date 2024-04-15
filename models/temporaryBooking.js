@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const bookedSlotSchema = new mongoose.Schema({
-        userId: {
+const temporaryBookingSchema = new mongoose.Schema({
+        tempUserId: {
             type: String,
             required: true
         },
@@ -36,6 +36,6 @@ const bookedSlotSchema = new mongoose.Schema({
     });
 
 
-const BookedSlot = mongoose.model('BookedSlot', bookedSlotSchema);
+const TemporaryBooking = mongoose.model('TemporaryBooking', temporaryBookingSchema);
 
-module.exports = BookedSlot;
+module.exports = TemporaryBooking;

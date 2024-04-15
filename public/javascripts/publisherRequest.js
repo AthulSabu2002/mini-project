@@ -64,23 +64,24 @@ document.getElementById('publisherRequestForm').addEventListener('submit', funct
             console.log(pair[0]+ ', ' + pair[1]); 
         }
 
-        fetch('/publisher/request', {
+        fetch('/publisher/stripe-checkout', {
             method: 'POST',
             body: formData,
         })
-        .then(response => {
-            if (response.ok) {
-                alert('Requested successfully! Status will be updated via email provided');
-            } else {
-                console.log('Error occurred');
-            }
+        .then((response) =>
+                response.json()
+        )
+        .then((url) => {
+            location.href = url;
         })
         .catch(error => {
             console.error('Error:', error);
             console.log('Error occurred');
+            location.href = '/publisher/request'
         });
     } catch (error) {
         console.error('Error:', error);
         console.log(error.message || 'An error occurred');
+        location.href = '/publisher/request'
     }
 });

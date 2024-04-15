@@ -72,9 +72,9 @@ app.use('/publisher', publisherRouter);
 
 app.use('/auth', authRouter);
 
-app.use('/stripe-checkout', checkoutRouter);
+// app.use('/stripe-checkout', checkoutRouter);
 
-app.use('/webhook', webHookRouter);
+// app.use('/webhook', webHookRouter);
 
 // app.use('/forgot',require("./routes/usersRouter.js"));
 

@@ -4,11 +4,16 @@ const User = require("../models/userModel");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const stripe = require('stripe');
+
+
 const Publisher = require('../models/publisherModel');
 const Layout = require('../models/layout');
 const BookingDates = require('../models/bookingDates');
 const BookedSlots = require("../models/bookedSlots");
-const stripe = require('stripe');
+const TemporaryBooking = require('../models/temporaryBooking');
+const SlotPrices = require('../models/slotPrices');
+
 
 
 
@@ -425,20 +430,29 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
 
 const renderSuccessPage = asyncHandler( async(req, res) => {
   try{
-    const temporaryBooking = req.session.temporaryBooking;
+
+    const sessionId = req.session.sessionId;
+
+    const temporaryBooking = await TemporaryBooking.findOne({ sessionId: sessionId });
+
+    if (!temporaryBooking) {
+      return res.status(404).send('Temporary booking not found');
+    }
 
     const booking = new BookedSlots({
-      userId: temporaryBooking.userId,
+      userId: temporaryBooking.tempUserId,
       slotId: temporaryBooking.slotId,
       newspaperName: temporaryBooking.newspaperName,
       publishingDate: temporaryBooking.publishingDate,
       file: temporaryBooking.file,
+      price: temporaryBooking.price,
       sessionId: temporaryBooking.sessionId
     });
 
     await booking.save();
 
-    req.session.temporaryBooking = null;
+    await TemporaryBooking.deleteOne({ sessionId: sessionId });
+
 
     res.render('bookingSuccess');
   }catch(error){
@@ -449,7 +463,10 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
 const renderCancelPage = asyncHandler( async(req, res) => {
   try{
-    req.session.temporaryBooking = null;
+    const sessionId = req.session.sessionId;
+
+    await TemporaryBooking.deleteOne({ sessionId: sessionId });
+
     res.send('failure');
   }catch(error){
     console.log(error);
@@ -470,6 +487,8 @@ const bookSlot = asyncHandler(async (req, res) => {
     const { slotId, newspaperName } = req.body;
     const publishingDate = req.cookies.publishingDate;
 
+    const price = await findSlotPrice(newspaperName, slotId);
+
     const lineItems = [
       {
         price_data: {
@@ -478,7 +497,7 @@ const bookSlot = asyncHandler(async (req, res) => {
             name: newspaperName,
             description: `Slot ${slotId} - ${newspaperName} (${publishingDate})`, 
           },
-          unit_amount: 100,
+          unit_amount: price,
         },
         quantity: 1, 
       }
@@ -492,19 +511,25 @@ const bookSlot = asyncHandler(async (req, res) => {
       cancel_url: `${DOMAIN}/book-slot/cancel`,
       line_items: lineItems, 
       billing_address_collection: 'required'
-    });    
+    });  
+    
+    req.session.sessionId = session.id;
 
-    req.session.temporaryBooking = {
-      userId: userId,
+
+    const bookingBeforePayment = new TemporaryBooking({
+      tempUserId: userId,
       slotId: slotId,
       newspaperName: newspaperName,
-      publishingDate: new Date(publishingDate),
+      publishingDate: publishingDate,
       file: {
         data: file.buffer, 
         contentType: file.mimetype
       },
-      sessionId: session.id 
-    };
+      price: price,
+      sessionId: session.id
+    });
+
+    await bookingBeforePayment.save();
 
 
     res.status(201).json(session.url);
@@ -565,6 +590,29 @@ function getMonthNumber(monthAbbreviation) {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return months.indexOf(monthAbbreviation);
 }
+
+async function findSlotPrice(newspaperName, slotName) {
+  try {
+      const slotPrices = await SlotPrices.findOne({ newspaperName: newspaperName });
+
+      if (!slotPrices) {
+          return null;
+      }
+
+      const slot = slotPrices.slots.find(slot => slot.name === slotName);
+
+      if (!slot) {
+          return null;
+      }
+
+      return slot.price;
+  } catch (error) {
+      console.error('Error finding slot price:', error);
+      throw error;
+  }
+}
+
+
 
 
 

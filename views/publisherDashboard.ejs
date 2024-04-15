@@ -18,14 +18,14 @@
 				<li>
 					<i class='bx bxs-calendar-check' ></i>
 					<span class="text">
-						<h3>0</h3>
+						<h3><%= bookingsCount %></h3>
 						<p>Bookings</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-group' ></i>
 					<span class="text">
-						<h3>0</h3>
+						<h3><%= count %></h3>
 						<p>Users</p>
 					</span>
 				</li>
@@ -47,13 +47,26 @@
 					<table>
 						<thead>
 							<tr>
-								<th>User</th>
-								<th>Date Of Booking</th>
-								<th>Status</th>
+								<th>Booking Date</th>
+								<th>Publishing Date</th>
+								<th>Slot Id</th>
 							</tr>
 						</thead>
+	
 						<tbody>
-							
+							<% if (bookings.length > 0) { %>
+								<% bookings.forEach(booking => { %>
+									<tr>
+										<td><%= booking.createdAt %></td>
+										<td><%= booking.publishingDate %></td>
+										<td><%= booking.slotId %></td>
+									</tr>
+								<% }); %>
+							<% } else { %>
+								<tr>
+									<td colspan="2">No new requests.</td>
+								</tr>
+							<% } %>
 						</tbody>
 					</table>
 				</div>

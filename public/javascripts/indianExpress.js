@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 formData.append('slotId', slotId);
                 formData.append('newspaperName', newspaperName); 
     
-                fetch('/stripe-checkout', {
+                fetch('/users/stripe-checkout', {
                     method: 'POST',
                     body: formData
                 })
