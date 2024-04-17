@@ -24,7 +24,6 @@ const renderDashboard = asyncHandler(async (req, res) => {
 
                 const bookings = await BookedSlots.find({ newspaperName });
 
-                console.log(bookings);
 
                 const result = await BookedSlots.aggregate([
                     {
@@ -237,7 +236,6 @@ const renderSlotsPricing = asyncHandler(async (req, res) => {
             slotNames: newspaper.slots.map(slot => slot.slotName)
         }));
 
-        console.log(data);
 
         res.render('publisherAddPrice', { activeTab: 'pricing', data: data });
     } catch (error) {
