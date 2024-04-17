@@ -492,19 +492,19 @@ const bookSlot = asyncHandler(async (req, res) => {
     const lineItems = [
       {
         price_data: {
-          currency: 'usd',
+          currency: 'inr',
           product_data: {
             name: newspaperName,
             description: `Slot ${slotId} - ${newspaperName} (${publishingDate})`, 
           },
-          unit_amount: price,
+          unit_amount: price * 100,
         },
         quantity: 1, 
       }
     ];
     
     const session = await stripeGateway.checkout.sessions.create({
-      currency: 'usd',
+      currency: 'inr',
       payment_method_types: ['card'],
       mode: 'payment',
       success_url: `${DOMAIN}/book-slot/success`,

@@ -2,17 +2,18 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(document.cookie);
     var selectedDivs = []; 
 
-    // var adAreas = document.querySelectorAll('[class^="ad-area-"]');
     var unbookedAreas = document.querySelectorAll('.unbooked');
 
     unbookedAreas.forEach(function(adArea) {
         adArea.addEventListener('click', function() {
             if (selectedDivs.includes(adArea)) {
-                adArea.style.backgroundColor = '';
-                selectedDivs.splice(selectedDivs.indexOf(adArea), 1); 
+                return;
             } else {
-                adArea.style.backgroundColor = 'rgb(56, 247, 56)';
-                selectedDivs.push(adArea); 
+                if (selectedDivs.length > 0) {
+                    selectedDivs[0].style.backgroundColor = '';
+                  }
+                  selectedDivs = [adArea]; 
+                  adArea.style.backgroundColor = 'rgb(56, 247, 56)';
             }
 
             var stickyContainer = document.getElementById('sticky-container');
@@ -22,10 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 stickyContainer.style.display = 'none';
             }
 
-            var selectedNames = document.getElementById('selected-names');
-            selectedNames.textContent = selectedDivs.map(function(div) {
-                return div.getAttribute('class').split(' ')[1];
-            }).join('');
         });
     });
 
