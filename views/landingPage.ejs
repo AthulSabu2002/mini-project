@@ -327,19 +327,18 @@
                         </div>
                     </div>
 
-                    <form class="form mainform">
+                    <form class="form mainform" id="searchForm">
                         <div class="subform_1">
                             <div class="sub-div">
-                                <select name="" id="" class="form-control custom-select">
-                                    <option value="">Destination</option>
-                                    <option value="">Mumbai</option>
-                                    <option value="">Kochi</option>
-                                    <option value="">Hyderabad</option>
-                                    <option value="">Chennai</option>
-                                    <option value="">Delhi</option>
-                                    <option value="">bangalore</option>
-                                    <option value="">pune</option>
-                                    <option value="">Kolkata</option>
+                                <select name="destination" id="destination" class="form-control custom-select">                                    <option value="">Destination</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Kochi">Kochi</option>
+                                    <option value="Hyderabad">Hyderabad</option>
+                                    <option value="Chennai">Chennai</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="bangalore">bangalore</option>
+                                    <option value="pune">pune</option>
+                                    <option value="Kolkata">Kolkata</option>
                                 </select>
                             </div>
                             <div class="sub-div">
@@ -445,6 +444,18 @@
           dateFormat: 'dd-mm-yy'
         });
       });
+
+
+     
+    document.getElementById("searchForm").addEventListener("submit", function(event) {
+       var destination = document.getElementById("destination").value;
+         var datepicker = document.getElementById("datepicker").value;
+        if (destination === "" || datepicker === "") {
+            alert("Please select both destination and date");
+             event.preventDefault(); 
+         }
+    });
+
         </script>
          <script src="/javascripts/landingPage.js"></script>
     </body>
