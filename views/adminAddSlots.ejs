@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/admin-dashboard.css">
+    <link rel="stylesheet" href="/stylesheets/admin-add-slots.css">
+</head>
+<body>
+<%- include('partials/admin-sidebar.ejs') %>
+
+	<section id="content">
+		
+    	<%- include('partials/admin-navbar.ejs') %>
+		<main>
+            <div class="form-box">
+                <h1>Add Slots for Newspaper</h1>
+                <form id="slotForm">
+                    <div class="form-group">
+                        <label for="newspaperName">Newspaper Name:</label>
+                        <input type="text" id="newspaperName" name="newspaperName" required>
+                    </div>
+        
+                    <div id="slotFields">
+                        <!-- Slot input fields will be dynamically added here -->
+                    </div>
+        
+                    <button type="button" id="addSlotButton">Add Slot</button>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </main>
+        
+
+	</section>
+    
+    <script src="/javascripts/admin-add-slots.js"></script>
+	<script src="/javascripts/admin-dashboard.js"></script>
+</body>
+</html>

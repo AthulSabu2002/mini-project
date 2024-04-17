@@ -24,6 +24,25 @@ const renderDashboard = asyncHandler(async (req, res) => {
 
                 const bookings = await BookedSlots.find({ newspaperName });
 
+                console.log(bookings);
+
+                const result = await BookedSlots.aggregate([
+                    {
+                      $match: {
+                        newspaperName: newspaperName
+                      }
+                    },
+                    {
+                      $group: {
+                        _id: null,
+                        totalPrice: { $sum: "$price" }
+                      }
+                    }
+                ]);
+                  
+                const totalPrice = result.length > 0 ? result[0].totalPrice : 0;
+
+
                 const distinctUsersCount = await BookedSlots.aggregate([
                     {
                         $match: { newspaperName: newspaperName }
@@ -51,7 +70,8 @@ const renderDashboard = asyncHandler(async (req, res) => {
                     };
                 });
 
-                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount, bookings: formattedBookings, count: count });
+
+                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount, bookings: formattedBookings, count: count, totalPrice: totalPrice });
             }
             else{
                 res.redirect('/publisher/login');
@@ -582,19 +602,19 @@ const publisherRequest = async (req, res) => {
         const lineItems = [
             {
               price_data: {
-                currency: 'usd',
+                currency: 'inr',
                 product_data: {
                   name: fullName,
                   description: `${username} - ${newspaperName} (${organizationName})`, 
                 },
-                unit_amount: 10000,
+                unit_amount: 10000 * 100,
               },
               quantity: 1, 
             }
           ];
           
           const session = await stripeGateway.checkout.sessions.create({
-            currency: 'usd',
+            currency: 'inr',
             payment_method_types: ['card'],
             mode: 'payment',
             success_url: `${PUBLISHER_DOMAIN}/publisher-request/success`,

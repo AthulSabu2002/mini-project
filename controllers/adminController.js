@@ -46,7 +46,10 @@ const renderDashboard = asyncHandler(async (req, res) => {
         const publisherCount = await Publisher.countDocuments();
         const requestCount = await Request.countDocuments();
         const requests = await Request.find();
-        res.render('adminDashboard', { requests: requests, requestCount: requestCount, publisherCount: publisherCount,  activeTab: 'dashboard' });
+
+        const total_revenue = publisherCount * 10000;
+
+        res.render('adminDashboard', { requests: requests, requestCount: requestCount, publisherCount: publisherCount,total_revenue: total_revenue,  activeTab: 'dashboard' });
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).send('Error fetching requests');
