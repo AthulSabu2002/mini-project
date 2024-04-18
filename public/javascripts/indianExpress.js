@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     unbookedAreas.forEach(function(adArea) {
         adArea.addEventListener('click', function() {
             if (selectedDivs.includes(adArea)) {
-                return;
+                selectedDivs = [];
+                adArea.style.backgroundColor = '';
             } else {
                 if (selectedDivs.length > 0) {
                     selectedDivs[0].style.backgroundColor = '';

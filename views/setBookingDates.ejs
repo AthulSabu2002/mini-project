@@ -15,19 +15,22 @@
 <%- include('partials/publisher-navbar.ejs') %>
 
 	<main>
-        <h1>Set Layout Dates</h1>
-
-        <form action="/publisher/set-booking-date" method="POST">
-            <label for="publishingDate">Publishing Date:</label>
-            <input type="date" id="publishingDate" name="publishingDate" required>
-            
-            <label for="layoutDate">Booking Opening Date:</label>
-            <input type="date" id="layoutDate" name="layoutDate" required>
-    
-            <label for="bookingCloseDate">Booking Close Date:</label>
-            <input type="date" id="bookingCloseDate" name="bookingCloseDate" required>
-    
-            <button type="submit">Submit</button>
+        <form action="/publisher/set-booking-date" method="POST" class="booking-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="publishingDate">Publishing Date:</label>
+                <input type="date" id="publishingDate" name="publishingDate" required>
+              </div>
+              <div class="form-group">
+                <label for="layoutDate">Booking Opening Date:</label>
+                <input type="date" id="layoutDate" name="layoutDate" required>
+              </div>
+              <div class="form-group">
+                <label for="bookingCloseDate">Booking Close Date:</label>
+                <input type="date" id="bookingCloseDate" name="bookingCloseDate" required>
+              </div>
+            </div>
+            <button type="submit" class="submit-btn">Submit</button>
         </form>
         
 		<div class="table-data">
