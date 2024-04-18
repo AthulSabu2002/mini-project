@@ -18,7 +18,6 @@ const usersRouter = require('./routes/usersRouter');
 const adminRouter = require('./routes/adminRouter');
 const publisherRouter = require('./routes/publisherRouter');
 const authRouter = require('./routes/auth');
-const checkoutRouter = require('./routes/checkoutRouter');
 const webHookRouter = require('./routes/webHookRouter');
 
 const app = express();
