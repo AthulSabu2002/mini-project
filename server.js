@@ -72,24 +72,6 @@ app.use('/publisher', publisherRouter);
 
 app.use('/auth', authRouter);
 
-// app.use('/stripe-checkout', checkoutRouter);
-
-// app.use('/webhook', webHookRouter);
-
-// app.use('/forgot',require("./routes/usersRouter.js"));
-
-// app.use('/resetPassword',require("./routes/usersRouter.js"));
-
-// app.use('/reset/:token',require("./routes/usersRouter.js")); 
-
-// app.use('/logout',require("./routes/usersRouter.js"));
-
-// app.use('/dashboard',require("./routes/usersRouter.js"));
-
-// app.use('/verifyOtp',require("./routes/usersRouter.js"));
-
-// app.use('/registerUserWithOTP',require("./routes/usersRouter.js"));
-
 let stripeGateway = stripe(process.env.stripe_api)
 
 
