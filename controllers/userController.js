@@ -485,7 +485,7 @@ const bookSlot = asyncHandler(async (req, res) => {
     const userId = req.cookies.userId;
     const file = req.file;
     const { slotId, newspaperName } = req.body;
-    const publishingDate = req.cookies.publishingDate;
+    const publishingDate = new Date(req.cookies.publishingDate);
 
     const price = await findSlotPrice(newspaperName, slotId);
 
