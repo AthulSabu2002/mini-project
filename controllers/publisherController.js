@@ -264,7 +264,7 @@ const SaveSlotsPricing = asyncHandler(async (req, res) => {
 
         if (existingSlotPrices) {
             existingSlotPrices.slots = slotPrice.map((price, index) => ({
-                name: `slot${index + 1}`,
+                name: `slot${index + 1}`,                
                 price: parseInt(price)
             }));
             await existingSlotPrices.save();
@@ -272,7 +272,7 @@ const SaveSlotsPricing = asyncHandler(async (req, res) => {
             const newSlotPrices = new SlotPrices({
                 newspaperName: newspaperName,
                 slots: slotPrice.map((price, index) => ({
-                    name: `Slot ${index + 1}`,
+                    name: `slot${index + 1}`,
                     price: parseInt(price)
                 }))
             });
