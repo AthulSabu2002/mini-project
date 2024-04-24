@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     selectedDivs[0].style.backgroundColor = '';
                   }
                   selectedDivs = [adArea]; 
-                  adArea.style.backgroundColor = 'rgb(56, 247, 56)';
+                  adArea.style.backgroundColor = '#0be881';
             }
 
             var stickyContainer = document.getElementById('sticky-container');

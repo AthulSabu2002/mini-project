@@ -13,8 +13,11 @@ body{
 
 
 .main{
-    width: 80%;
+    width: 85%;
     position: absolute;
+    margin-left: 1.5rem;
+    padding: .5rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .page-1,.page-2{
@@ -103,7 +106,7 @@ body{
 .news-area-1{
     height: 60vh;
     width: 100%;
-    background-color: khaki;
+    background-color: #718093;
 }
 
 .ad-area-1{
@@ -128,7 +131,7 @@ body{
 .news-area-2{
     height: 60vh;
     width: 100%;
-    background-color: khaki;
+    background-color: #718093;
 }
 
 .ad-area-2{
@@ -161,28 +164,21 @@ body{
 
 .ad-area-3{
     width:  450px;
-    height: 500px;
+    height: 420px;
     border-style: solid;
     border-width: .1rem;
     border-color: black;
 }
 
 .booked{
-    background-color: lightgrey;
-    width:  450px;
-    height: 500px;
+    background-color: #1e272e;
     border-style: none;
     border-width: 0;
     border-color: none;
 }
 
 .unbooked{
-    background-color: #DDA0DD;
-    width:  450px;
-    height: 500px;
-    border-style: solid;
-    border-width: .1rem;
-    border-color: black;
+    background-color: #dfe4ea;
 }
 
 .container-6{
@@ -203,13 +199,16 @@ body{
 
 
 .control-panel{
-    margin: 2rem;
-    width: 15%;
-    height: 100vh;
+    margin: 1rem;
+    width: 5rem;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    justify-self: center;
+    border-radius: 1rem;
     position: fixed;
     right: 0;
 }
@@ -225,20 +224,20 @@ body{
 }
 
 .selected{
-    background-color: rgb(56, 247, 56);
+    background-color: #0be881;
 }
 
 .bestseller{
-    background-color: khaki;
+    background-color: #718093;
 }
 
 
 .available{
-   background-color: #DDA0DD;
+   background-color: #dfe4ea;
 }
 
 .sold{
-    background-color: rgb(213, 213, 213);
+    background-color: #1e272e;
 }
 
 
@@ -333,3 +332,119 @@ body{
     cursor: pointer;
 }
 
+
+
+/* Tablet Styles */
+@media (max-width: 1200px) {
+    body {
+      margin: 0.5rem;
+    }
+  
+    .main {
+      width: 95%;
+      margin-left: 0.5rem;
+    }
+  
+    .newspaper-name {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  
+    .day,
+    .date {
+      font-size: 16px;
+    }
+  
+    .news-link {
+      width: 20%;
+      padding: 3px;
+      margin-left: 20px;
+    }
+  
+    .ad {
+      width: 90%;
+    }
+  
+    .main-heading {
+      margin: 0.3rem;
+    }
+  
+    .page-1-list {
+        margin: 0.5rem;
+        font-size: 14px;
+      }
+    
+      .p-1 p,
+      .p-5 p {
+        font-size: 14px;
+      }
+  
+    .image-1 {
+      min-height: 150px;
+      min-width: 250px;
+      padding: 2rem;
+    }
+  
+    .news-area-1,
+    .ad-area-1,
+    .news-area-2,
+    .ad-area-2 {
+      height: 40vh;
+    }
+  
+    .ad-area-1,
+    .ad-area-2 {
+      width: 30%;
+    }
+
+    .container-5 .p-5 p:nth-last-child(-n+2),
+    .news-area-3 .p-5 p:nth-last-child(-n+2),
+    .news-area-4 .p-5 p:nth-last-child(-n+2){
+        display: none;
+    }
+
+  
+    .page-no {
+      width: 8%;
+      padding: 2px;
+    }
+  
+    .ad-area-3 {
+      width: 300px;
+      height: 400px;
+    }
+  
+    .control-panel {
+        width: 80%;
+        height: 4rem;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        box-shadow: none;
+        border-radius: 0;
+        margin: 1rem auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+      }
+    
+      .control-panel div {
+        margin: 0 0.5rem;
+      }
+  
+    .ad-slot1 {
+      height: 300px;
+      width: 400px;
+    }
+  
+    .sticky-container {
+      padding: 5px;
+    }
+  
+    .upload-div {
+      bottom: 10px;
+      right: 10px;
+    }
+  }
