@@ -20,7 +20,7 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.clientID,
         clientSecret: process.env.clientSecret,
-        callbackURL: 'http://localhost:3000/auth/google/redirect',
+        callbackURL: 'https://adcolumn.onrender.com/auth/google/redirect',
     }, (accessToken, refreshToken, profile, done) => {
 
         console.log('passport-callback-function-fired');
