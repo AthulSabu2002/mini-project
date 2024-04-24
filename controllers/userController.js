@@ -143,8 +143,7 @@ const loginUser = asyncHandler(async (req, res) => {
         return res.status(500).send("<script>alert('username and password fields are mandatory'); window.location='/auth/login';</script>");
       }
       const user = await User.findOne({ username }, 'username email password');
-      console.log(user);
-      console.log(user.password)
+
       if (user) {
           const isPasswordValid = await bcrypt.compare(password, user.password);
           if (isPasswordValid) {
@@ -159,8 +158,9 @@ const loginUser = asyncHandler(async (req, res) => {
                         maxAge: 24 * 60 * 60 * 1000,
                         httpOnly: true 
                     });
-                  console.log('User logged in:', user);
-                  return res.redirect('/profile');
+                  const returnUrl = req.cookies.returnTo || '/profile';
+                  res.clearCookie('returnTo');
+                  return res.redirect(returnUrl);
               });
           } else {
               console.log('Incorrect password for user:', username);
@@ -320,44 +320,6 @@ const renderBookSlot = asyncHandler( async(req, res) => {
 });
 
 
-// const renderBookSlotByDate = asyncHandler(async (req, res) => {
-//     try {
-//         const { day, date, month } = req.body;
-//         console.log(req.body);
-
-//         const selectedDate = new Date(`${month} ${date}, ${new Date().getFullYear()}`);
-
-//         console.log(selectedDate);
-
-//         const booking = await BookingDates.findOne({
-//             bookingOpenDate: { $lte: selectedDate },
-//             bookingCloseDate: { $gte: selectedDate }
-//         });
-
-//         console.log(booking);
-
-//         if (booking) {
-//             const publisherId = booking.publisher;
-//             const publisherLayout = await Publisher.findOne({ _id: publisherId });
-//             console.log(publisherLayout);
-//             if (publisherLayout) {
-//                 const layoutName = publisherLayout.newspaperName;
-//                 res.status(200).json({ layoutName }); // Send layout name as JSON response
-//             } else {
-//                 const layoutName = 'defaultLayout';
-//                 res.status(200).json({ layoutName }); // Send default layout name as JSON response
-//             }
-//         } else {
-//             const layoutName = 'defaultLayout';
-//             res.status(200).json({ layoutName }); // Send default layout name as JSON response
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// });
-
-
 const renderBookSlotByDate = asyncHandler(async (req, res) => {
   try {
     const { day, date, month } = req.body;
@@ -486,7 +448,6 @@ const bookSlot = asyncHandler(async (req, res) => {
     const file = req.file;
     const { slotId, newspaperName } = req.body;
     const publishingDateStr = req.cookies.publishingDate;
-     console.log(publishingDateStr);
     const publishingDate = new Date(publishingDateStr);
 
     const price = await findSlotPrice(newspaperName, slotId);

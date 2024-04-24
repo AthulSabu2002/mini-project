@@ -264,7 +264,7 @@ const SaveSlotsPricing = asyncHandler(async (req, res) => {
 
         if (existingSlotPrices) {
             existingSlotPrices.slots = slotPrice.map((price, index) => ({
-                name: `slot${index + 1}`,
+                name: `slot${index + 1}`,                
                 price: parseInt(price)
             }));
             await existingSlotPrices.save();
