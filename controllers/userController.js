@@ -15,8 +15,6 @@ const TemporaryBooking = require('../models/temporaryBooking');
 const SlotPrices = require('../models/slotPrices');
 
 
-
-
 const renderDashboard = asyncHandler(async (req, res) => {
    if(req.session.loggedIn){
     res.render('userDashboard');
@@ -393,9 +391,12 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
 const renderSuccessPage = asyncHandler( async(req, res) => {
   try{
 
-    const sessionId = req.session.sessionId;
+    const sessionId = req.cookies.sessionId;
+    console.log(sessionId);
+    res.clearCookie('sessionId');
 
     const temporaryBooking = await TemporaryBooking.findOne({ sessionId: sessionId });
+    console.log(temporaryBooking);
 
     if (!temporaryBooking) {
       return res.status(404).send('Temporary booking not found');
@@ -415,7 +416,6 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
-
     res.render('bookingSuccess');
   }catch(error){
     console.log(error);
@@ -425,7 +425,8 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
 const renderCancelPage = asyncHandler( async(req, res) => {
   try{
-    const sessionId = req.session.sessionId;
+    const sessionId = req.cookies.sessionId;
+    res.clearCookie('sessionId');
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
@@ -447,8 +448,19 @@ const bookSlot = asyncHandler(async (req, res) => {
     const userId = req.cookies.userId;
     const file = req.file;
     const { slotId, newspaperName } = req.body;
-    const publishingDateStr = req.cookies.publishingDate;
-    const publishingDate = new Date(publishingDateStr);
+    const publishingDate = req.cookies.publishingDate;
+    // const publishingDate = new Date(publishingDateStr);
+
+    // Check if the slotId is already booked
+    const bookedSlots = await BookedSlots.find({
+      newspaperName: newspaperName,
+      publishingDate: publishingDate,
+      slotId: slotId,
+    });
+
+    if (bookedSlots.length > 0) {
+      return res.redirect('/slot-booked');
+    }
 
     const price = await findSlotPrice(newspaperName, slotId);
 
@@ -458,42 +470,38 @@ const bookSlot = asyncHandler(async (req, res) => {
           currency: 'inr',
           product_data: {
             name: newspaperName,
-            description: `Slot ${slotId} - ${newspaperName} (${publishingDate})`, 
+            description: `Slot ${slotId} - ${newspaperName} (${publishingDate})`,
           },
           unit_amount: price * 100,
         },
-        quantity: 1, 
-      }
+        quantity: 1,
+      },
     ];
-    
+
     const session = await stripeGateway.checkout.sessions.create({
       currency: 'inr',
       payment_method_types: ['card'],
       mode: 'payment',
       success_url: `${DOMAIN}/book-slot/success`,
       cancel_url: `${DOMAIN}/book-slot/cancel`,
-      line_items: lineItems, 
-      billing_address_collection: 'required'
-    });  
-    
-    req.session.sessionId = session.id;
+      line_items: lineItems,
+      billing_address_collection: 'required',
+    });
 
+    const sessionId = session.id;
+    res.cookie('sessionId', sessionId, { httpOnly: true });
 
     const bookingBeforePayment = new TemporaryBooking({
       tempUserId: userId,
       slotId: slotId,
       newspaperName: newspaperName,
       publishingDate: publishingDate,
-      file: {
-        data: file.buffer, 
-        contentType: file.mimetype
-      },
+      file: { data: file.buffer, contentType: file.mimetype },
       price: price,
-      sessionId: session.id
+      sessionId: session.id,
     });
 
     await bookingBeforePayment.save();
-
 
     res.status(201).json(session.url);
   } catch (error) {

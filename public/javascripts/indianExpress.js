@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log(document.cookie);
     var selectedDivs = []; 
 
     var unbookedAreas = document.querySelectorAll('.unbooked');
