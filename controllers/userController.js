@@ -5,12 +5,6 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const stripe = require('stripe');
-const express = require('express');
-const app = express();
-const http = require('http').createServer(app);
-const socketIO = require('socket.io');
-const io = socketIO(http);
-
 
 
 const Publisher = require('../models/publisherModel');
@@ -421,17 +415,6 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
     await booking.save();
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
-
-    if (io) {
-      if (typeof io.emit === 'function') {
-          io.emit('slotBooked', booking.slotId);
-      } else {
-          console.error("io.emit is not a function. Check the initialization of io.");
-      }
-    } else {
-      console.error("io is undefined. Make sure it is properly initialized.");
-    }
-    console.log('slotBooked event emitted with slotId:', booking.slotId);
 
     res.render('bookingSuccess');
   }catch(error){

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const socket = io();
     var selectedDivs = []; 
 
     var unbookedAreas = document.querySelectorAll('.unbooked');
@@ -26,23 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         });
     });
-
-    socket.on('connect', () => {
-        console.log('Connected to server');
-        socket.on('slotBooked', (slotId) => {
-            console.log('slotBooked event received:', slotId);
-            updateBookingSuccessPage(slotId);
-          });
-    });
-      
-      function updateBookingSuccessPage(slotId) {
-        console.log('updateBookingSuccessPage called with:', slotId);
-        const slotIdElement = document.getElementById(slotId);
-        console.log('slotIdElement:', slotIdElement);
-        if (slotIdElement) {
-          slotIdElement.classList.add('booked');
-        }
-      }
 
     var uploadDiv = document.getElementById('uploadDiv');
     var confirmUploadDiv = document.getElementById('confirmUploadDiv');
