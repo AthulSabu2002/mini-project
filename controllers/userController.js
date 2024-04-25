@@ -397,7 +397,8 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
 const renderSuccessPage = asyncHandler( async(req, res) => {
   try{
 
-    const sessionId = req.session.sessionId;
+    const sessionId = req.cookies.sessionId;
+    res.clearCookie('sessionId');
 
     const temporaryBooking = await TemporaryBooking.findOne({ sessionId: sessionId });
 
@@ -430,7 +431,8 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
 const renderCancelPage = asyncHandler( async(req, res) => {
   try{
-    const sessionId = req.session.sessionId;
+    const sessionId = req.cookies.sessionId;
+    res.clearCookie('sessionId');
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
@@ -492,7 +494,8 @@ const bookSlot = asyncHandler(async (req, res) => {
       billing_address_collection: 'required',
     });
 
-    req.session.sessionId = session.id;
+    const sessionId = session.id;
+    res.cookie('sessionId', sessionId, { httpOnly: true });
 
     const bookingBeforePayment = new TemporaryBooking({
       tempUserId: userId,
