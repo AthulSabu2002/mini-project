@@ -335,7 +335,7 @@ body{
 
 
 /* Tablet Styles */
-@media (max-width: 1200px) {
+@media (max-width: 800px) {
     body {
       margin: 0.5rem;
     }

@@ -5,6 +5,10 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const stripe = require('stripe');
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 
 const Publisher = require('../models/publisherModel');
@@ -415,6 +419,7 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
+    io.emit('slotBooked', booking.slotId);
 
     res.render('bookingSuccess');
   }catch(error){
@@ -450,6 +455,17 @@ const bookSlot = asyncHandler(async (req, res) => {
     const publishingDateStr = req.cookies.publishingDate;
     const publishingDate = new Date(publishingDateStr);
 
+    // Check if the slotId is already booked
+    const bookedSlots = await BookedSlots.find({
+      newspaperName: newspaperName,
+      publishingDate: publishingDate,
+      slotId: slotId,
+    });
+
+    if (bookedSlots.length > 0) {
+      return res.redirect('/slot-booked');
+    }
+
     const price = await findSlotPrice(newspaperName, slotId);
 
     const lineItems = [
@@ -458,42 +474,37 @@ const bookSlot = asyncHandler(async (req, res) => {
           currency: 'inr',
           product_data: {
             name: newspaperName,
-            description: `Slot ${slotId} - ${newspaperName} (${publishingDate})`, 
+            description: `Slot ${slotId} - ${newspaperName} (${publishingDate})`,
           },
           unit_amount: price * 100,
         },
-        quantity: 1, 
-      }
+        quantity: 1,
+      },
     ];
-    
+
     const session = await stripeGateway.checkout.sessions.create({
       currency: 'inr',
       payment_method_types: ['card'],
       mode: 'payment',
       success_url: `${DOMAIN}/book-slot/success`,
       cancel_url: `${DOMAIN}/book-slot/cancel`,
-      line_items: lineItems, 
-      billing_address_collection: 'required'
-    });  
-    
-    req.session.sessionId = session.id;
+      line_items: lineItems,
+      billing_address_collection: 'required',
+    });
 
+    req.session.sessionId = session.id;
 
     const bookingBeforePayment = new TemporaryBooking({
       tempUserId: userId,
       slotId: slotId,
       newspaperName: newspaperName,
       publishingDate: publishingDate,
-      file: {
-        data: file.buffer, 
-        contentType: file.mimetype
-      },
+      file: { data: file.buffer, contentType: file.mimetype },
       price: price,
-      sessionId: session.id
+      sessionId: session.id,
     });
 
     await bookingBeforePayment.save();
-
 
     res.status(201).json(session.url);
   } catch (error) {

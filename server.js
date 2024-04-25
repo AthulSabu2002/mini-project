@@ -71,6 +71,8 @@ app.use('/publisher', publisherRouter);
 
 app.use('/auth', authRouter);
 
+app.use('/socket.io', require('socket.io'));
+
 let stripeGateway = stripe(process.env.stripe_api)
 
 
