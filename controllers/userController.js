@@ -422,7 +422,9 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
+    const io = req.app.get('io');
     io.emit('slotBooked', booking.slotId);
+    console.log('slotBooked event emitted with slotId:', booking.slotId);
 
     res.render('bookingSuccess');
   }catch(error){
