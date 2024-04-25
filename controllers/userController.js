@@ -5,6 +5,13 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const stripe = require('stripe');
+const http = require('http');
+const express = require('express');
+const socketIo = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 
 const Publisher = require('../models/publisherModel');
@@ -415,6 +422,8 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
     await booking.save();
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
+
+    await io.emit('newBooking');
 
     res.render('bookingSuccess');
   }catch(error){

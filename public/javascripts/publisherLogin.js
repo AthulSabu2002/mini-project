@@ -21,7 +21,7 @@ function moveSlider(index) {
   const textSlider = document.querySelector(".text-group");
   textSlider.style.transform = `translateY(${-(index - 1) * 2.2}rem)`;
   bullets.forEach((bull) => bull.classList.remove("active"));
-  const activeBullet = document.querySelector(`.bullet[data-value="${index}"]`);
+  const activeBullet = document.querySelector(`.bullets span[data-value="${index}"]`);
   activeBullet.classList.add("active");
 }
 
