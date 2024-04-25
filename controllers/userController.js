@@ -398,9 +398,11 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
   try{
 
     const sessionId = req.cookies.sessionId;
+    console.log(sessionId);
     res.clearCookie('sessionId');
 
     const temporaryBooking = await TemporaryBooking.findOne({ sessionId: sessionId });
+    console.log(temporaryBooking);
 
     if (!temporaryBooking) {
       return res.status(404).send('Temporary booking not found');
