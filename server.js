@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const stripe = require('stripe');
 const http = require('http');
 const socketIo = require('socket.io');
+const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
@@ -23,8 +24,6 @@ const adminRouter = require('./routes/adminRouter');
 const publisherRouter = require('./routes/publisherRouter');
 const authRouter = require('./routes/auth');
 const webHookRouter = require('./routes/webHookRouter');
-
-const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
