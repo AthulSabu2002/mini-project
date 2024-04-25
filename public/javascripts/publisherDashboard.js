@@ -1,3 +1,9 @@
+const socket = io();
+
+socket.on('updateDashboard', () => {
+	alert("Dashboard updated!");
+});
+
 const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 
 allSideMenu.forEach(item=> {

@@ -10,6 +10,10 @@ const createError = require('http-errors');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 const stripe = require('stripe');
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+const io = socketIo(server);
 
 
 const landingPageRouter = require('./routes/landingPageRouter')
@@ -75,6 +79,17 @@ app.use('/socket.io', require('socket.io'));
 
 let stripeGateway = stripe(process.env.stripe_api)
 
+io.on('connection', (socket) => {
+  console.log('A client connected');
+
+  socket.on('newBooking', () => {
+      io.emit('updateDashboard'); 
+  });
+
+  socket.on('disconnect', () => {
+      console.log('A client disconnected');
+  });
+});
 
 app.use(function(req, res, next) {
   next(createError(404));
