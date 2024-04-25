@@ -20,8 +20,6 @@ const BookedSlots = require("../models/bookedSlots");
 const TemporaryBooking = require('../models/temporaryBooking');
 const SlotPrices = require('../models/slotPrices');
 
-app.set('io', io);
-
 
 const renderDashboard = asyncHandler(async (req, res) => {
    if(req.session.loggedIn){
@@ -424,7 +422,7 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
-    req.app.io.emit('slotBooked', booking.slotId);
+    io.emit('slotBooked', booking.slotId);
     console.log('slotBooked event emitted with slotId:', booking.slotId);
 
     res.render('bookingSuccess');
