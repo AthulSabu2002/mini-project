@@ -7,6 +7,8 @@
 var app = require('../server');
 var debug = require('debug')('google-auth:server');
 var http = require('http');
+const socketIo = require('socket.io');
+
 
 /**
  * Get port from environment and store in Express.
@@ -88,3 +90,18 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+var io = socketIo(server);
+
+io.on('connection', (socket) => {
+  console.log('A client connected');
+
+  socket.on('newBooking', () => {
+    console.log('New booking received');
+    io.emit('updateDashboard'); 
+});
+
+  socket.on('disconnect', () => {
+      console.log('A client disconnected');
+  });
+});
