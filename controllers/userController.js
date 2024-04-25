@@ -9,8 +9,8 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const socketIO = require('socket.io');
-const server = http.createServer(app);
-const io = socketIO(server);
+const io = socketIO(http);
+
 
 
 const Publisher = require('../models/publisherModel');
