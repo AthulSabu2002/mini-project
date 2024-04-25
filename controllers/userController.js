@@ -18,7 +18,7 @@ const BookedSlots = require("../models/bookedSlots");
 const TemporaryBooking = require('../models/temporaryBooking');
 const SlotPrices = require('../models/slotPrices');
 
-
+app.set('io', io);
 
 
 const renderDashboard = asyncHandler(async (req, res) => {
