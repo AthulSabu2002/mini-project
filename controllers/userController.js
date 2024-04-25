@@ -422,7 +422,15 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
-    io.emit('slotBooked', booking.slotId);
+    if (io) {
+      if (typeof io.emit === 'function') {
+          io.emit('slotBooked', booking.slotId);
+      } else {
+          console.error("io.emit is not a function. Check the initialization of io.");
+      }
+  } else {
+      console.error("io is undefined. Make sure it is properly initialized.");
+  }
     console.log('slotBooked event emitted with slotId:', booking.slotId);
 
     res.render('bookingSuccess');
