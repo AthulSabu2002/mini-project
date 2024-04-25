@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const stripe = require('stripe');
 const app = require('express')();
 
+
 const landingPageRouter = require('./routes/landingPageRouter')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/usersRouter');

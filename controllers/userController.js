@@ -5,14 +5,6 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const stripe = require('stripe');
-const http = require('http');
-const express = require('express');
-const socketIo = require('socket.io');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
-
 
 const Publisher = require('../models/publisherModel');
 const Layout = require('../models/layout');
@@ -423,8 +415,6 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
-    await io.emit('newBooking');
-
     res.render('bookingSuccess');
   }catch(error){
     console.log(error);
@@ -458,9 +448,7 @@ const bookSlot = asyncHandler(async (req, res) => {
     const file = req.file;
     const { slotId, newspaperName } = req.body;
     const publishingDate = req.cookies.publishingDate;
-    // const publishingDate = new Date(publishingDateStr);
 
-    // Check if the slotId is already booked
     const bookedSlots = await BookedSlots.find({
       newspaperName: newspaperName,
       publishingDate: publishingDate,
@@ -468,7 +456,7 @@ const bookSlot = asyncHandler(async (req, res) => {
     });
 
     if (bookedSlots.length > 0) {
-      return res.redirect('/slot-booked');
+      return res.redirect('/users/viewSlot');
     }
 
     const price = await findSlotPrice(newspaperName, slotId);
