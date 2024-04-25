@@ -27,10 +27,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    socket.on('slotBooked', (slotId) => {
-        console.log('slotBooked event received:', slotId);
-        updateBookingSuccessPage(slotId);
-      });
+    socket.on('connect', () => {
+        console.log('Connected to server');
+        socket.on('slotBooked', (slotId) => {
+            console.log('slotBooked event received:', slotId);
+            updateBookingSuccessPage(slotId);
+          });
+    });
       
       function updateBookingSuccessPage(slotId) {
         console.log('updateBookingSuccessPage called with:', slotId);
