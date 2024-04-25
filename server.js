@@ -10,6 +10,7 @@ const createError = require('http-errors');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 const stripe = require('stripe');
+const app = require('express')();
 
 
 const landingPageRouter = require('./routes/landingPageRouter')
@@ -19,8 +20,6 @@ const adminRouter = require('./routes/adminRouter');
 const publisherRouter = require('./routes/publisherRouter');
 const authRouter = require('./routes/auth');
 const webHookRouter = require('./routes/webHookRouter');
-
-const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -74,7 +73,6 @@ app.use('/auth', authRouter);
 app.use('/socket.io', require('socket.io'));
 
 let stripeGateway = stripe(process.env.stripe_api)
-
 
 app.use(function(req, res, next) {
   next(createError(404));

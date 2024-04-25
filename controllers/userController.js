@@ -6,7 +6,6 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const stripe = require('stripe');
 
-
 const Publisher = require('../models/publisherModel');
 const Layout = require('../models/layout');
 const BookingDates = require('../models/bookingDates');
@@ -449,9 +448,7 @@ const bookSlot = asyncHandler(async (req, res) => {
     const file = req.file;
     const { slotId, newspaperName } = req.body;
     const publishingDate = req.cookies.publishingDate;
-    // const publishingDate = new Date(publishingDateStr);
 
-    // Check if the slotId is already booked
     const bookedSlots = await BookedSlots.find({
       newspaperName: newspaperName,
       publishingDate: publishingDate,
@@ -459,7 +456,7 @@ const bookSlot = asyncHandler(async (req, res) => {
     });
 
     if (bookedSlots.length > 0) {
-      return res.redirect('/slot-booked');
+      return res.redirect('/users/viewSlot');
     }
 
     const price = await findSlotPrice(newspaperName, slotId);
