@@ -1,5 +1,5 @@
 .form-container {
-    width: 80%;
+    width: 60%;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -15,9 +15,8 @@ h1 {
     margin-bottom: 15px;
 }
 
-.label {
-    display: inline-block;
-    width: 120px;
+label {
+   
     font-weight: bold;
 }
 
@@ -31,13 +30,33 @@ h1 {
 
 .slot-row {
     margin-bottom: 10px;
+    display: flex;
+    align-items:center;
+    justify-content:flex-start;
+   
 }
 
+#newspaperName{
+    width: calc(100% - 30px);
+    max-width: 300px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    color: #333; /* Example color */
+    font-size:medium;
+}
+
+
 button[type="submit"] {
-    padding: 10px 20px;
+    display: block;
+    width: 50%;
+    padding: 12px 20px;
     background-color: #007bff;
     color: #fff;
     border: none;
+    margin: 0 auto;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -45,4 +64,46 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
     background-color: #0056b3;
+}
+
+input {
+    width: 70;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    margin-right:50px;
+    
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+
+@media only screen and (max-width: 600px) {
+    /* CSS rules for devices with a maximum width of 600px */
+    .form-container {
+        width: 90%;
+        margin: 0 auto;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+    .slot-row {
+        margin-bottom: 10px;
+       display: block;
+       
+    }
+    #content main {
+    padding-left: 5px;
+    padding-right: 5px;
+
+
+    
+    
+    }
 }

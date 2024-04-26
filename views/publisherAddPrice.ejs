@@ -25,10 +25,14 @@
 					<div id="slotPrices">
 						<% for (let i = 0; i < data[0].slotNames.length; i++) { %>
 							<div class="slot-row">
-								<label>Slot <%= i + 1 %> Name:</label>
-								<input type="text" name="slotName<%= i + 1 %>" value="<%= data[0].slotNames[i] %>" disabled>
-								<label>Price:</label>
-								<input type="number" name="slotPrice<%= i + 1 %>" required>
+								<div>
+									<label>Slot <%= i + 1 %> Name:</label>
+									<input type="text" name="slotName<%= i + 1 %>" value="<%= data[0].slotNames[i] %>" disabled>
+								</div>
+								<div>
+									<label for="slotPrice<%= i + 1 %>">Price:</label>
+									<input type="number" id="slotPrice<%= i + 1 %>" name="slotPrice<%= i + 1 %>" required>
+								</div>
 							</div>
 						<% } %>
 					</div>
