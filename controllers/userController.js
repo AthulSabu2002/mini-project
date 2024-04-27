@@ -308,9 +308,11 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 
-const renderBookSlot = asyncHandler( async(req, res) => {
+const renderNewspaperInfo = asyncHandler( async(req, res) => {
+  const layoutName = req.params.layoutName;
+  const fileName = layoutName + '_infoPage';
   try{
-    res.render('defaultLayout');
+    res.render(fileName);
   }catch(error){
     console.log(error);
   }
@@ -320,6 +322,8 @@ const renderBookSlot = asyncHandler( async(req, res) => {
 const renderBookSlotByDate = asyncHandler(async (req, res) => {
   try {
     const { day, date, month } = req.body;
+    const layoutName = req.params.layoutName;
+
     const monthNumber = getMonthNumber(month);
 
     const publishingDate = new Date(Date.UTC(new Date().getFullYear(), monthNumber, date));
@@ -328,18 +332,21 @@ const renderBookSlotByDate = asyncHandler(async (req, res) => {
 
     const requestedDate = new Date();
 
+    const publisher = await Publisher.findOne({ newspaperName: layoutName });
+
+    const publisherId = publisher._id;
+
     const booking = await BookingDates.findOne({
         bookingOpenDate: { $lte: requestedDate },
         bookingCloseDate: { $gte: requestedDate },
-        publishingDate: publishingDate
+        publishingDate: publishingDate,
+        publisher: publisherId
     });
 
-
       if (booking) {
-          const publisherId = booking.publisher;
+          //const publisherId = booking.publisher;
           const publisherLayout = await Publisher.findOne({ _id: publisherId });
           if (publisherLayout) {
-              const layoutName = publisherLayout.newspaperName;
 
               const bookedSlots = await BookedSlots.find({
                 newspaperName: layoutName,
@@ -350,11 +357,9 @@ const renderBookSlotByDate = asyncHandler(async (req, res) => {
               
               res.status(200).json({ layoutName, bookedSlotIds, publishingDate }); 
             } else {
-                const layoutName = 'defaultLayout';
                 res.status(200).json({ layoutName, publishingDate }); 
             }
         } else {
-            const layoutName = 'defaultLayout';
             res.status(200).json({ layoutName, publishingDate }); 
         }
     } catch (error) {
@@ -374,14 +379,36 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
       const day = publishingDateOldFormat.slice(6, 8);
       const publishingDateISO8601 = `${year}-${month}-${day}T00:00:00.000Z`;
 
-      const bookedSlots = await BookedSlots.find({
-        newspaperName: layoutName,
-        publishingDate: publishingDateISO8601
+      const publisher = await Publisher.findOne({ newspaperName: layoutName });
+
+      const requestedDate = new Date();
+      const publisherId = publisher._id;
+
+      const booking = await BookingDates.findOne({
+        bookingOpenDate: { $lte: requestedDate },
+        bookingCloseDate: { $gte: requestedDate },
+        publishingDate: publishingDateISO8601,
+        publisher: publisherId
       });
 
-      const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
 
-      res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
+      if(booking){
+
+        const bookedSlots = await BookedSlots.find({
+          newspaperName: layoutName,
+          publishingDate: publishingDateISO8601
+        });
+  
+        const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
+  
+        res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
+
+      }else{
+
+        res.render('defaultLayout');
+
+      }
+      
     } catch (err) {
       res.send(err);
   }
@@ -593,7 +620,7 @@ module.exports = {
                   renderDashboard ,
                   registerUserWithOTP,
                   verifyOtp,
-                  renderBookSlot,
+                  renderNewspaperInfo,
                   renderBookSlotByDate,
                   renderBookinglayout,
                   bookSlot,

@@ -35,8 +35,13 @@ function populateNavbar() {
 }
 
 async function sendSelectedDetails(selectedDetails, selectedColumn) {
+  const urlPath = window.location.pathname;
+
+  const pathParts = urlPath.split('/');
+
+  const newspaperName = pathParts[pathParts.length - 2];
   try {
-    const response = await fetch('/users/viewSlot', {
+    const response = await fetch(`/users/viewSlot/${newspaperName}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -46,12 +51,12 @@ async function sendSelectedDetails(selectedDetails, selectedColumn) {
 
     if (response.ok) {
       const responseData = await response.json();
+      console.log(responseData);
       const layoutName = responseData.layoutName;
-      let publishingDate = responseData.publishingDate.split('T')[0];
-      publishingDate = publishingDate.replace(/-/g, '');
+      const publishingDateRes = responseData.publishingDate.split('T')[0];
+      const publishingDate = publishingDateRes.replace(/-/g, '');
       const url = `/users/viewSlot/${layoutName}/${publishingDate}`;
 
-      // Store the selected column's information in the session or local storage
       sessionStorage.setItem('selectedColumn', selectedColumn.id);
 
       window.location.href = url;
@@ -65,7 +70,6 @@ async function sendSelectedDetails(selectedDetails, selectedColumn) {
   }
 }
 
-// Restore the selected column's background color after URL redirection
 window.addEventListener('load', () => {
   const selectedColumnId = sessionStorage.getItem('selectedColumn');
   if (selectedColumnId) {
