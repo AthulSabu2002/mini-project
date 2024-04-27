@@ -8,7 +8,7 @@ const {
       renderDashboard,  
       verifyOtp,
       registerUserWithOTP,
-      renderBookSlot,
+      renderNewspaperInfo,
       renderBookSlotByDate,
       renderBookinglayout,
       bookSlot,
@@ -95,25 +95,7 @@ router.route("/verifyOtp").get((req, res) =>{
     res.render('user/verify-otp', { email: userEmail });
 });
 
-router.route("/viewSlot/:layoutName/:publishingDate").get(authCheck, renderBookinglayout);
-
-router.route('/stripe-checkout').post(upload, bookSlot);
-
-router.route('/book-slot/success').get(renderSuccessPage);
-
-router.route('/book-slot/cancel').get(renderCancelPage);
-
-router.route("/viewSlot").get(authCheck, renderBookSlot);
-
-router.route("/viewSlot").post(renderBookSlotByDate);
-
-router.route("/logout").post(logoutUser);
-
-router.route("/reset/:token").get(urlencodedParser,changePasswordRequest);
-
 router.route("/login").post(urlencodedParser,loginUser);
-
-router.route("/dashboard").get(renderDashboard);
 
 router.route("/forgot").post(urlencodedParser,resetPassword);
 
@@ -122,6 +104,25 @@ router.route("/verifyOtp").post(urlencodedParser,verifyOtp);
 router.route("/registerUserWithOTP").post(urlencodedParser,registerUserWithOTP)
 
 router.route("/reset/:token").post(urlencodedParser,changePassword);
+
+router.route("/reset/:token").get(urlencodedParser,changePasswordRequest);
+
+router.route("/dashboard").get(renderDashboard);
+
+router.route("/viewSlot/:layoutName").get(authCheck, renderNewspaperInfo);
+
+router.route("/viewSlot/:layoutName").post(renderBookSlotByDate);
+
+router.route("/viewSlot/:layoutName/:publishingDate").get(authCheck, renderBookinglayout);
+
+router.route('/stripe-checkout').post(upload, bookSlot);
+
+router.route('/book-slot/success').get(renderSuccessPage);
+
+router.route('/book-slot/cancel').get(renderCancelPage);
+
+router.route("/logout").post(logoutUser);
+
 
 
 
