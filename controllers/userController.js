@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const stripe = require('stripe');
+const fs = require('fs');
+const path = require('path');
 
 const Publisher = require('../models/publisherModel');
 const Layout = require('../models/layout');
@@ -12,6 +14,9 @@ const BookingDates = require('../models/bookingDates');
 const BookedSlots = require("../models/bookedSlots");
 const TemporaryBooking = require('../models/temporaryBooking');
 const SlotPrices = require('../models/slotPrices');
+
+const emailTemplatePath = path.join(__dirname, '..', 'templates', 'reset-password-template.html');
+const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
 
 
 const renderDashboard = asyncHandler(async (req, res) => {
@@ -217,18 +222,16 @@ const resetPassword = asyncHandler(async (req, res, next) => {
             pass: process.env.APP_PASSWORD,
           }
         });
-        
-          smtpTrans.sendMail({
-            to: user.email,
-            from: process.env.MYEMAIL,
-            subject: 'aDColumn password reset',
-            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-            'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-            'http://' + req.headers.host + '/users/reset/' + user.resetPasswordToken + '\n\n' +
-            'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-          });
+        const emailContent = emailTemplate.replace('href="#"', `href="http://${req.headers.host}/users/reset/${user.resetPasswordToken}"`);
+        smtpTrans.sendMail({
+          to: user.email,
+          from: process.env.MYEMAIL,
+          subject: 'aDColumn password reset',
+          text: 'Plain text fallback content', 
+          html: emailContent 
+        });
           console.log("Mail sent successfully");
-          res.send("check your mail id for the password reset link");
+          res.render('user-mail-send-success');
   }
     ], function(err) {
       console.log('this err' + ' ' + err)
@@ -295,7 +298,7 @@ const changePassword = asyncHandler(async (req, res) => {
           console.log('Email sending error:', err);
         } else {
           console.log('Success! Your password has been changed.');
-          res.send('Password changed.Please return to login page for login');
+          res.render('user-password-reset-success');
         }
       });
     }
@@ -456,7 +459,7 @@ const renderCancelPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
-    res.send('failure');
+    res.render('user-payment-failure');
   }catch(error){
     console.log(error);
   }
