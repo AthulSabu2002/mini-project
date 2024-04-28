@@ -5,7 +5,8 @@ const {
       changePasswordRequest, 
       changePassword, 
       logoutUser, 
-      renderDashboard,  
+      renderDashboard,
+      renderViewBookingsPage,  
       verifyOtp,
       registerUserWithOTP,
       renderNewspaperInfo,
@@ -13,7 +14,9 @@ const {
       renderBookinglayout,
       bookSlot,
       renderSuccessPage,
-      renderCancelPage
+      renderCancelPage,
+      cancelBooking,
+      renderCancelConfirmationPage
      } = require("../controllers/userController");
 
 
@@ -109,6 +112,8 @@ router.route("/reset/:token").get(urlencodedParser,changePasswordRequest);
 
 router.route("/dashboard").get(renderDashboard);
 
+router.route("/dashboard/view-bookings").get(renderViewBookingsPage);
+
 router.route("/viewSlot/:layoutName").get(authCheck, renderNewspaperInfo);
 
 router.route("/viewSlot/:layoutName").post(renderBookSlotByDate);
@@ -118,6 +123,10 @@ router.route("/viewSlot/:layoutName/:publishingDate").get(authCheck, renderBooki
 router.route('/stripe-checkout').post(upload, bookSlot);
 
 router.route('/book-slot/success').get(renderSuccessPage);
+
+router.route('/cancel-slot/:bookingId').get(renderCancelConfirmationPage);
+
+router.route('/cancel-slot/:bookingId').post(cancelBooking);
 
 router.route('/book-slot/cancel').get(renderCancelPage);
 
