@@ -30,6 +30,9 @@ This website allows users to book slots in newspapers for advertising purposes. 
    ```
 4. Create a `.env` file in the root directory and add necessary environment variables:
    ```plaintext
+   clientID=your_client_id
+   clientSecret=your_client_secret
+   MYEMAIL=your_email
    SECRET=your_secret_key
    MONGODB_URI=your_mongodb_uri
    ```
