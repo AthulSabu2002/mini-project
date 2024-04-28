@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancellation Confirmation</title>
+  <link rel="stylesheet" href="/stylesheets/bookingCancellationConfirmation.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Cancel Your Booking</h1>
+    <div class="booking-details">
+      <h2>Booking Details</h2>
+      <p>Booking ID: <span id="bookingId">123456</span></p>
+      <p>Item: <span id="itemName">Luxury Hotel Room</span></p>
+      <p>Dates: <span id="bookingDates">May 1, 2024 - May 5, 2024</span></p>
+      <p>Total Cost: <span id="totalCost">$1,000</span></p>
+    </div>
+    <div class="confirmation">
+      <p>Are you sure you want to cancel this booking?</p>
+      <button id="confirmCancel">Yes, Cancel Booking</button>
+      <button id="keepBooking">No, Keep Booking</button>
+    </div>
+  </div>
+  <script src="/javascripts/bookingCancellationConfirmation.js"></script>
+</body>
+</html>

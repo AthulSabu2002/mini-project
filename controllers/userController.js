@@ -14,6 +14,7 @@ const BookingDates = require('../models/bookingDates');
 const BookedSlots = require("../models/bookedSlots");
 const TemporaryBooking = require('../models/temporaryBooking');
 const SlotPrices = require('../models/slotPrices');
+const CancelledBookings = require('../models/cancelledBookingModel');
 
 const emailTemplatePath = path.join(__dirname, '..', 'templates', 'reset-password-template.html');
 const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
@@ -27,6 +28,46 @@ const renderDashboard = asyncHandler(async (req, res) => {
       res.redirect('/auth/login');
     }
 });
+
+
+const renderViewBookingsPage = asyncHandler(async (req, res) => {
+  try{
+    const userId = req.cookies.userId;
+    if(userId){
+      const bookings = await BookedSlots.find({ userId: userId });
+
+      const formattedBookings = bookings.map(booking => {
+        const createdAt = new Date(booking.createdAt);
+        const options = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          hour12: true
+        };
+        const formattedCreatedAt = createdAt.toLocaleString('en-US', options);
+
+        return {
+          _id: booking._id,
+          newspaperName: booking.newspaperName,
+          createdAt: formattedCreatedAt,
+          price: booking.price,
+          sessionId: booking.sessionId
+        };
+      });
+
+      res.render('userViewBookings', { bookings: formattedBookings });
+    }
+    else{
+      res.redirect('/users/auth/login')
+    }
+  }
+  catch(error){
+    console.log(error);
+  }
+})
 
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -538,6 +579,48 @@ const bookSlot = asyncHandler(async (req, res) => {
 });
 
 
+const cancelBooking = asyncHandler(async (req, res) => {
+  try {
+    const sessionId = req.params.sessionId;
+
+    const booking = await BookedSlots.findOne({ sessionId: sessionId });
+
+    if (!booking) {
+      return res.status(404).send('Booking not found');
+    }
+
+    const cancelledBooking = new CancelledBookings({
+      userId: booking.userId,
+      slotId: booking.slotId,
+      newspaperName: booking.newspaperName,
+      publishingDate: booking.publishingDate,
+      file: booking.file,
+      price: booking.price,
+      sessionId: booking.sessionId
+    });
+
+    await cancelledBooking.save();
+
+    await BookedSlots.deleteOne({ sessionId: sessionId });
+
+    res.render('bookingCancellationSuccess');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+const renderCancelConfirmationPage = asyncHandler(async (req, res) => {
+  try{
+    res.render('bookingCancellationConfirmation');
+  }
+  catch(error){
+    console.log(error);
+  }
+})
+
+
+
 const webHook =  asyncHandler(async (request, response) => {
   const sig = request.headers['stripe-signature'];
 
@@ -621,6 +704,7 @@ module.exports = {
                   changePassword, 
                   logoutUser, 
                   renderDashboard ,
+                  renderViewBookingsPage,
                   registerUserWithOTP,
                   verifyOtp,
                   renderNewspaperInfo,
@@ -629,5 +713,7 @@ module.exports = {
                   bookSlot,
                   renderSuccessPage,
                   renderCancelPage,
+                  renderCancelConfirmationPage,
+                  cancelBooking,
                   webHook
                 };
