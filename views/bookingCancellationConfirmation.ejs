@@ -11,17 +11,37 @@
     <h1>Cancel Your Booking</h1>
     <div class="booking-details">
       <h2>Booking Details</h2>
-      <p>Booking ID: <span id="bookingId">123456</span></p>
-      <p>Item: <span id="itemName">Luxury Hotel Room</span></p>
-      <p>Dates: <span id="bookingDates">May 1, 2024 - May 5, 2024</span></p>
-      <p>Total Cost: <span id="totalCost">$1,000</span></p>
+      <p>Booking ID: <span id="bookingId"><%= booking._id %></span></p>
+      <p>Item: <span id="itemName"><%= booking.newspaperName %></span></p>
+      <p>Dates: <span id="bookingDates"><%= booking.createdAt %></span></p>
+      <p>Total Cost: <span id="totalCost"><%= booking.price %></span></p>
     </div>
     <div class="confirmation">
       <p>Are you sure you want to cancel this booking?</p>
-      <button id="confirmCancel">Yes, Cancel Booking</button>
-      <button id="keepBooking">No, Keep Booking</button>
+      <a class="button" id="confirmCancel">Yes, Cancel Booking</a>
+      <a class="button" id="keepBooking" href="">No, Keep Booking</a>
     </div>
   </div>
-  <script src="/javascripts/bookingCancellationConfirmation.js"></script>
+
+  <script>
+    document.getElementById('confirmCancel').addEventListener('click', function(event) {
+      event.preventDefault();
+      
+      const url = new URL(window.location.href);
+      const bookingId = url.pathname.split('/').pop();
+
+
+      fetch(`/users/cancel-slot/${bookingId}`, {
+        method: 'POST'
+      }).then(response => {
+        if (response.ok) {
+          window.location.href = '/users/cancel-booking/success';
+        } else {
+        }
+      }).catch(error => {
+        console.error('Error:', error);
+      });
+    });
+    </script>
 </body>
 </html>
