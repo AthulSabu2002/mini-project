@@ -581,9 +581,9 @@ const bookSlot = asyncHandler(async (req, res) => {
 
 const cancelBooking = asyncHandler(async (req, res) => {
   try {
-    const sessionId = req.params.sessionId;
+    const bookingId = req.params.bookingId;
 
-    const booking = await BookedSlots.findOne({ sessionId: sessionId });
+    const booking = await BookedSlots.findOne({ _id: bookingId });
 
     if (!booking) {
       return res.status(404).send('Booking not found');
@@ -601,9 +601,9 @@ const cancelBooking = asyncHandler(async (req, res) => {
 
     await cancelledBooking.save();
 
-    await BookedSlots.deleteOne({ sessionId: sessionId });
+    await BookedSlots.deleteOne({ bookingId: bookingId });
 
-    res.render('bookingCancellationSuccess');
+    res.status(200).send('slot cancellation success');
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal Server Error');
@@ -611,13 +611,49 @@ const cancelBooking = asyncHandler(async (req, res) => {
 });
 
 const renderCancelConfirmationPage = asyncHandler(async (req, res) => {
+  const bookingId = req.params.bookingId;
+  console.log(bookingId);
+
+  const userId = req.cookies.userId;
+  
   try{
-    res.render('bookingCancellationConfirmation');
-  }
-  catch(error){
+    if(userId){
+      const booking = await BookedSlots.findOne({ _id: bookingId });
+
+      console.log(booking);
+
+      const createdAt = new Date(booking.createdAt);
+      const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true
+      };
+      const formattedCreatedAt = createdAt.toLocaleString('en-US', options);
+
+      const formattedBooking = {
+        _id: booking._id,
+        newspaperName: booking.newspaperName,
+        createdAt: formattedCreatedAt,
+        price: booking.price,
+        sessionId: booking.sessionId
+      };
+
+      console.log(formattedBooking);
+
+      res.render('bookingCancellationConfirmation', { booking: formattedBooking });
+    }
+    else{
+      res.redirect('/users/auth/login')
+    }
+  }catch(error){
     console.log(error);
   }
-})
+
+});
 
 
 

@@ -54,7 +54,7 @@ h1 {
 
 .booking h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 2rem;
+  font-size: 1rem;
   color: #2c3e50;
   margin-bottom: 1rem;
 }
@@ -74,6 +74,7 @@ h1 {
   font-weight: 600;
   padding: 0.8rem 1.5rem;
   border: none;
+  text-decoration: none;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
