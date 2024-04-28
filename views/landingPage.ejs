@@ -12,6 +12,8 @@
 
         <!--=============== CSS ===============-->
         <link rel="stylesheet" href="/stylesheets/landingPage.css">
+        <link rel="stylesheet" href="/stylesheets/preloader.css" id="preloaderCss">
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- Include jQuery UI -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -21,6 +23,11 @@
         <title>Adcolumn</title>
     </head>
     <body>
+
+
+        <!-- preloader section -->
+        <%- include('partials/preloader.ejs') %>
+
         <!--==================== HEADER ====================-->
         <header class="header" id="header">
             <nav class="nav container">
