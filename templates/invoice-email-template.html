@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Invoice - Paid</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 30px;
+    }
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .invoice-header h2 {
+      color: #333;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .invoice-header p.paid {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    .invoice-details {
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      padding: 20px 0;
+      margin-bottom: 20px;
+    }
+
+    .invoice-details p {
+      color: #666;
+      margin: 5px 0;
+    }
+
+    .invoice-total {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 18px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .invoice-total span {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="invoice-header">
+      <h2>Invoice</h2>
+      <p class="paid">Paid</p>
+    </div>
+    <div class="invoice-details">
+      <p>Date: April 28, 2024</p>
+      <p>Bill To: [Customer Name]</p>
+      <p>Email: [Customer Email]</p>
+    </div>
+    <div class="invoice-items">
+      <p>Item 1 - $99.99</p>
+      <p>Item 2 - $49.99</p>
+      <p>Item 3 - $29.99</p>
+    </div>
+    <div class="invoice-total">
+      <span>Total:</span>
+      <span>$179.97</span>
+    </div>
+  </div>
+</body>
+</html>
