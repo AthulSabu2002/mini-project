@@ -360,10 +360,12 @@ input::placeholder {
 	}
 	
 	.sign-in-container {
+		width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 100%;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -373,10 +375,12 @@ input::placeholder {
 		z-index: 5; /* Ensure containers are above any other content */
 	}
  .sign-up-container{
+	    width: 100%;
+	    padding: 20px;
+	    box-sizing: border-box;
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 100%;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -470,3 +474,21 @@ input::placeholder {
 
 	
   }
+
+  @media only screen and (max-width: 767px) {
+    .form-control,
+    .form-control1,
+    .bt1,
+    .bt2,
+    .bt3 {
+        width: 100%;
+        max-width: 400px;
+        box-sizing: border-box;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 400px;
+        min-height: 100vh;
+    }
+}
