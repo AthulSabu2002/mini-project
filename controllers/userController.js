@@ -22,7 +22,7 @@ const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
 
 const renderDashboard = asyncHandler(async (req, res) => {
    if(req.session.loggedIn){
-    res.render('userDashboard');
+    res.render('user_dashboard');
    }
     else{
       res.redirect('/auth/login');
@@ -201,7 +201,7 @@ const loginUser = asyncHandler(async (req, res) => {
                         maxAge: 24 * 60 * 60 * 1000,
                         httpOnly: true 
                     });
-                  const returnUrl = req.cookies.returnTo || '/profile';
+                  const returnUrl = req.cookies.returnTo || '/users/dashboard';
                   res.clearCookie('returnTo');
                   return res.redirect(returnUrl);
               });

@@ -16,8 +16,8 @@ body {
 
 .container {
   max-width: 1000px;
-  margin: 4rem auto;
-  padding: 2rem;
+  margin: 4rem auto; 
+  padding: 2rem; 
   background-color: #fff;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
   border-radius: 8px;

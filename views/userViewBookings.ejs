@@ -4,24 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Bookings</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/stylesheets/user_dashboard.css">
   <link rel="stylesheet" href="/stylesheets/userViewBookings.css">
 </head>
 <body>
-  <div class="container">
-    <h1>My Bookings</h1>
-    <div id="bookingsList">
-      <% bookings.forEach(booking => { %>
-        <div class="booking">
-          <div class="booking-details">
-            <h2>Booking ID: <%= booking._id %></h2>
-            <p>Item: <span><%= booking.newspaperName %></span></p>
-            <p>Dates: <span><%= booking.createdAt %></span></p>
-            <p>Total Cost: <span><%= booking.price %></span></p>
+  <main>
+    <div class="container">
+      <h1>My Bookings</h1>
+      <div id="bookingsList">
+        <% bookings.forEach(booking => { %>
+          <div class="booking">
+            <div class="booking-details">
+              <h2>Booking ID: <%= booking._id %></h2>
+              <p>Item: <span><%= booking.newspaperName %></span></p>
+              <p>Dates: <span><%= booking.createdAt %></span></p>
+              <p>Total Cost: <span><%= booking.price %></span></p>
+            </div>
+            <a href="/users/cancel-slot/<%= booking._id %>" class="cancel-btn">Cancel</a>
           </div>
-          <a href="/users/cancel-slot/<%= booking._id %>" class="cancel-btn">Cancel</a>
-        </div>
-      <% }) %>
+        <% }) %>
+      </div>
     </div>
-  </div>
+  </main>
+  <script src="/javascripts/user_dashboard.js"></script>
 </body>
 </html>
