@@ -4,7 +4,61 @@ const Request = require("../models/requestModel");
 const bcrypt = require('bcrypt')
 const Layout = require("../models/newsPaperLayout");
 const Newspaper = require("../models/newspaperSlots");
+const Admin = require('../models/adminModel');
 
+
+const loginAdmin = asyncHandler(async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        console.log(req.body);
+        
+        if (!username || !password) {
+          return res.status(500).send("<script>alert('username and password fields are mandatory'); window.location='/admin/login';</script>");
+        }
+        const user = await Admin.findOne({ username }, 'username email password');
+  
+        if (user) {
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (isPasswordValid) {
+                req.login(user, (err) => {
+                    if (err) {
+                        console.error('Error logging in:', err);
+                        return res.status(500).send("<script>alert('Internal Server error'); window.location='/admin/login';</script>");
+                    }
+                      req.session.loggedIn = true;
+                      const userId = req.user.id;
+                      res.cookie('userId', userId, { 
+                          maxAge: 24 * 60 * 60 * 1000,
+                          httpOnly: true 
+                      });
+                    const returnUrl = req.cookies.returnTo || '/admin/dashboard';
+                    res.clearCookie('returnTo');
+                    return res.redirect(returnUrl);
+                });
+            } else {
+                console.log('Incorrect password for user:', username);
+                return res.status(500).send("<script>alert('Incorrect username or password'); window.location='/admin/login';</script>");
+            }
+        } else {
+            console.log('No user found with this username:', username);
+            return res.status(500).send("<script>alert('Incorrect username or password'); window.location='/admin/login';</script>");
+        }
+    } catch (error) {
+        console.error('Error finding user:', error);
+        return res.status(500).send("<script>alert('Internal Server error'); window.location='/admin/login';</script>");
+    }
+});
+
+const logoutAdmin = asyncHandler(async (req, res) => {
+    req.logOut(function(err) {
+      if (err) { return next(err); }
+        req.session.loggedIn = false;
+        req.session.destroy()
+        res.clearCookie('userId');
+      res.redirect('/admin/login'); 
+    });
+});
 
 
 const renderAddPublisher = asyncHandler(async (req, res) => {
@@ -234,6 +288,7 @@ const deletePublisher = asyncHandler(async (req, res) => {
 
 
  module.exports = { 
+                    loginAdmin,
                     addPublisher,  
                     viewPublishers, 
                     deletePublisher, 
@@ -244,5 +299,6 @@ const deletePublisher = asyncHandler(async (req, res) => {
                     renderNewspaperSlots, 
                     deleteRequest,
                     renderSaveAddSlots,
-                    saveAdSlots
+                    saveAdSlots,
+                    logoutAdmin
                 }

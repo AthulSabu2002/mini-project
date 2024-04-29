@@ -1,15 +1,40 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+
 
 const adminSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    fullName: { type: String, required: true },
-    role: { type: String, enum: ['user', 'admin', 'moderator'], default: 'user' }, // Default role set to 'user'
-    profilePicture: String,
-    isActive: { type: Boolean, default: true },
-}, { timestamps: true });
+    username: String,
+    email: {
+        type: String,
+    },
+    password: {
+        type: String,
+    },
+    otp: String,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+}, {
+    timestamps: true,
+});
 
-const Admin = mongoose.model('Admin', adminSchema);
+adminSchema.plugin(passportLocalMongoose);
+
+const Admin = mongoose.model("Admin", adminSchema);
+
+passport.use(Admin.createStrategy());
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await Admin.findById(id);
+        done(null, user);
+    } catch (error) {
+        done(error);
+    }
+});
 
 module.exports = Admin;
