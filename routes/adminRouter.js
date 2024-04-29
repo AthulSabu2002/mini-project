@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const asyncHandler = require("express-async-handler");
+const Admin = require('../models/adminModel');
 const {
+    loginAdmin,
     addPublisher,
     viewPublishers,
     viewRequest,
@@ -11,30 +14,63 @@ const {
     deletePublisher,
     deleteRequest,
     renderSaveAddSlots,
-    saveAdSlots
+    saveAdSlots,
+    logoutAdmin
     } = require("../controllers/adminController");
 
 
-router.route('/dashboard').get(renderDashboard);
+const bodyParser = require("body-parser");
+        
+const urlencodedParser = bodyParser.urlencoded({ extended: true })
 
-router.route('/add-publisher').get(renderAddPublisher);
+const authCheck = asyncHandler(async (req, res, next) => {
+    const userId = req.cookies.userId;
+    if (!userId) {
+        return res.redirect('/admin/login'); 
+    }
 
-router.route('/view-publishers').get(viewPublishers);
+    const user = await Admin.findById(userId);
+    if (!user) {
+        return res.redirect('/admin/login'); 
+    } 
+    else{
+      next()
+    }
+});
 
-router.route('/add-newspaperSlots-details').get(renderNewspaperSlots);
+router.route("/login").get((req,res) => {
+    try{
+        res.render("admin_login");
+    }
+    catch(err){
+        res.send(err);
+    }
+});
 
-router.route('/view-requests').get(viewRequest);
+router.route("/login").post(urlencodedParser, loginAdmin);
 
-router.route('/view-request-details/:id').get(viewPublisherDetails);
+router.route('/dashboard').get(authCheck, renderDashboard);
 
-router.route('/add-publisher').post(addPublisher);
+router.route('/add-publisher').get(authCheck, renderAddPublisher);
 
-router.route('/add-slots').get(renderSaveAddSlots);
+router.route('/view-publishers').get(authCheck, viewPublishers);
 
-router.route('/initialize-slots').post(saveAdSlots);
+router.route('/add-newspaperSlots-details').get(authCheck, renderNewspaperSlots);
 
-router.route('/delete-publisher/:id').post(deletePublisher);
+router.route('/view-requests').get(authCheck, viewRequest);
 
-router.route('/delete-request/:id').post(deleteRequest);
+router.route('/view-request-details/:id').get(authCheck, viewPublisherDetails);
+
+router.route('/add-publisher').post(authCheck, addPublisher);
+
+router.route('/add-slots').get(authCheck, renderSaveAddSlots);
+
+router.route('/initialize-slots').post(authCheck, saveAdSlots);
+
+router.route('/delete-publisher/:id').post(authCheck, deletePublisher);
+
+router.route('/delete-request/:id').post(authCheck, deleteRequest);
+
+router.route("/logout").get(logoutAdmin);
 
 module.exports = router;
