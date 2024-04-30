@@ -1,4 +1,7 @@
 const express = require("express");
+const asyncHandler = require("express-async-handler");
+const async = require('async');
+const Users = require('../models/userModel');
 const {
       loginUser, 
       resetPassword, 
@@ -6,6 +9,8 @@ const {
       changePassword, 
       logoutUser, 
       renderDashboard,
+      renderUserProfile,
+      updateUserProfile,
       renderViewBookingsPage,  
       verifyOtp,
       registerUserWithOTP,
@@ -28,7 +33,8 @@ const path = require("path");
 
 const app = express();
 
-const urlencodedParser = bodyParser.urlencoded({ extended: true })
+const urlencodedParser = bodyParser.urlencoded({ extended: true });
+
 
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -45,15 +51,30 @@ const upload = multer({
     },
 }).single('file');
 
-const authCheck = (req, res, next) => {
-  if(!req.user){
-    res.cookie('returnTo', req.originalUrl || 'unknown');
-    res.redirect('/auth/login')
+// const authCheck = (req, res, next) => {
+//   if(!req.user){
+//     res.cookie('returnTo', req.originalUrl || 'unknown');
+//     res.redirect('/auth/login')
+//   }
+//   else{
+//     next()
+//   }
+// }
+
+const authCheck = asyncHandler(async (req, res, next) => {
+  const userId = req.cookies.userId;
+  if (!userId) {
+      return res.redirect('/auth/login'); 
   }
+
+  const user = await Users.findById(userId);
+  if (!user) {
+      return res.redirect('/auth/login'); 
+  } 
   else{
     next()
   }
-}
+});
 
 router.route("/login").get((req,res) => {
     try{
@@ -110,25 +131,29 @@ router.route("/reset/:token").post(urlencodedParser,changePassword);
 
 router.route("/reset/:token").get(urlencodedParser,changePasswordRequest);
 
-router.route("/dashboard").get(renderDashboard);
+router.route("/dashboard").get(authCheck, renderDashboard);
 
-router.route("/dashboard/view-bookings").get(renderViewBookingsPage);
+router.route("/dashboard/view-profile").get(authCheck, renderUserProfile);
+
+router.route("/dashboard/profile/update-profile").post(urlencodedParser, authCheck, updateUserProfile);
+
+router.route("/dashboard/view-bookings").get(authCheck, renderViewBookingsPage);
 
 router.route("/viewSlot/:layoutName").get(authCheck, renderNewspaperInfo);
 
-router.route("/viewSlot/:layoutName").post(renderBookSlotByDate);
+router.route("/viewSlot/:layoutName").post(authCheck, renderBookSlotByDate);
 
 router.route("/viewSlot/:layoutName/:publishingDate").get(authCheck, renderBookinglayout);
 
-router.route('/stripe-checkout').post(upload, bookSlot);
+router.route('/stripe-checkout').post(authCheck, upload, bookSlot);
 
-router.route('/book-slot/success').get(renderSuccessPage);
+router.route('/book-slot/success').get(authCheck, renderSuccessPage);
 
-router.route('/cancel-slot/:bookingId').get(renderCancelConfirmationPage);
+router.route('/cancel-slot/:bookingId').get(authCheck, renderCancelConfirmationPage);
 
-router.route('/cancel-slot/:bookingId').post(cancelBooking);
+router.route('/cancel-slot/:bookingId').post(authCheck, cancelBooking);
 
-router.route('/book-slot/cancel').get(renderCancelPage);
+router.route('/book-slot/cancel').get(authCheck, renderCancelPage);
 
 router.route("/logout").get(logoutUser);
 
