@@ -130,7 +130,7 @@ router.route('/cancel-slot/:bookingId').post(cancelBooking);
 
 router.route('/book-slot/cancel').get(renderCancelPage);
 
-router.route("/logout").post(logoutUser);
+router.route("/logout").get(logoutUser);
 
 
 
