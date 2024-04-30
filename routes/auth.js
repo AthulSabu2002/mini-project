@@ -13,7 +13,19 @@ router.get('/google', passport.authenticate('google',{
 
 
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
-    res.redirect('/users/dashboard/')
+    if (req.user) {
+        const googleId = req.user.googleId;
+        const requserId = req.user._id;
+        const userId = requserId.toString();
+        console.log(userId);
+        if (googleId) {
+            res.cookie('userId', userId, {
+                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true
+            });
+            res.redirect('/users/dashboard/')
+        }
+    }
 })
 
 

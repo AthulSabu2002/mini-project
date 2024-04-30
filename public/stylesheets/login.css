@@ -43,7 +43,18 @@ h2 {
 	margin-bottom: 10px;
 }
 
+.error {
+	font-size: 12px;
+	color: red;
+	margin-top: 2px;
+	margin-bottom: 0;
+}
 
+input[type="submit"]:disabled {
+	background-color: #cccccc; 
+	color: #666666;
+	cursor: not-allowed;
+  }
 
 
 span {

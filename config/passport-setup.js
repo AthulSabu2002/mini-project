@@ -32,7 +32,8 @@ passport.use(
             } else {
                 new User({
                     username: profile.displayName,
-                    googleId: profile.id
+                    googleId: profile.id,
+                    email: profile.emails ? profile.emails[0].value : null
                 }).save().then((newUser) => {
                     console.log('new user saved to database');
                     done(null, newUser);
@@ -41,5 +42,6 @@ passport.use(
         }).catch(err => done(err));
     })
 );
+
 
 module.exports = router;
