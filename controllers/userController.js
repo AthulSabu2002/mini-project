@@ -22,12 +22,7 @@ const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
 
 
 const renderDashboard = asyncHandler(async (req, res) => {
-   if(req.session.loggedIn){
     res.render('user_dashboard');
-   }
-    else{
-      res.redirect('/auth/login');
-    }
 });
 
 
@@ -153,29 +148,29 @@ function generateOTP() {
 
 
 async function sendOTPEmail(email, otp) {
-  console.log(`Sending OTP ${otp} to ${email}`);
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail', 
-    auth: {
-      user: process.env.MYEMAIL,
-      pass: process.env.APP_PASSWORD, 
-    }
-  });
+  // console.log(`Sending OTP ${otp} to ${email}`);
+  // const transporter = nodemailer.createTransport({
+  //   service: 'Gmail', 
+  //   auth: {
+  //     user: process.env.MYEMAIL,
+  //     pass: process.env.APP_PASSWORD, 
+  //   }
+  // });
 
-  const mailOptions = {
-    from: process.env.MYEMAIL,
-    to: email,
-    subject: 'Your OTP Code',
-    text: `Your OTP code is: ${otp}`
-  };
+  // const mailOptions = {
+  //   from: process.env.MYEMAIL,
+  //   to: email,
+  //   subject: 'Your OTP Code',
+  //   text: `Your OTP code is: ${otp}`
+  // };
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent: ${info.messageId}`);
-  } catch (error) {
-    console.error('Error sending email:', error.message);
-    throw error;
-  }
+  // try {
+  //   const info = await transporter.sendMail(mailOptions);
+  //   console.log(`Email sent: ${info.messageId}`);
+  // } catch (error) {
+  //   console.error('Error sending email:', error.message);
+  //   throw error;
+  // }
 };
 
 

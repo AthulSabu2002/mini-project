@@ -63,18 +63,21 @@ const upload = multer({
 
 const authCheck = asyncHandler(async (req, res, next) => {
   const userId = req.cookies.userId;
+  console.log("userId is : ",userId);
   if (!userId) {
-      return res.redirect('/auth/login'); 
+      return res.redirect('/users/login');
   }
 
   const user = await Users.findById(userId);
+  console.log(user);
   if (!user) {
-      return res.redirect('/auth/login'); 
-  } 
-  else{
-    next()
+      return res.redirect('/users/login');
   }
+
+  next();
 });
+
+
 
 router.route("/login").get((req,res) => {
     try{
