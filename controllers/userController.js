@@ -15,6 +15,7 @@ const BookedSlots = require("../models/bookedSlots");
 const TemporaryBooking = require('../models/temporaryBooking');
 const SlotPrices = require('../models/slotPrices');
 const CancelledBookings = require('../models/cancelledBookingModel');
+const Users = require('../models/userModel');
 
 const emailTemplatePath = path.join(__dirname, '..', 'templates', 'reset-password-template.html');
 const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
@@ -350,6 +351,42 @@ const changePassword = asyncHandler(async (req, res) => {
     }
   });
 });
+
+const renderUserProfile = asyncHandler(async (req, res) => {
+  try{
+    const userId = req.cookies.userId;
+    if(userId){
+      console.log(userId);
+      const user = await Users.findById({ _id: userId });
+      console.log(user);
+      res.render('user_profile', { user: user});
+    }
+  }
+  catch(error){
+    console.log(error);
+  }
+})
+
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const userId = req.cookies.userId;
+  try{
+      const user = await Users.findById(userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        user.username = req.body.username;
+        user.email = req.body.email;
+
+        await user.save();
+        res.status(200).send('Account details updated');
+  }
+  catch(error){
+    console.error('Error updating user details:', error);
+    res.status(500).send('Error updating user details');
+  }
+})
 
 
 const renderNewspaperInfo = asyncHandler( async(req, res) => {
@@ -739,7 +776,9 @@ module.exports = {
                   changePasswordRequest, 
                   changePassword, 
                   logoutUser, 
-                  renderDashboard ,
+                  renderDashboard,
+                  renderUserProfile,
+                  updateUserProfile,
                   renderViewBookingsPage,
                   registerUserWithOTP,
                   verifyOtp,
