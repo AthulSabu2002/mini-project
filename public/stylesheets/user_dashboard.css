@@ -1611,7 +1611,7 @@ in order for the aspect ratio trick to work*/
   color: #333;
 }
 
-.profile-item span {
+.profile-item span a{
   color: #333;
   font-size: 14px;
 }

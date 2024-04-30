@@ -14,6 +14,39 @@ body {
   color: #333;
 }
 
+nav {
+  background-color: #f2f2f2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+
+/* Back Button Styles */
+.back-btn {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #2c3e50;
+  transition: color 0.3s ease, transform 0.3s ease;
+  font-size: 1.5rem;
+}
+
+.back-btn:hover {
+  color: #333;
+  transform: translateX(-2px);
+}
+
+.back-btn:hover i {
+  background-color: #e6e6e6;
+}
+
 .container {
   max-width: 1000px;
   margin: 4rem auto; 
@@ -115,6 +148,10 @@ h1 {
 }
 
 @media (max-width: 480px) {
+  .back-btn {
+    font-size: 1.2rem;
+  }
+
   h1 {
     font-size: 2rem;
   }
