@@ -8,7 +8,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/google', passport.authenticate('google',{
-    scope: ['profile']
+    scope: ['email','profile']
 }))
 
 
@@ -19,6 +19,7 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
         const userId = requserId.toString();
         console.log(userId);
         if (googleId) {
+            req.session.loggedIn = true;
             res.cookie('userId', userId, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true
