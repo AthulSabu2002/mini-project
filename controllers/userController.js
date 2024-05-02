@@ -33,6 +33,7 @@ const renderViewBookingsPage = asyncHandler(async (req, res) => {
       const bookings = await BookedSlots.find({ userId: userId });
 
       const formattedBookings = bookings.map(booking => {
+        const publishingDate = new Date(booking.publishingDate);
         const createdAt = new Date(booking.createdAt);
         const options = {
           year: 'numeric',
@@ -44,11 +45,13 @@ const renderViewBookingsPage = asyncHandler(async (req, res) => {
           hour12: true
         };
         const formattedCreatedAt = createdAt.toLocaleString('en-US', options);
+        const formattedPublishingDate = publishingDate.toLocaleString('en-US', options);
 
         return {
           _id: booking._id,
           newspaperName: booking.newspaperName,
           createdAt: formattedCreatedAt,
+          publishingDate: formattedPublishingDate,
           price: booking.price,
           sessionId: booking.sessionId
         };

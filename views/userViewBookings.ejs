@@ -25,7 +25,8 @@
             <div class="booking-details">
               <h2>Booking ID: <%= booking._id %></h2>
               <p>Item: <span><%= booking.newspaperName %></span></p>
-              <p>Dates: <span><%= booking.createdAt %></span></p>
+              <p>Booking Date: <span><%= booking.createdAt %></span></p>
+              <p>Publishing Date: <span><%= booking.publishingDate %></span></p>
               <p>Total Cost: <span><%= booking.price %></span></p>
             </div>
             <a href="/users/cancel-slot/<%= booking._id %>" class="cancel-btn">Cancel</a>
