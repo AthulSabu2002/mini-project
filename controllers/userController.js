@@ -389,9 +389,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
 const renderNewspaperInfo = asyncHandler( async(req, res) => {
   const layoutName = req.params.layoutName;
-  const fileName = layoutName + '_infoPage';
+
   try{
-    res.render(fileName);
+
+    const newspaper = await Publisher.findOne({newspaperName: layoutName})
+
+    res.render('newspaper_infoPage', {newspaper: newspaper});
   }catch(error){
     console.log(error);
   }

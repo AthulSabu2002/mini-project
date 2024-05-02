@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/newspaper_infoPage.css">
+    <title>Info</title>
+    <script src="https://kit.fontawesome.com/58a6fcb787.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+   
+    <nav>
+        <a href="/users/dashboard" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+      </nav>
+    <!--adding the newsper body-->
+    <main>
+        <div class="site-content">
+            <div class="profile">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="newspaper-title">
+                                <h1>The Indian Express</h1>
+                            </div>
+                            <div class="tab-summary d-flex flex-column flex-md-row">
+                                <div class="summary_image">
+                                    <img class=imagenewsp src="/images/f12.webp" alt="newspaper image">
+                                </div>
+                            <div class="summary_content d-flex align-items-center ms-md-3">
+                                <div class="summaryitems">
+                                    <div class="itemsinsummary">
+                                        <h2 style="display: inline;">Language:</h2>
+                                        <p style="display: inline; font-size: larger;"><%= newspaper.language %></p>
+                                    </div>
+                                    <div class="itemsinsummary">
+                                        <h2 style="display: inline;">Established:</h2>
+                                        <p style="display: inline; font-size: larger;">1888</p>
+                                    </div>
+                                    <div class="itemsinsummary">
+                                        <h2 style="display: inline;">Headquarters:</h2>
+                                        <p style="display: inline; font-size: larger;">Mumbai, Maharasthra</p>
+                                    </div>
+                                    <div class="itemsinsummary">
+                                        <h2 style="display: inline;">Owner:</h2>
+                                        <p style="display: inline; font-size: larger;">The Indian Express</p>
+                                    </div>
+                                </div>  
+                                <div>
+                                <div class="expandable-boxes">
+                                    <div class="box">
+                                        <h3>Language</h3>
+                                        <p class="short-text">Click here to know more.</p>
+                                        <div class="box-content">
+                                            <p>English is the language used in the Malayala Manorama newspaper. It is one of the major Dravidian languages spoken primarily in the Indian state of Kerala.</p>
+                                        </div>
+                                    </div>
+                                    <div class="box">
+                                        <h3>Established</h3>
+                                        <p class="short-text">Click here to know more.</p>
+                                        <div class="box-content">
+                                            <p>The Indian Express was founded in 1888 by Kandathil Varghese Mappillai, a Syrian Christian from Kottayam, Kerala. It is one of the oldest and most widely read newspapers in India.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bookingbut">
+                                    <button class="book-btn" id="myButton">BOOK YOUR SLOT</button>
+                                  </div>
+                             </div> 
+                            </div>                           
+
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/javascripts/newspaper_infoPage.js"></script>
+</body>
+</html>
