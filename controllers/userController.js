@@ -518,7 +518,7 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
-    res.render('bookingSuccess');
+    res.render('bookingSuccess', { booking: booking });
   }catch(error){
     console.log(error);
   }
