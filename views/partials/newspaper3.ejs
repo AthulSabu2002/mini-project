@@ -155,13 +155,28 @@
 <!-- <button id="showUploadBtn" class="upload-button">Upload Ad</button> -->
 
 <!-- Hidden div for uploading ad -->
-<div id="uploadDiv" class="upload-div">
+ <!-- Hidden div for uploading ad -->
+ <div id="uploadDiv" class="upload-div">
+    <div class="dottedborder">
     <span class="close-icon" id="closeUploadDiv">&times;</span>
-    <input type="file" id="imageInput" accept="image/*">
+    <span><p class="upldstmt">click to upload your image</p></span>
+    <label for="imageInput"></label>
+    <div class="imgint">
+        <input type="file" id="imageInput" accept="image/*">
+    </div>
     <button id="uploadButton" class="upload-button">Upload</button>
+    </div>
 </div>
-<div id="confirmUploadDiv" class="upload-div" style="display:none;">
+
+
+
+<div id="confirmUploadDiv" class="upload-div" style="display:none; border: 4px solid #464bac;">
+   
     <span class="close-icon" id="closeConfirmUploadDiv">&times;</span>
+    <span><p class="upldstmt">upload your image</p></span>
+    <div class="imgint">
     <input type="file" id="confirmImageInput" accept="image/*">
+    </div>
     <button id="confirmBookingButton" class="confirm-booking-button">Confirm Booking</button>
+    
 </div>
