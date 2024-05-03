@@ -436,7 +436,8 @@ const renderViewBookings = asyncHandler(async (req, res) => {
                 createdAt: createdAt,
                 publishingDate: publishingDate,
                 slotId: booking.slotId,
-                newspaperName: newspaperName
+                newspaperName: newspaperName,
+                file: booking.file
             };
         });        
 

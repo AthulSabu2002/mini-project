@@ -1,0 +1,29 @@
+.download-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    background-color: #f0f0f0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .download-link:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .download-link i {
+    margin-right: 0.5rem;
+  }
+  
+  .visually-hidden {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+  }
