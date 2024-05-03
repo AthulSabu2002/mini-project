@@ -430,8 +430,17 @@ const renderViewBookings = asyncHandler(async (req, res) => {
         const bookings = await BookedSlots.find({ newspaperName });
 
         const formattedBookings = bookings.map(booking => {
-            const createdAt = new Date(booking.createdAt).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).replace(/\//g, '-');
-            const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+            const createdAt = new Date(booking.createdAt)
+                                    .toLocaleString(undefined, {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit',
+                                    })
+                                    .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+                                    const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
             return {
                 createdAt: createdAt,
                 publishingDate: publishingDate,

@@ -29,18 +29,29 @@ passport.use(
             if (currentUser) {
                 done(null, currentUser);
             } else {
-                new User({
-                    username: profile.displayName,
-                    googleId: profile.id,
-                    email: profile.emails ? profile.emails[0].value : null
-                }).save().then((newUser) => {
-                    console.log('new user saved to database');
-                    done(null, newUser);
+                User.findOne({ email: profile.emails ? profile.emails[0].value : null }).then((userWithEmail) => {
+                    if (userWithEmail) {
+                        userWithEmail.googleId = profile.id;
+                        userWithEmail.save().then((updatedUser) => {
+                            console.log('Existing user updated with Google ID');
+                            done(null, updatedUser);
+                        }).catch(err => done(err));
+                    } else {
+                        new User({
+                            username: profile.displayName,
+                            googleId: profile.id,
+                            email: profile.emails ? profile.emails[0].value : null
+                        }).save().then((newUser) => {
+                            console.log('New user saved to database');
+                            done(null, newUser);
+                        }).catch(err => done(err));
+                    }
                 }).catch(err => done(err));
             }
         }).catch(err => done(err));
     })
 );
+
 
 
 module.exports = router;
