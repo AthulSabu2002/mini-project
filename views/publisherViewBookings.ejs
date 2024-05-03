@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publisher</title>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 	<link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
+    <link rel="stylesheet" href="/stylesheets/download-link.css">
 </head>
 <body>
 <%- include('partials/publisher-sidebar.ejs') %>
@@ -28,30 +30,41 @@
                             <th>Booking Date</th>
 							<th>Publishing Date</th>
 							<th>Slot Id</th>
+                            <th>file</th>
 							<th>Action</th>
 						</tr>
 					</thead>
 
 					<tbody>
                         <% if (bookings.length > 0) { %>
-                            <% bookings.forEach(booking => { %>
-                                <tr>
-                                    <td><%= booking.createdAt %></td>
-                                    <td><%= booking.publishingDate %></td>
-                                    <td><%= booking.slotId %></td>
-                                    <td>
-                                        <form action="/publisher/view-layout/<%= booking.newspaperName %>/<%= booking.publishingDate %>" method="POST">
-                                            <button type="submit" class="btn-danger">View</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <% }); %>
-                        <% } else { %>
+                          <% bookings.reverse().forEach(booking => { %>
                             <tr>
-                                <td colspan="2">No new requests.</td>
+                              <td><%= booking.createdAt %></td>
+                              <td><%= booking.publishingDate %></td>
+                              <td><%= booking.slotId %></td>
+                              <td>
+                                <% if (booking && booking.file) { %>
+                                  <a href="data:<%= booking.file.contentType %>;base64,<%= booking.file.data.toString('base64') %>" download="ad.jpeg" class="download-link">
+                                    <i class="fas fa-download"></i>
+                                    <span class="visually-hidden">Download PDF</span>
+                                  </a>
+                                <% } else { %>
+                                  <p>No file uploaded</p>
+                                <% } %>
+                              </td>
+                              <td>
+                                <form action="/publisher/view-layout/<%= booking.newspaperName %>/<%= booking.publishingDate %>" method="POST">
+                                  <button type="submit" class="btn-danger">View</button>
+                                </form>
+                              </td>
                             </tr>
+                          <% }); %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="2">No new requests.</td>
+                          </tr>
                         <% } %>
-					</tbody>
+                      </tbody>
 				</table>
 			</div>
 		</div>

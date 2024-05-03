@@ -55,7 +55,7 @@
 	
 						<tbody>
 							<% if (bookings.length > 0) { %>
-								<% bookings.forEach(booking => { %>
+								<% bookings.reverse().forEach(booking => { %>
 									<tr>
 										<td><%= booking.createdAt %></td>
 										<td><%= booking.publishingDate %></td>
