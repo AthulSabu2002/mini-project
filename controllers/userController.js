@@ -20,6 +20,9 @@ const Users = require('../models/userModel');
 const emailTemplatePath = path.join(__dirname, '..', 'templates', 'reset-password-template.html');
 const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
 
+const otp_reg_emailTemplatePath = path.join(__dirname, '..', 'templates', 'otp-reg-email-template.html');
+const otp_reg_emailTemplate = fs.readFileSync(otp_reg_emailTemplatePath, 'utf8');
+
 
 const renderDashboard = asyncHandler(async (req, res) => {
     res.render('user_dashboard');
@@ -85,6 +88,15 @@ const tempUserData = {};
 
 const registerUserWithOTP = asyncHandler(async (req, res) => {
   const otp = generateOTP();
+  const email = req.body.email;
+
+
+  const existingUser = await User.findOne({ email });
+
+  if (existingUser) {
+    return res.render('user_exists.ejs');
+  }
+
 
   tempUserData[req.body.email] = {
     username: req.body.username,
@@ -129,7 +141,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
                   return res.status(500).send("Internal Server Error");
                 }
 
-                return res.redirect('/profile/');
+                return res.redirect('/users/dashboard');
               });
             } else {
                 res.status(400).json({ message: 'Invalid OTP. Please try again.' });
@@ -160,11 +172,14 @@ async function sendOTPEmail(email, otp) {
     }
   });
 
+  const emailContent = otp_reg_emailTemplate.replace('{OTP_PLACEHOLDER}', otp);
+
   const mailOptions = {
     from: process.env.MYEMAIL,
     to: email,
     subject: 'Your OTP Code',
-    text: `Your OTP code is: ${otp}`
+    text: `Your OTP code is: ${otp}`,
+    html: emailContent
   };
 
   try {
