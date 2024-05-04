@@ -38,6 +38,7 @@ const renderViewBookingsPage = asyncHandler(async (req, res) => {
       const formattedBookings = bookings.map(booking => {
         const publishingDate = new Date(booking.publishingDate);
         const createdAt = new Date(booking.createdAt);
+        const lastDateOfCancellation = new Date(booking.lastDateOfCancellation)
         const options = {
           year: 'numeric',
           month: 'long',
@@ -55,6 +56,7 @@ const renderViewBookingsPage = asyncHandler(async (req, res) => {
           newspaperName: booking.newspaperName,
           createdAt: formattedCreatedAt,
           publishingDate: formattedPublishingDate,
+          lastDateOfCancellation: lastDateOfCancellation,
           price: booking.price,
           sessionId: booking.sessionId
         };
@@ -530,6 +532,7 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
       slotId: temporaryBooking.slotId,
       newspaperName: temporaryBooking.newspaperName,
       publishingDate: temporaryBooking.publishingDate,
+      lastDateOfCancellation: temporaryBooking.lastDateOfCancellation,
       file: temporaryBooking.file,
       price: temporaryBooking.price,
       sessionId: temporaryBooking.sessionId
@@ -573,6 +576,9 @@ const bookSlot = asyncHandler(async (req, res) => {
     const { slotId, newspaperName } = req.body;
     const publishingDate = req.cookies.publishingDate;
 
+    const publisher = await Publisher.findOne({newspaperName: newspaperName});
+    const publisherId = publisher._id;
+
     const bookedSlots = await BookedSlots.find({
       newspaperName: newspaperName,
       publishingDate: publishingDate,
@@ -582,6 +588,18 @@ const bookSlot = asyncHandler(async (req, res) => {
     if (bookedSlots.length > 0) {
       return res.redirect('/users/viewSlot');
     }
+
+
+    const bookingDate = await BookingDates.findOne({
+      publisher: publisherId,
+      publishingDate: publishingDate
+    });
+
+    console.log(bookingDate);
+
+    const bookingClosingDate = bookingDate.bookingCloseDate;
+
+    console.log(bookingClosingDate);
 
     const price = await findSlotPrice(newspaperName, slotId);
 
@@ -617,6 +635,7 @@ const bookSlot = asyncHandler(async (req, res) => {
       slotId: slotId,
       newspaperName: newspaperName,
       publishingDate: publishingDate,
+      lastDateOfCancellation: bookingClosingDate,
       file: { data: file.buffer, contentType: file.mimetype },
       price: price,
       sessionId: session.id,
@@ -654,7 +673,7 @@ const cancelBooking = asyncHandler(async (req, res) => {
 
     await cancelledBooking.save();
 
-    await BookedSlots.deleteOne({ bookingId: bookingId });
+    await BookedSlots.deleteOne({ _id: bookingId });
 
     res.status(200).send('slot cancellation success');
   } catch (error) {
@@ -706,6 +725,14 @@ const renderCancelConfirmationPage = asyncHandler(async (req, res) => {
     console.log(error);
   }
 
+});
+
+const renderCancelBookingSuccess = asyncHandler(async (req, res) => {
+  try{
+    res.render('user-cancel-booking-success');
+  }catch(error){
+    console.log(error);
+  }
 });
 
 
@@ -806,5 +833,6 @@ module.exports = {
                   renderCancelPage,
                   renderCancelConfirmationPage,
                   cancelBooking,
+                  renderCancelBookingSuccess,
                   webHook
                 };
