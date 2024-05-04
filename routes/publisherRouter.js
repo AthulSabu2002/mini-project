@@ -22,7 +22,10 @@ const {
     renderBookedLayout,
     sendBookedDetails,
     renderSlotsPricing,
-    SaveSlotsPricing
+    SaveSlotsPricing,
+    renderCancelledBookings,
+    refundInitiation,
+    renderRefundSuccessPage
 } = require("../controllers/publisherController");
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true })
@@ -66,6 +69,8 @@ router.route('/view-layout').get(viewLayout);
 
 router.route('/view-bookings').get(renderViewBookings);
 
+router.route('/view-cancel-requests').get(renderCancelledBookings)
+
 router.route('/view-layout/:newspaperName/:publishingDate').post(renderBookedLayout);
 
 router.route('/view-layout/:newspaperName/:publishingDate').get(sendBookedDetails);
@@ -73,6 +78,10 @@ router.route('/view-layout/:newspaperName/:publishingDate').get(sendBookedDetail
 router.route('/slots-pricing').get(renderSlotsPricing);
 
 router.route('/slots-pricing').post(SaveSlotsPricing);
+
+router.route('/refund/:cancellationId/stripe-checkout').post(refundInitiation);
+
+router.route('/refund/success').get(renderRefundSuccessPage);
 
 router.route('/stripe-checkout').post(upload, publisherRequest);
 
