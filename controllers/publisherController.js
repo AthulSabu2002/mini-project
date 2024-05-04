@@ -13,6 +13,8 @@ const SlotPrices = require("../models/slotPrices");
 const Newspapers = require("../models/newspaperSlots");
 const TemporaryRequest = require('../models/temporaryPublisherRequest');
 const CancelledBookings = require('../models/cancelledBookingModel');
+const TemporaryRefund = require('../models/temporaryRefundsModel');
+const Refunded = require('../models/refundedItemsModel');
 
 let stripeGateway = stripe(process.env.stripe_api)
 let PUBLISHER_DOMAIN = process.env.PUBLISHER_DOMAIN
@@ -575,6 +577,19 @@ const refundInitiation = asyncHandler(async (req, res) => {
           res.cookie('sessionId', sessionId, { httpOnly: true });
           res.cookie('sessionUrl', url, { httpOnly: true });
 
+          const newTemporaryRefund = new TemporaryRefund({
+            userId: cancelledBooking.userId,
+            publishingDate: cancelledBooking.publishingDate,
+            slotId: cancelledBooking.slotId,
+            newspaperName: cancelledBooking.newspaperName,
+            file: cancelledBooking.file,
+            price: cancelledBooking.price,
+            sessionId: cancelledBooking.sessionId,
+            cancellationSessionId: sessionId,
+          });
+
+          await newTemporaryRefund.save();
+
           res.redirect(url);
 
     }
@@ -597,9 +612,26 @@ const renderRefundSuccessPage = asyncHandler(async (req, res) => {
             return res.redirect('/publisher/login'); 
         }
 
-        const sessionId = req.session.sessionId;
+        const cancellationSessionId = req.cookies.sessionId;;
 
-        res.render('refundSuccess');
+        const temporaryRefundData = await TemporaryRefund.findOne({cancellationSessionId: cancellationSessionId});
+
+        const newRefund = new Refunded({
+            userId: temporaryRefundData.userId,
+            publishingDate: temporaryRefundData.publishingDate,
+            slotId: temporaryRefundData.slotId,
+            newspaperName: temporaryRefundData.newspaperName,
+            file: temporaryRefundData.file,
+            price: temporaryRefundData.price,
+            sessionId: temporaryRefundData.sessionId,
+            cancellationSessionId: cancellationSessionId,
+          });
+
+          await newRefund.save();
+
+          await TemporaryRefund.deleteOne({ cancellationSessionId: cancellationSessionId });
+
+        res.render('refundSuccess', );
 
     }
     catch(error){
