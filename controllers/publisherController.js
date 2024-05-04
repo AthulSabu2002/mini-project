@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const asyncHandler = require("express-async-handler");
 const async = require('async');
 const stripe = require('stripe');
+const mongoose = require('mongoose');
 
 const Request = require("../models/requestModel");
 const Layout = require("../models/newsPaperLayout");
@@ -11,6 +12,14 @@ const BookedSlots = require("../models/bookedSlots");
 const SlotPrices = require("../models/slotPrices");
 const Newspapers = require("../models/newspaperSlots");
 const TemporaryRequest = require('../models/temporaryPublisherRequest');
+const CancelledBookings = require('../models/cancelledBookingModel');
+const TemporaryRefund = require('../models/temporaryRefundsModel');
+const Refunded = require('../models/refundedItemsModel');
+
+let stripeGateway = stripe(process.env.stripe_api)
+let PUBLISHER_DOMAIN = process.env.PUBLISHER_DOMAIN
+
+
 
 const renderDashboard = asyncHandler(async (req, res) => {
     try {
@@ -460,6 +469,178 @@ const renderViewBookings = asyncHandler(async (req, res) => {
 });
 
 
+const renderCancelledBookings = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        if (!userId) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const newspaperName = user.newspaperName;
+
+        const cancelledBookings = await CancelledBookings.find({ newspaperName });
+
+        const formattedCancellations = cancelledBookings.map(cancelledBooking => {
+            const createdAt = new Date(cancelledBooking.createdAt)
+                                    .toLocaleString(undefined, {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit',
+                                    })
+                                    .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+                                    const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+            return {
+                createdAt: createdAt,
+                publishingDate: publishingDate,
+                slotId: cancelledBooking.slotId,
+                newspaperName: newspaperName,
+                file: cancelledBooking.file,
+                cancellationId: cancelledBooking._id
+            };
+        });        
+
+        res.render('publisher_view_cancel_requests', { cancellations: formattedCancellations, activeTab: 'view-cancel-requests' });
+        
+        
+    } catch (error) {
+        console.error('Error fetching layout:', error);
+        res.status(500).send('Error fetching layout');
+    }
+});
+
+
+const refundInitiation = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        if (!userId) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const cancellationId = String(req.params.cancellationId);
+
+        let newspaperName, cancellationDate, price, slotId;
+
+        const cancellationObjectId = new mongoose.Types.ObjectId(cancellationId);
+
+        const cancelledBooking = await CancelledBookings.findById(cancellationObjectId);
+
+        newspaperName = cancelledBooking.newspaperName;
+        cancellationDate = cancelledBooking.createdAt;
+        price = cancelledBooking.price;
+        slotId = cancelledBooking.slotId;
+
+        console.log(price);
+        console.log(newspaperName);
+
+        const lineItems = [
+            {
+              price_data: {
+                currency: 'inr',
+                product_data: {
+                  name: newspaperName,
+                  description: `Slot ${slotId} - ${newspaperName} (${cancellationDate})`,
+                },
+                unit_amount: price * 100,
+              },
+              quantity: 1,
+            },
+          ];
+
+          console.log(lineItems);
+      
+          const session = await stripeGateway.checkout.sessions.create({
+            currency: 'inr',
+            payment_method_types: ['card'],
+            mode: 'payment',
+            success_url: `${PUBLISHER_DOMAIN}/refund/success`,
+            cancel_url: `${PUBLISHER_DOMAIN}/refund/failure`,
+            line_items: lineItems,
+            billing_address_collection: 'required',
+          });
+      
+          const sessionId = session.id;
+          const url = session.url;
+
+          res.cookie('sessionId', sessionId, { httpOnly: true });
+          res.cookie('sessionUrl', url, { httpOnly: true });
+
+          const newTemporaryRefund = new TemporaryRefund({
+            userId: cancelledBooking.userId,
+            publishingDate: cancelledBooking.publishingDate,
+            slotId: cancelledBooking.slotId,
+            newspaperName: cancelledBooking.newspaperName,
+            file: cancelledBooking.file,
+            price: cancelledBooking.price,
+            sessionId: cancelledBooking.sessionId,
+            cancellationSessionId: sessionId,
+          });
+
+          await newTemporaryRefund.save();
+
+          res.redirect(url);
+
+    }
+    catch(error){
+        console.log("couldnt initiate refund!", error);
+        res.redirect('/publisher/view-cancel-requests');
+    }
+});
+
+
+const renderRefundSuccessPage = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        if (!userId) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login'); 
+        }
+
+        const cancellationSessionId = req.cookies.sessionId;;
+
+        const temporaryRefundData = await TemporaryRefund.findOne({cancellationSessionId: cancellationSessionId});
+
+        const newRefund = new Refunded({
+            userId: temporaryRefundData.userId,
+            publishingDate: temporaryRefundData.publishingDate,
+            slotId: temporaryRefundData.slotId,
+            newspaperName: temporaryRefundData.newspaperName,
+            file: temporaryRefundData.file,
+            price: temporaryRefundData.price,
+            sessionId: temporaryRefundData.sessionId,
+            cancellationSessionId: cancellationSessionId,
+          });
+
+          await newRefund.save();
+
+          await TemporaryRefund.deleteOne({ cancellationSessionId: cancellationSessionId });
+
+        res.render('refundSuccess', );
+
+    }
+    catch(error){
+        console.log(error);
+    }
+});
+
+
+
 const loginPublisher = asyncHandler(async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -572,8 +753,7 @@ const renderCancelPage = asyncHandler( async(req, res) => {
     }
 }); 
 
-let stripeGateway = stripe(process.env.stripe_api)
-let PUBLISHER_DOMAIN = process.env.PUBLISHER_DOMAIN
+
 
 
 const publisherRequest = async (req, res) => {
@@ -704,6 +884,9 @@ module.exports = {  loginPublisher,
                     sendBookedDetails,
                     renderSlotsPricing,
                     SaveSlotsPricing,
+                    renderCancelledBookings,
+                    refundInitiation,
                     renderSuccessPage,
-                    renderCancelPage
+                    renderCancelPage,
+                    renderRefundSuccessPage
                 }
