@@ -20,7 +20,7 @@
     <div class="container">
       <h1>My Bookings</h1>
       <div id="bookingsList">
-        <% bookings.forEach(booking => { %>
+        <% bookings.reverse().forEach(booking => { %>
           <div class="booking">
             <div class="booking-details">
               <h2>Booking ID: <%= booking._id %></h2>
@@ -29,10 +29,12 @@
               <p>Publishing Date: <span><%= booking.publishingDate %></span></p>
               <p>Total Cost: <span><%= booking.price %></span></p>
             </div>
-            <a href="/users/cancel-slot/<%= booking._id %>" class="cancel-btn">Cancel</a>
+            <% if (new Date() < new Date(booking.lastDateOfCancellation)) { %>
+              <a href="/users/cancel-slot/<%= booking._id %>" class="cancel-btn">Cancel</a>
+            <% } %>
           </div>
         <% }) %>
-      </div>
+      </div>      
     </div>
   </main>
   <script src="/javascripts/user_dashboard.js"></script>

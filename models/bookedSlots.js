@@ -9,6 +9,10 @@ const bookedSlotSchema = new mongoose.Schema({
             type: Date,
             required: true
         },
+        lastDateOfCancellation: {
+            type: Date,
+            required: true
+        },
         slotId: {
             type: String,
             required: true

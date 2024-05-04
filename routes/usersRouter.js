@@ -21,7 +21,8 @@ const {
       renderSuccessPage,
       renderCancelPage,
       cancelBooking,
-      renderCancelConfirmationPage
+      renderCancelConfirmationPage,
+      renderCancelBookingSuccess
      } = require("../controllers/userController");
 
 
@@ -157,6 +158,8 @@ router.route('/cancel-slot/:bookingId').get(authCheck, renderCancelConfirmationP
 router.route('/cancel-slot/:bookingId').post(authCheck, cancelBooking);
 
 router.route('/book-slot/cancel').get(authCheck, renderCancelPage);
+
+router.route('/cancel-booking/success').get(authCheck, renderCancelBookingSuccess);
 
 router.route("/logout").get(logoutUser);
 
