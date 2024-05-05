@@ -51,7 +51,7 @@
 
 					<tbody>
                         <% if (layoutDates.length > 0) { %>
-                            <% layoutDates.forEach(date => { %>
+                            <% layoutDates.reverse().forEach(date => { %>
                                 <tr>
                                     <td><%= new Date(date.publishingDate).toLocaleString() %></td>
                                     <td><%= new Date(date.bookingOpenDate).toLocaleString() %></td>
