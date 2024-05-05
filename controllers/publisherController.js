@@ -33,6 +33,8 @@ const renderDashboard = asyncHandler(async (req, res) => {
 
                 const bookings = await BookedSlots.find({ newspaperName });
 
+                const cancelledBookings = await CancelledBookings.find({ newspaperName });
+
 
                 const result = await BookedSlots.aggregate([
                     {
@@ -78,8 +80,30 @@ const renderDashboard = asyncHandler(async (req, res) => {
                     };
                 });
 
+                const formattedCancellations = cancelledBookings.map(cancelledBooking => {
+                    const createdAt = new Date(cancelledBooking.createdAt)
+                                            .toLocaleString(undefined, {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                second: '2-digit',
+                                            })
+                                            .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+                                            const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+                    return {
+                        createdAt: createdAt,
+                        publishingDate: publishingDate,
+                        slotId: cancelledBooking.slotId,
+                        newspaperName: newspaperName,
+                        file: cancelledBooking.file,
+                        cancellationId: cancelledBooking._id
+                    };
+                });        
 
-                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount, bookings: formattedBookings, count: count, totalPrice: totalPrice });
+
+                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount, bookings: formattedBookings, cancelledBookings: formattedCancellations,  count: count, totalPrice: totalPrice });
             }
             else{
                 res.redirect('/publisher/login');
