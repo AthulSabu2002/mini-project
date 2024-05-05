@@ -48,7 +48,7 @@
 					  <h2 class="booking_section-title">New Bookings</h2>
 					  <div class="booking_data">
 						<% if (bookings.length > 0) { %>
-						  <% bookings.forEach(booking => { %>
+						  <% bookings.reverse().forEach(booking => { %>
 							<div class="booking_card new">
 							  <div class="booking_info">
 								<div class="avatar">
@@ -56,12 +56,12 @@
 								</div>
 								<div>
 								  <h4><%= booking.slotId %></h4>
-								  <p><%= booking.createdAt %></p>
-								  <p><%= booking.publishingDate %></p>
+								  <p>Booked At : <%= booking.createdAt %></p>
+								  <p>Publishing Date: <%= booking.publishingDate %></p>
 								</div>
 							  </div>
 							  <div class="booking_details">
-								<span class="status pending">Pending</span>
+								<span class="status pending">New</span>
 							  </div>
 							</div>
 						  <% }); %>
@@ -76,7 +76,7 @@
 					  <h2 class="cancelled_section-title">Cancelled Bookings</h2>
 					  <div class="cancelled_data">
 						<% if (cancelledBookings.length > 0) { %>
-						  <% cancelledBookings.forEach(booking => { %>
+						  <% cancelledBookings.reverse().forEach(booking => { %>
 							<div class="booking_card cancelled">
 							  <div class="booking_info">
 								<div class="avatar">
@@ -84,8 +84,8 @@
 								</div>
 								<div>
 								  <h4><%= booking.slotId %></h4>
-								  <p><%= booking.createdAt %></p>
-								  <p><%= booking.publishingDate %></p>
+								  <p>Cancelled At : <%= booking.createdAt %></p>
+								  <p>Publishing Date : <%= booking.publishingDate %></p>
 								</div>
 							  </div>
 							  <div class="booking_details">

@@ -31,9 +31,28 @@ const renderDashboard = asyncHandler(async (req, res) => {
 
                 const bookingsCount = await BookedSlots.countDocuments({ newspaperName });
 
-                const bookings = await BookedSlots.find({ newspaperName });
+                const currentDate = new Date();
+                currentDate.setUTCHours(0, 0, 0, 0); 
 
-                const cancelledBookings = await CancelledBookings.find({ newspaperName });
+                const bookings = await BookedSlots.find({
+                    newspaperName,
+                    $expr: {
+                        $eq: [
+                            { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                            { $dateToString: { format: "%Y-%m-%d", date: currentDate } }
+                        ]
+                    }
+                });
+
+                const cancelledBookings = await CancelledBookings.find({ 
+                    newspaperName,
+                    $expr: {
+                        $eq: [
+                            { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                            { $dateToString: { format: "%Y-%m-%d", date: currentDate } }
+                        ]
+                    }
+                });
 
 
                 const result = await BookedSlots.aggregate([
@@ -90,7 +109,7 @@ const renderDashboard = asyncHandler(async (req, res) => {
                                                 minute: '2-digit',
                                                 second: '2-digit',
                                             })
-                                            .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+                                            .replace(/(\d+)\/(\d+)\/(\d+)/, '$1-$2-$3');
                                             const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
                     return {
                         createdAt: createdAt,
