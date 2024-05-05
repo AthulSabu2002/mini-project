@@ -3,7 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/stylesheets/publisherDashboardData.css">
 	<link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
 	<title>Publisher</title>
 </head>
@@ -39,38 +41,66 @@
 			</ul>
 
 
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Recent Bookings</h3>
+			<div class="container">
+				<div class="row">
+				  <div class="col">
+					<div class="booking_section">
+					  <h2 class="booking_section-title">New Bookings</h2>
+					  <div class="booking_data">
+						<% if (bookings.length > 0) { %>
+						  <% bookings.forEach(booking => { %>
+							<div class="booking_card new">
+							  <div class="booking_info">
+								<div class="avatar">
+								  <i class="fas fa-user-circle"></i>
+								</div>
+								<div>
+								  <h4><%= booking.slotId %></h4>
+								  <p><%= booking.createdAt %></p>
+								  <p><%= booking.publishingDate %></p>
+								</div>
+							  </div>
+							  <div class="booking_details">
+								<span class="status pending">Pending</span>
+							  </div>
+							</div>
+						  <% }); %>
+						<% } else { %>
+						  <p>No new bookings.</p>
+						<% } %>
+					  </div>
 					</div>
-					<table>
-						<thead>
-							<tr>
-								<th>Booking Date</th>
-								<th>Publishing Date</th>
-								<th>Slot Id</th>
-							</tr>
-						</thead>
-	
-						<tbody>
-							<% if (bookings.length > 0) { %>
-								<% bookings.reverse().forEach(booking => { %>
-									<tr>
-										<td><%= booking.createdAt %></td>
-										<td><%= booking.publishingDate %></td>
-										<td><%= booking.slotId %></td>
-									</tr>
-								<% }); %>
-							<% } else { %>
-								<tr>
-									<td colspan="2">No new requests.</td>
-								</tr>
-							<% } %>
-						</tbody>
-					</table>
+				  </div>
+				  <div class="col">
+					<div class="cancelled_section">
+					  <h2 class="cancelled_section-title">Cancelled Bookings</h2>
+					  <div class="cancelled_data">
+						<% if (cancelledBookings.length > 0) { %>
+						  <% cancelledBookings.forEach(booking => { %>
+							<div class="booking_card cancelled">
+							  <div class="booking_info">
+								<div class="avatar">
+								  <i class="fas fa-user-circle"></i>
+								</div>
+								<div>
+								  <h4><%= booking.slotId %></h4>
+								  <p><%= booking.createdAt %></p>
+								  <p><%= booking.publishingDate %></p>
+								</div>
+							  </div>
+							  <div class="booking_details">
+								<span class="status cancelled">Cancelled</span>
+							  </div>
+							</div>
+						  <% }); %>
+						<% } else { %>
+						  <p>No cancelled bookings.</p>
+						<% } %>
+					  </div>
+					</div>
+				  </div>
 				</div>
-			</div>
+			  </div>
 		</main>
 	</section>
 	
