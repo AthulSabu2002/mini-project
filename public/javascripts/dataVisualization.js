@@ -94,7 +94,7 @@ var overview = new Chart(cty, {
         plugins: {
             title: {
                 display: true,
-                text: 'Advanced Data Visualization',
+                text: 'Yearly Data Visualization',
                 font: {
                     size: 16,
                     family: 'Montserrat, sans-serif',

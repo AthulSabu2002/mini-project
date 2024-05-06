@@ -15,6 +15,7 @@ const BookedSlots = require("../models/bookedSlots");
 const TemporaryBooking = require('../models/temporaryBooking');
 const SlotPrices = require('../models/slotPrices');
 const CancelledBookings = require('../models/cancelledBookingModel');
+const Refunded = require('../models/refundedItemsModel');
 const Users = require('../models/userModel');
 
 const emailTemplatePath = path.join(__dirname, '..', 'templates', 'reset-password-template.html');
@@ -25,14 +26,14 @@ const otp_reg_emailTemplate = fs.readFileSync(otp_reg_emailTemplatePath, 'utf8')
 
 
 const renderDashboard = asyncHandler(async (req, res) => {
-    res.render('user_dashboard');
+  res.render('user_dashboard');
 });
 
 
 const renderViewBookingsPage = asyncHandler(async (req, res) => {
-  try{
+  try {
     const userId = req.cookies.userId;
-    if(userId){
+    if (userId) {
       const bookings = await BookedSlots.find({ userId: userId });
 
       const formattedBookings = bookings.map(booking => {
@@ -64,23 +65,91 @@ const renderViewBookingsPage = asyncHandler(async (req, res) => {
 
       res.render('userViewBookings', { bookings: formattedBookings });
     }
-    else{
+    else {
       res.redirect('/users/auth/login')
     }
   }
-  catch(error){
+  catch (error) {
     console.log(error);
   }
-})
+});
+
+
+const renderViewCancelledAndRefundsPage = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.cookies.userId;
+    if (userId) {
+      const cancelledBookings = await CancelledBookings.find({ userId: userId });
+
+      const formattedCancellations = cancelledBookings.map(cancelledBooking => {
+        const createdAt = new Date(cancelledBooking.createdAt)
+          .toLocaleString(undefined, {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          })
+          .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+        const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
+        return {
+          createdAt: createdAt,
+          publishingDate: publishingDate,
+          slotId: cancelledBooking.slotId,
+          newspaperName: cancelledBooking.newspaperName,
+          file: cancelledBooking.file,
+          cancellationId: cancelledBooking._id,
+          price: cancelledBooking.price
+        };
+      });
+
+      const refundedBookings = await Refunded.find({ userId: userId });
+
+      const formattedRefunds = refundedBookings.map(refundedBooking => {
+        const createdAt = new Date(refundedBooking.createdAt)
+          .toLocaleString(undefined, {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          })
+          .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+        const publishingDate = new Date(refundedBooking.publishingDate).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
+        return {
+          createdAt: createdAt,
+          publishingDate: publishingDate,
+          slotId: refundedBooking.slotId,
+          newspaperName: refundedBooking.newspaperName,
+          file: refundedBooking.file,
+          cancellationId: refundedBooking._id,
+          cancellationSessionId: refundedBooking.cancellationSessionId,
+          price: refundedBooking.price
+        };
+      });
+
+
+      res.render('userCancelledRefundedPage', { cancellations: formattedCancellations, refunds: formattedRefunds });
+    }
+    else {
+      res.redirect('/users/auth/login')
+    }
+  }
+  catch (error) {
+    console.log(error);
+  }
+});
 
 
 const logoutUser = asyncHandler(async (req, res) => {
-  req.logOut(function(err) {
+  req.logOut(function (err) {
     if (err) { return next(err); }
-      req.session.loggedIn = false;
-      req.session.destroy()
-      res.clearCookie('userId');
-    res.redirect('/auth/login'); 
+    req.session.loggedIn = false;
+    req.session.destroy()
+    res.clearCookie('userId');
+    res.redirect('/auth/login');
   });
 });
 
@@ -122,40 +191,40 @@ const verifyOtp = asyncHandler(async (req, res) => {
   const enteredOTP = req.body.otp;
 
   try {
-        const tempUser = tempUserData[userEmail];
-        if (tempUser) {
-            if (enteredOTP === tempUser.otp) {
-              const hashedPassword = await bcrypt.hash(tempUser.password, 10);
+    const tempUser = tempUserData[userEmail];
+    if (tempUser) {
+      if (enteredOTP === tempUser.otp) {
+        const hashedPassword = await bcrypt.hash(tempUser.password, 10);
 
-              const newUser = new User({
-                username: tempUser.username,
-                email: tempUser.email,
-                password: hashedPassword
-              });
+        const newUser = new User({
+          username: tempUser.username,
+          email: tempUser.email,
+          password: hashedPassword
+        });
 
-              await newUser.save();
+        await newUser.save();
 
-              delete tempUserData[userEmail];
+        delete tempUserData[userEmail];
 
-              req.login(newUser, (err) => {
-                if (err) {
-                  console.error(err);
-                  return res.status(500).send("Internal Server Error");
-                }
-
-                return res.redirect('/users/dashboard');
-              });
-            } else {
-                res.status(400).json({ message: 'Invalid OTP. Please try again.' });
-              }
-
-        } else {
-            res.status(400).json({ message: 'Username is already taken. Please choose another.' });
+        req.login(newUser, (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send("Internal Server Error");
           }
-  } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Internal Server Error' });
+
+          return res.redirect('/users/dashboard');
+        });
+      } else {
+        res.status(400).json({ message: 'Invalid OTP. Please try again.' });
+      }
+
+    } else {
+      res.status(400).json({ message: 'Username is already taken. Please choose another.' });
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
 
@@ -167,10 +236,10 @@ function generateOTP() {
 async function sendOTPEmail(email, otp) {
   console.log(`Sending OTP ${otp} to ${email}`);
   const transporter = nodemailer.createTransport({
-    service: 'Gmail', 
+    service: 'Gmail',
     auth: {
       user: process.env.MYEMAIL,
-      pass: process.env.APP_PASSWORD, 
+      pass: process.env.APP_PASSWORD,
     }
   });
 
@@ -196,42 +265,42 @@ async function sendOTPEmail(email, otp) {
 
 const loginUser = asyncHandler(async (req, res) => {
   try {
-      const { username, password } = req.body;
-      
-      if (!username || !password) {
-        return res.status(500).send("<script>alert('username and password fields are mandatory'); window.location='/auth/login';</script>");
-      }
-      const user = await User.findOne({ username }, 'username email password');
+    const { username, password } = req.body;
 
-      if (user) {
-          const isPasswordValid = await bcrypt.compare(password, user.password);
-          if (isPasswordValid) {
-              req.login(user, (err) => {
-                  if (err) {
-                      console.error('Error logging in:', err);
-                      return res.status(500).send("<script>alert('Internal Server error'); window.location='/auth/login';</script>");
-                  }
-                    req.session.loggedIn = true;
-                    const userId = req.user.id;
-                    res.cookie('userId', userId, { 
-                        maxAge: 24 * 60 * 60 * 1000,
-                        httpOnly: true 
-                    });
-                  const returnUrl = req.cookies.returnTo || '/users/dashboard';
-                  res.clearCookie('returnTo');
-                  return res.redirect(returnUrl);
-              });
-          } else {
-              console.log('Incorrect password for user:', username);
-              return res.status(500).send("<script>alert('Incorrect username or password'); window.location='/auth/login';</script>");
+    if (!username || !password) {
+      return res.status(500).send("<script>alert('username and password fields are mandatory'); window.location='/auth/login';</script>");
+    }
+    const user = await User.findOne({ username }, 'username email password');
+
+    if (user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
+        req.login(user, (err) => {
+          if (err) {
+            console.error('Error logging in:', err);
+            return res.status(500).send("<script>alert('Internal Server error'); window.location='/auth/login';</script>");
           }
+          req.session.loggedIn = true;
+          const userId = req.user.id;
+          res.cookie('userId', userId, {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true
+          });
+          const returnUrl = req.cookies.returnTo || '/users/dashboard';
+          res.clearCookie('returnTo');
+          return res.redirect(returnUrl);
+        });
       } else {
-          console.log('No user found with this username:', username);
-          return res.status(500).send("<script>alert('Incorrect username or password'); window.location='/auth/login';</script>");
+        console.log('Incorrect password for user:', username);
+        return res.status(500).send("<script>alert('Incorrect username or password'); window.location='/auth/login';</script>");
       }
+    } else {
+      console.log('No user found with this username:', username);
+      return res.status(500).send("<script>alert('Incorrect username or password'); window.location='/auth/login';</script>");
+    }
   } catch (error) {
-      console.error('Error finding user:', error);
-      return res.status(500).send("<script>alert('Internal Server error'); window.location='/auth/login';</script>");
+    console.error('Error finding user:', error);
+    return res.status(500).send("<script>alert('Internal Server error'); window.location='/auth/login';</script>");
   }
 });
 
@@ -239,70 +308,70 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
 const resetPassword = asyncHandler(async (req, res, next) => {
-    async.waterfall([
-        function(done) {
-            crypto.randomBytes(20, function(err, buf) {
-              if (err) {
-                return done(err);
-              }
-              var token = buf.toString('hex');
-              done(null, token);
-              console.log(token);
-            });
-      },
-      async function findUserAndUpdateToken(token) {
-          const user = await User.findOne({ email: req.body.email });
-          if (!user) {
-            console.log('error', 'No account with that email address exists.');
-            return res.redirect('/users/forgot');
-          }
-          user.resetPasswordToken = token;
-          console.log(user.resetPasswordToken);
-          user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-          console.log(user);
-          console.log(user.email);
-          try {
-            console.log("saving..")
-            await user.save();
-            console.log('User saved successfully.');
-            return user;
-          } catch (error) {
-            console.error('Error while saving user:', error);
-          }
-          callback(null, user);   
-      },
-      function(user, callback) {
-        var smtpTrans = nodemailer.createTransport({
-           service: 'Gmail', 
-           auth: {
-            user: process.env.MYEMAIL,
-            pass: process.env.APP_PASSWORD,
-          }
-        });
-        const emailContent = emailTemplate.replace('href="#"', `href="http://${req.headers.host}/users/reset/${user.resetPasswordToken}"`);
-        smtpTrans.sendMail({
-          to: user.email,
-          from: process.env.MYEMAIL,
-          subject: 'aDColumn password reset',
-          text: 'Plain text fallback content', 
-          html: emailContent 
-        });
-          console.log("Mail sent successfully");
-          res.render('user-mail-send-success');
-  }
-    ], function(err) {
-      console.log('this err' + ' ' + err)
-      res.redirect('/');
-    });
+  async.waterfall([
+    function (done) {
+      crypto.randomBytes(20, function (err, buf) {
+        if (err) {
+          return done(err);
+        }
+        var token = buf.toString('hex');
+        done(null, token);
+        console.log(token);
+      });
+    },
+    async function findUserAndUpdateToken(token) {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        console.log('error', 'No account with that email address exists.');
+        return res.redirect('/users/forgot');
+      }
+      user.resetPasswordToken = token;
+      console.log(user.resetPasswordToken);
+      user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+      console.log(user);
+      console.log(user.email);
+      try {
+        console.log("saving..")
+        await user.save();
+        console.log('User saved successfully.');
+        return user;
+      } catch (error) {
+        console.error('Error while saving user:', error);
+      }
+      callback(null, user);
+    },
+    function (user, callback) {
+      var smtpTrans = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.MYEMAIL,
+          pass: process.env.APP_PASSWORD,
+        }
+      });
+      const emailContent = emailTemplate.replace('href="#"', `href="http://${req.headers.host}/users/reset/${user.resetPasswordToken}"`);
+      smtpTrans.sendMail({
+        to: user.email,
+        from: process.env.MYEMAIL,
+        subject: 'aDColumn password reset',
+        text: 'Plain text fallback content',
+        html: emailContent
+      });
+      console.log("Mail sent successfully");
+      res.render('user-mail-send-success');
+    }
+  ], function (err) {
+    console.log('this err' + ' ' + err)
+    res.redirect('/');
   });
+});
 
 const changePasswordRequest = asyncHandler(async (req, res) => {
   console.log('resetting')
   const requestToken = req.params.token;
-  const user = await User.findOne({ resetPasswordToken: requestToken, resetPasswordExpires: { $gt: Date.now() }});
+  const user = await User.findOne({ resetPasswordToken: requestToken, resetPasswordExpires: { $gt: Date.now() } });
   console.log(user);
   if (user) {
-    res.render('resetPassword.ejs',{ requestToken });
+    res.render('resetPassword.ejs', { requestToken });
   } else {
     res.status(400).send('Invalid or expired token');
   }
@@ -310,7 +379,7 @@ const changePasswordRequest = asyncHandler(async (req, res) => {
 
 const changePassword = asyncHandler(async (req, res) => {
   async.waterfall([
-    async function(callback) {
+    async function (callback) {
       const user = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
       if (!user) {
         return res.status(400).send('Password reset token is invalid or has expired.');
@@ -328,11 +397,11 @@ const changePassword = asyncHandler(async (req, res) => {
       } catch (error) {
         console.error('Error while saving user:', error);
       }
-      
+
       console.log(user);
       callback(null, user);
     },
-    function(user, callback) {
+    function (user, callback) {
       console.log(user);
       var smtpTrans = nodemailer.createTransport({
         service: 'Gmail',
@@ -350,7 +419,7 @@ const changePassword = asyncHandler(async (req, res) => {
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
 
-      smtpTrans.sendMail(mailOptions, function(err) {
+      smtpTrans.sendMail(mailOptions, function (err) {
         if (err) {
           console.log('Email sending error:', err);
         } else {
@@ -359,7 +428,7 @@ const changePassword = asyncHandler(async (req, res) => {
         }
       });
     }
-  ], function(err) {
+  ], function (err) {
     if (err) {
       console.log(err);
       return res.status(500).send('An error occurred during the password change process.');
@@ -368,51 +437,51 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 const renderUserProfile = asyncHandler(async (req, res) => {
-  try{
+  try {
     const userId = req.cookies.userId;
-    if(userId){
+    if (userId) {
       console.log(userId);
       const user = await Users.findById({ _id: userId });
       console.log(user);
-      res.render('user_profile', { user: user});
+      res.render('user_profile', { user: user });
     }
   }
-  catch(error){
+  catch (error) {
     console.log(error);
   }
 })
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   const userId = req.cookies.userId;
-  try{
-      const user = await Users.findById(userId);
+  try {
+    const user = await Users.findById(userId);
 
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
 
-        user.username = req.body.username;
-        user.email = req.body.email;
+    user.username = req.body.username;
+    user.email = req.body.email;
 
-        await user.save();
-        res.status(200).send('Account details updated');
+    await user.save();
+    res.status(200).send('Account details updated');
   }
-  catch(error){
+  catch (error) {
     console.error('Error updating user details:', error);
     res.status(500).send('Error updating user details');
   }
 })
 
 
-const renderNewspaperInfo = asyncHandler( async(req, res) => {
+const renderNewspaperInfo = asyncHandler(async (req, res) => {
   const layoutName = req.params.layoutName;
 
-  try{
+  try {
 
-    const newspaper = await Publisher.findOne({newspaperName: layoutName})
+    const newspaper = await Publisher.findOne({ newspaperName: layoutName })
 
-    res.render('newspaper_infoPage', {newspaper: newspaper});
-  }catch(error){
+    res.render('newspaper_infoPage', { newspaper: newspaper });
+  } catch (error) {
     console.log(error);
   }
 });
@@ -436,85 +505,85 @@ const renderBookSlotByDate = asyncHandler(async (req, res) => {
     const publisherId = publisher._id;
 
     const booking = await BookingDates.findOne({
-        bookingOpenDate: { $lte: requestedDate },
-        bookingCloseDate: { $gte: requestedDate },
-        publishingDate: publishingDate,
-        publisher: publisherId
+      bookingOpenDate: { $lte: requestedDate },
+      bookingCloseDate: { $gte: requestedDate },
+      publishingDate: publishingDate,
+      publisher: publisherId
     });
 
-      if (booking) {
-          //const publisherId = booking.publisher;
-          const publisherLayout = await Publisher.findOne({ _id: publisherId });
-          if (publisherLayout) {
+    if (booking) {
+      //const publisherId = booking.publisher;
+      const publisherLayout = await Publisher.findOne({ _id: publisherId });
+      if (publisherLayout) {
 
-              const bookedSlots = await BookedSlots.find({
-                newspaperName: layoutName,
-                publishingDate: publishingDate
-              });
+        const bookedSlots = await BookedSlots.find({
+          newspaperName: layoutName,
+          publishingDate: publishingDate
+        });
 
-              const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
-              
-              res.status(200).json({ layoutName, bookedSlotIds, publishingDate }); 
-            } else {
-                res.status(200).json({ layoutName, publishingDate }); 
-            }
-        } else {
-            res.status(200).json({ layoutName, publishingDate }); 
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
+
+        res.status(200).json({ layoutName, bookedSlotIds, publishingDate });
+      } else {
+        res.status(200).json({ layoutName, publishingDate });
+      }
+    } else {
+      res.status(200).json({ layoutName, publishingDate });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 
 const renderBookinglayout = asyncHandler(async (req, res) => {
   try {
-      const layoutName = req.params.layoutName;
-      const publishingDateOldFormat = req.params.publishingDate;
+    const layoutName = req.params.layoutName;
+    const publishingDateOldFormat = req.params.publishingDate;
 
-      const year = publishingDateOldFormat.slice(0, 4);
-      const month = publishingDateOldFormat.slice(4, 6);
-      const day = publishingDateOldFormat.slice(6, 8);
-      const publishingDateISO8601 = `${year}-${month}-${day}T00:00:00.000Z`;
+    const year = publishingDateOldFormat.slice(0, 4);
+    const month = publishingDateOldFormat.slice(4, 6);
+    const day = publishingDateOldFormat.slice(6, 8);
+    const publishingDateISO8601 = `${year}-${month}-${day}T00:00:00.000Z`;
 
-      const publisher = await Publisher.findOne({ newspaperName: layoutName });
+    const publisher = await Publisher.findOne({ newspaperName: layoutName });
 
-      const requestedDate = new Date();
-      const publisherId = publisher._id;
+    const requestedDate = new Date();
+    const publisherId = publisher._id;
 
-      const booking = await BookingDates.findOne({
-        bookingOpenDate: { $lte: requestedDate },
-        bookingCloseDate: { $gte: requestedDate },
-        publishingDate: publishingDateISO8601,
-        publisher: publisherId
+    const booking = await BookingDates.findOne({
+      bookingOpenDate: { $lte: requestedDate },
+      bookingCloseDate: { $gte: requestedDate },
+      publishingDate: publishingDateISO8601,
+      publisher: publisherId
+    });
+
+
+    if (booking) {
+
+      const bookedSlots = await BookedSlots.find({
+        newspaperName: layoutName,
+        publishingDate: publishingDateISO8601
       });
 
+      const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
 
-      if(booking){
+      res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
 
-        const bookedSlots = await BookedSlots.find({
-          newspaperName: layoutName,
-          publishingDate: publishingDateISO8601
-        });
-  
-        const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
-  
-        res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
+    } else {
 
-      }else{
+      res.render('defaultLayout');
 
-        res.render('defaultLayout');
+    }
 
-      }
-      
-    } catch (err) {
-      res.send(err);
+  } catch (err) {
+    res.send(err);
   }
 });
 
-const renderSuccessPage = asyncHandler( async(req, res) => {
-  try{
+const renderSuccessPage = asyncHandler(async (req, res) => {
+  try {
 
     const sessionId = req.cookies.sessionId;
     console.log(sessionId);
@@ -543,24 +612,24 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
     res.render('bookingSuccess', { booking: booking });
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
-}); 
+});
 
 
-const renderCancelPage = asyncHandler( async(req, res) => {
-  try{
+const renderCancelPage = asyncHandler(async (req, res) => {
+  try {
     const sessionId = req.cookies.sessionId;
     res.clearCookie('sessionId');
 
     await TemporaryBooking.deleteOne({ sessionId: sessionId });
 
     res.render('user-payment-failure');
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
-}); 
+});
 
 
 
@@ -576,7 +645,7 @@ const bookSlot = asyncHandler(async (req, res) => {
     const { slotId, newspaperName } = req.body;
     const publishingDate = req.cookies.publishingDate;
 
-    const publisher = await Publisher.findOne({newspaperName: newspaperName});
+    const publisher = await Publisher.findOne({ newspaperName: newspaperName });
     const publisherId = publisher._id;
 
     const bookedSlots = await BookedSlots.find({
@@ -687,9 +756,9 @@ const renderCancelConfirmationPage = asyncHandler(async (req, res) => {
   console.log(bookingId);
 
   const userId = req.cookies.userId;
-  
-  try{
-    if(userId){
+
+  try {
+    if (userId) {
       const booking = await BookedSlots.findOne({ _id: bookingId });
 
       console.log(booking);
@@ -718,26 +787,26 @@ const renderCancelConfirmationPage = asyncHandler(async (req, res) => {
 
       res.render('bookingCancellationConfirmation', { booking: formattedBooking });
     }
-    else{
+    else {
       res.redirect('/users/auth/login')
     }
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
 
 });
 
 const renderCancelBookingSuccess = asyncHandler(async (req, res) => {
-  try{
+  try {
     res.render('user-cancel-booking-success');
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
 });
 
 
 
-const webHook =  asyncHandler(async (request, response) => {
+const webHook = asyncHandler(async (request, response) => {
   const sig = request.headers['stripe-signature'];
 
   let event;
@@ -753,9 +822,9 @@ const webHook =  asyncHandler(async (request, response) => {
     case 'checkout.session.completed':
       const checkoutSessionCompleted = event.data.object;
       const userId = checkoutSessionCompleted.client_reference_id;
-      
+
       const user = await getUserDetails(userId);
-      
+
       if (user) {
         console.log('User Details:', user);
       } else {
@@ -777,7 +846,7 @@ async function getUserDetails(userId) {
     return user;
   } catch (error) {
     console.error('Error retrieving user details:', error);
-    return null; 
+    return null;
   }
 }
 
@@ -790,22 +859,22 @@ function getMonthNumber(monthAbbreviation) {
 
 async function findSlotPrice(newspaperName, slotName) {
   try {
-      const slotPrices = await SlotPrices.findOne({ newspaperName: newspaperName });
+    const slotPrices = await SlotPrices.findOne({ newspaperName: newspaperName });
 
-      if (!slotPrices) {
-          return null;
-      }
+    if (!slotPrices) {
+      return null;
+    }
 
-      const slot = slotPrices.slots.find(slot => slot.name === slotName);
+    const slot = slotPrices.slots.find(slot => slot.name === slotName);
 
-      if (!slot) {
-          return null;
-      }
+    if (!slot) {
+      return null;
+    }
 
-      return slot.price;
+    return slot.price;
   } catch (error) {
-      console.error('Error finding slot price:', error);
-      throw error;
+    console.error('Error finding slot price:', error);
+    throw error;
   }
 }
 
@@ -814,25 +883,26 @@ async function findSlotPrice(newspaperName, slotName) {
 
 
 module.exports = {
-                  loginUser,  
-                  resetPassword, 
-                  changePasswordRequest, 
-                  changePassword, 
-                  logoutUser, 
-                  renderDashboard,
-                  renderUserProfile,
-                  updateUserProfile,
-                  renderViewBookingsPage,
-                  registerUserWithOTP,
-                  verifyOtp,
-                  renderNewspaperInfo,
-                  renderBookSlotByDate,
-                  renderBookinglayout,
-                  bookSlot,
-                  renderSuccessPage,
-                  renderCancelPage,
-                  renderCancelConfirmationPage,
-                  cancelBooking,
-                  renderCancelBookingSuccess,
-                  webHook
-                };
+  loginUser,
+  resetPassword,
+  changePasswordRequest,
+  changePassword,
+  logoutUser,
+  renderDashboard,
+  renderUserProfile,
+  updateUserProfile,
+  renderViewBookingsPage,
+  renderViewCancelledAndRefundsPage,
+  registerUserWithOTP,
+  verifyOtp,
+  renderNewspaperInfo,
+  renderBookSlotByDate,
+  renderBookinglayout,
+  bookSlot,
+  renderSuccessPage,
+  renderCancelPage,
+  renderCancelConfirmationPage,
+  cancelBooking,
+  renderCancelBookingSuccess,
+  webHook
+};

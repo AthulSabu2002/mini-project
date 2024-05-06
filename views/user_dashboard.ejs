@@ -1,329 +1,343 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
 
-        <!--=============== FAVICON ===============-->
-        <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!--=============== REMIX ICONS ===============-->
-        <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!--=============== FAVICON ===============-->
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
 
-        <!--=============== CSS ===============-->
-        <link rel="stylesheet" href="/stylesheets/user_dashboard.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!--=============== REMIX ICONS ===============-->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="/stylesheets/user_dashboard.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- Include jQuery UI -->
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/stylesheets/calender.css">
-        
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/stylesheets/calender.css">
 
-        <title>Adcolumn</title>
-    </head>
-    <body>
-        <!--==================== HEADER ====================-->
-        <header class="header" id="header">
-            <nav class="nav container">
-                <a href="#" class="nav__logo">
-                    <i class="ri-newspaper-fill"></i> AdColumn
-                </a>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-                <div class="nav__menu" id="nav-menu">
-                    <ul class="nav__list">
-                        <li class="nav__item">
-                            <a href="#home" class="nav__link active-link">User</a>
-                        </li>
-                    
-                        <li class="nav__item">
-                            <a href="#products" class="nav__link">Languages</a>
-                        </li>
-                        <li class="nav__item">
-                            <a href="#faqs" class="nav__link">Offers</a>
-                        </li>
-                    </ul>
+    <title>Adcolumn</title>
+</head>
 
-                    <div class="nav__close" id="nav-close">
-                        <i class="ri-close-line"></i>
+<body>
+    <!--==================== HEADER ====================-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="#" class="nav__logo">
+                <i class="ri-newspaper-fill"></i> AdColumn
+            </a>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="#home" class="nav__link active-link">User</a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="#products" class="nav__link">Languages</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#faqs" class="nav__link">Offers</a>
+                    </li>
+                </ul>
+
+                <div class="nav__close" id="nav-close">
+                    <i class="ri-close-line"></i>
+                </div>
+            </div>
+
+            <div class="nav__btns">
+                <div class="profile-container">
+                    <div class="profile-btn">
+                        <i class="ri-user-line profile-icon"></i>
+                    </div>
+                    <div class="profile-dropdown">
+                        <div class="profile-item">
+                            <i class="ri-user-line"></i>
+                            <a href="/users/dashboard/view-profile">Profile</a>
+                        </div>
+                        <div class="profile-item">
+                            <i class="ri-history-line"></i>
+                            <span><a href="/users/dashboard/view-bookings">My-Bookings</a></span>
+                        </div>
+                        <div class="profile-item">
+                            <i class="ri-history-line"></i>
+                            <span><a href="/users/dashboard/view-cancellation-refunds">Cancellations &
+                                    Refunds</a></span>
+                        </div>
+                        <div class="profile-item logout-btn">
+                            <i class="ri-logout-box-r-line"></i>
+                            <span><a href="/users/logout">Logout</a></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="nav__btns">
-                    <div class="profile-container">
-                        <div class="profile-btn">
-                            <i class="ri-user-line profile-icon"></i>
-                        </div>
-                        <div class="profile-dropdown">
-                            <div class="profile-item">
-                                <i class="ri-user-line"></i>
-                                <a href="/users/dashboard/view-profile">Profile</a>
-                            </div>
-                            <div class="profile-item">
-                                <i class="ri-history-line"></i>
-                                <span><a href="/users/dashboard/view-bookings">My-Bookings</a></span>
-                            </div>
-                            <div class="profile-item logout-btn">
-                                <i class="ri-logout-box-r-line"></i>
-                                <span><a href="/users/logout">Logout</a></span>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="nav__toggle" id="nav-toggle">
-                        <i class="ri-menu-line"></i>
-                    </div>
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class="ri-menu-line"></i>
                 </div>
+            </div>
 
 
 
-            </nav>
-        </header>
+        </nav>
+    </header>
 
-        <main class="main">
-            <!--==================== HOME ====================-->
-           <!----> <section class="home" id="home">
-                <div class="home__container container grid">
-                      <div class="document-center">
-                        <!--This carousel-container only exists so we can do the 
+    <main class="main">
+        <!--==================== HOME ====================-->
+        <!---->
+        <section class="home" id="home">
+            <div class="home__container container grid">
+                <div class="document-center">
+                    <!--This carousel-container only exists so we can do the 
                         aspect ratio tricks in CSS-->
-                        <div class="carousel-container">
-                          <div class="carousel" id="carousel-1" auto-scroll="3000">
+                    <div class="carousel-container">
+                        <div class="carousel" id="carousel-1" auto-scroll="3000">
                             <!--The uppermost screen will appear first. This is due to JavaScript-->
                             <section class="carousel-screen">
-                              <img src="/images/indian1.jpg" alt="Chicago Band" />
-                              
+                                <img src="/images/indian1.jpg" alt="Chicago Band" />
+
                             </section>
                             <section class="carousel-screen">
-                              <img src="/images/thhin2.png" alt="New York" />
-                              <!--<section class="text-container">
+                                <img src="/images/thhin2.png" alt="New York" />
+                                <!--<section class="text-container">
                                 <p>New York</p>
                                 <p>We love the Big Apple!</p>
                               </section>-->
                             </section>
                             <section class="carousel-screen">
-                              <img src="/images/malymrama1.jpg" alt="Los Angeles" />
-                              <!--<section class="text-container">
+                                <img src="/images/malymrama1.jpg" alt="Los Angeles" />
+                                <!--<section class="text-container">
                                 <p>Los Angeles</p>
                                 <p>LA is always so much fun!</p>
                               </section>-->
                             </section>
                             <!--These are not screens. They will always be on carousel-->
                             <section class="circle-container">
-                              <!--These 'circles' need to match the number of carousel screens-->
-                              <div class="circle"></div>
-                              <div class="circle"></div>
-                              <div class="circle"></div>
+                                <!--These 'circles' need to match the number of carousel screens-->
+                                <div class="circle"></div>
+                                <div class="circle"></div>
+                                <div class="circle"></div>
                             </section>
                             <div class="left-arrow">
-                              <span class="chevron left"></span>
+                                <span class="chevron left"></span>
                             </div>
                             <div class="right-arrow">
-                              <span class="chevron right"></span>
+                                <span class="chevron right"></span>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-
-
-
-
-                </div>
-            </section>
-            <section class="steps section container">
-                <div class="steps__bg">
-                    <h2 class="section__title-center steps__title">
-                        Top <br> Advertisements
-                    </h2>
-
-                    <div class="steps__container grid">
-                        <div class="steps__card">
-                            <div class="steps__card-number">01</div>
-                            <h3 class="steps__card-title">Real Estate</h3>
-                            <p class="steps__card-description">
-                                Advertise your apartments, houses, and commercial spaces to reach a wider audience. </p>
-                        </div>
-
-                        <div class="steps__card">
-                            <div class="steps__card-number">02</div>
-                            <h3 class="steps__card-title">Jobs</h3>
-                            <p class="steps__card-description">
-                                Attract qualified candidates by advertising your job openings.    </p>
-                        </div>
-
-                        <div class="steps__card">
-                            <div class="steps__card-number">03</div>
-                            <h3 class="steps__card-title">Business</h3>
-                            <p class="steps__card-description">
-                                Advertise your business for sale or lease to connect with interested buyers and investors.    </p>
                         </div>
                     </div>
                 </div>
-            </section>
-        
-               <section class="product section container" id="products">
-                  <!-- Add search bar here -->
-                   
 
-                 <h2 class="section__title-center">
-                 Different Languages <br> we provide
-                 </h2>
 
-                 <div class="search-bar">
-                    <input type="text" id="search-bar" placeholder="Search...">
-                     <button id="search-btn">Search</button>
+
+
+            </div>
+        </section>
+        <section class="steps section container">
+            <div class="steps__bg">
+                <h2 class="section__title-center steps__title">
+                    Top <br> Advertisements
+                </h2>
+
+                <div class="steps__container grid">
+                    <div class="steps__card">
+                        <div class="steps__card-number">01</div>
+                        <h3 class="steps__card-title">Real Estate</h3>
+                        <p class="steps__card-description">
+                            Advertise your apartments, houses, and commercial spaces to reach a wider audience. </p>
+                    </div>
+
+                    <div class="steps__card">
+                        <div class="steps__card-number">02</div>
+                        <h3 class="steps__card-title">Jobs</h3>
+                        <p class="steps__card-description">
+                            Attract qualified candidates by advertising your job openings. </p>
+                    </div>
+
+                    <div class="steps__card">
+                        <div class="steps__card-number">03</div>
+                        <h3 class="steps__card-title">Business</h3>
+                        <p class="steps__card-description">
+                            Advertise your business for sale or lease to connect with interested buyers and investors.
+                        </p>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="product section container" id="products">
+            <!-- Add search bar here -->
+
+
+            <h2 class="section__title-center">
+                Different Languages <br> we provide
+            </h2>
+
+            <div class="search-bar">
+                <input type="text" id="search-bar" placeholder="Search...">
+                <button id="search-btn">Search</button>
+            </div>
 
 
 
-                <p class="product__description">
-                    Place your Ad in any of the below prestegious newspapers
-                </p>
+            <p class="product__description">
+                Place your Ad in any of the below prestegious newspapers
+            </p>
 
-                 <div class="product__container grid">
-                    <article class="product__card">
+            <div class="product__container grid">
+                <article class="product__card">
                     <div class="product__circle"></div>
 
                     <img src="/images/f17.jpg" alt="" class="product__img">
 
-                  <h3 class="product__title">THE HINDU</h3>
-                   <span class="product__price">$5.55</span>
+                    <h3 class="product__title">THE HINDU</h3>
+                    <span class="product__price">$5.55</span>
                 </article>
 
 
-                    <article class="product__card">
-                        <div class="product__circle"></div>
+                <article class="product__card">
+                    <div class="product__circle"></div>
 
-                        <img src="/images/f12.jpg" alt="" class="product__img">
+                    <img src="/images/f12.jpg" alt="" class="product__img">
 
-                        <a href="/users/viewSlot/newspaper3"><h3 class="product__title">The Indian EXPRESS</h3></a>
-                        <span class="product__price">$6.44</span>
+                    <a href="/users/viewSlot/newspaper3">
+                        <h3 class="product__title">The Indian EXPRESS</h3>
+                    </a>
+                    <span class="product__price">$6.44</span>
 
-                       
-                    </article>
 
-                    <article class="product__card">
-                        <div class="product__circle"></div>
+                </article>
 
-                        <img src="/images/f13.jpg" alt="" class="product__img">
+                <article class="product__card">
+                    <div class="product__circle"></div>
 
-                        <h3 class="product__title">മലയാള മനോരമ</h3>
-                        <span class="product__price">$7.99</span>
+                    <img src="/images/f13.jpg" alt="" class="product__img">
 
-                       
-                    </article>
+                    <h3 class="product__title">മലയാള മനോരമ</h3>
+                    <span class="product__price">$7.99</span>
 
-                    <article class="product__card">
-                        <div class="product__circle"></div>
 
-                        <img src="/images/f7.avif" alt="" class="product__img">
+                </article>
 
-                        <h3 class="product__title">മാതൃഭൂമി</h3>
-                        <span class="product__price">$7.50</span>
+                <article class="product__card">
+                    <div class="product__circle"></div>
 
-                       
-                    </article>
+                    <img src="/images/f7.avif" alt="" class="product__img">
 
-                    <article class="product__card">
-                        <div class="product__circle"></div>
+                    <h3 class="product__title">മാതൃഭൂമി</h3>
+                    <span class="product__price">$7.50</span>
 
-                        <img src="/images/f9.jpg" alt="" class="product__img">
 
-                        <a href="/users/viewSlot/newspaper1"><h3 class="product__title">दैनिक भास्कर</h3></a>
-                        <span class="product__price">$4.99</span>
+                </article>
 
-                    </article>
+                <article class="product__card">
+                    <div class="product__circle"></div>
 
-                    <article class="product__card">
-                        <div class="product__circle"></div>
+                    <img src="/images/f9.jpg" alt="" class="product__img">
 
-                        <img src="/images/f10.jpg" alt="" class="product__img">
+                    <a href="/users/viewSlot/newspaper1">
+                        <h3 class="product__title">दैनिक भास्कर</h3>
+                    </a>
+                    <span class="product__price">$4.99</span>
 
-                        <h3 class="product__title">THE TIMES OF INDIA</h3>
-                        <span class="product__price">$6.10</span>
+                </article>
 
-                    </article>
-                </div>
-            </section>
+                <article class="product__card">
+                    <div class="product__circle"></div>
 
-            <section class="questions section" id="faqs">
-                <h2 class="section__title-center questions__title container">
-                    Offers
-                </h2>
+                    <img src="/images/f10.jpg" alt="" class="product__img">
 
-                <div class="steps__container grid offers1">
-                    <div class="steps__card">
-                        <div class="steps__card-number">1</div>
-                        <h3 class="steps__card-title">Display Ads</h3>
-                        <p class="steps__card-description">
-                            Range from ₹66 to ₹5358 per square centimeter. </p>
-                    </div>
+                    <h3 class="product__title">THE TIMES OF INDIA</h3>
+                    <span class="product__price">$6.10</span>
 
-                    <div class="steps__card">
-                        <div class="steps__card-number">2</div>
-                        <h3 class="steps__card-title">Classified Ads</h3>
-                        <p class="steps__card-description">
-                            Cost from ₹25 to ₹1070 per square centimeter.  </p>
-                    </div>
+                </article>
+            </div>
+        </section>
 
-                    <div class="steps__card">
-                        <div class="steps__card-number">3</div>
-                        <h3 class="steps__card-title">Obituary Ads</h3>
-                        <p class="steps__card-description">
-                            Priced between ₹90 and ₹982 per square centimeter.    </p>
-                    </div>
+        <section class="questions section" id="faqs">
+            <h2 class="section__title-center questions__title container">
+                Offers
+            </h2>
+
+            <div class="steps__container grid offers1">
+                <div class="steps__card">
+                    <div class="steps__card-number">1</div>
+                    <h3 class="steps__card-title">Display Ads</h3>
+                    <p class="steps__card-description">
+                        Range from ₹66 to ₹5358 per square centimeter. </p>
                 </div>
 
-                <div class="steps__container grid offers2">
-                    <div class="steps__card">
-                        <div class="steps__card-number">4</div>
-                        <h3 class="steps__card-title">Recruitment Ads</h3>
-                        <p class="steps__card-description">
-                            Priced between ₹90 and ₹982 per square centimeter. </p>
-                    </div>
-
-                    <div class="steps__card">
-                        <div class="steps__card-number">5</div>
-                        <h3 class="steps__card-title">Quarter Page Ads</h3>
-                        <p class="steps__card-description">
-                            Prices  range from ₹10,000 to ₹25,000, depending on the newspaper and placement    </p>
-                    </div>
-
-                    <div class="steps__card">
-                        <div class="steps__card-number">6</div>
-                        <h3 class="steps__card-title">Half Page Ads</h3>
-                        <p class="steps__card-description">
-                            Generally cost between ₹25,000 and ₹50,000.    </p>
-                    </div>
+                <div class="steps__card">
+                    <div class="steps__card-number">2</div>
+                    <h3 class="steps__card-title">Classified Ads</h3>
+                    <p class="steps__card-description">
+                        Cost from ₹25 to ₹1070 per square centimeter. </p>
                 </div>
-            </section>
+
+                <div class="steps__card">
+                    <div class="steps__card-number">3</div>
+                    <h3 class="steps__card-title">Obituary Ads</h3>
+                    <p class="steps__card-description">
+                        Priced between ₹90 and ₹982 per square centimeter. </p>
+                </div>
+            </div>
+
+            <div class="steps__container grid offers2">
+                <div class="steps__card">
+                    <div class="steps__card-number">4</div>
+                    <h3 class="steps__card-title">Recruitment Ads</h3>
+                    <p class="steps__card-description">
+                        Priced between ₹90 and ₹982 per square centimeter. </p>
+                </div>
+
+                <div class="steps__card">
+                    <div class="steps__card-number">5</div>
+                    <h3 class="steps__card-title">Quarter Page Ads</h3>
+                    <p class="steps__card-description">
+                        Prices range from ₹10,000 to ₹25,000, depending on the newspaper and placement </p>
+                </div>
+
+                <div class="steps__card">
+                    <div class="steps__card-number">6</div>
+                    <h3 class="steps__card-title">Half Page Ads</h3>
+                    <p class="steps__card-description">
+                        Generally cost between ₹25,000 and ₹50,000. </p>
+                </div>
+            </div>
+        </section>
 
 
-        <a href="#" class="scrollup" id="scroll-up"> 
+        <a href="#" class="scrollup" id="scroll-up">
             <i class="ri-arrow-up-fill scrollup__icon"></i>
         </a>
 
         <!--=============== SCROLL REVEAL ===============-->
         <script src="/javascripts/scrollreveal.min.js"></script>
-        
-        <!--=============== MAIN JS ===============-->
-       
-        <script>
-         
-            $(document).ready(function() {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
-    
-        today = dd + '-' + mm + '-' + yyyy;
-        $("#datepicker").attr("placeholder", today);
-    
-        $("#datepicker").datepicker({
-          dateFormat: 'dd-mm-yy'
-        });
-      });
-        </script>
-         <script src="/javascripts/user_dashboard.js"></script>
 
-    </body>
+        <!--=============== MAIN JS ===============-->
+
+        <script>
+
+            $(document).ready(function () {
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var yyyy = today.getFullYear();
+
+                today = dd + '-' + mm + '-' + yyyy;
+                $("#datepicker").attr("placeholder", today);
+
+                $("#datepicker").datepicker({
+                    dateFormat: 'dd-mm-yy'
+                });
+            });
+        </script>
+        <script src="/javascripts/user_dashboard.js"></script>
+
+</body>
+
 </html>

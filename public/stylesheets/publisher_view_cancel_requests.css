@@ -80,3 +80,20 @@
     background-color: #e53935;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
+
+  .refunded-label {
+    background-color: #343a40;
+    color: #fff; 
+    padding: 6px 12px; 
+    border-radius: 4px; 
+    font-size: 14px; 
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px; 
+    display: inline-block;
+    transition: background-color 0.3s ease;
+  }
+  
+  .refunded-label:hover {
+    background-color: #007bff; 
+  }

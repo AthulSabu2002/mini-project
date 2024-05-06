@@ -1,56 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publisher</title>
-    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-	<link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
-    <link rel="stylesheet" href="/stylesheets/publisher_view_cancel_requests.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publisher</title>
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
+  <link rel="stylesheet" href="/stylesheets/publisher_view_cancel_requests.css">
 </head>
+
 <body>
-<%- include('partials/publisher-sidebar.ejs') %>
+  <%- include('partials/publisher-sidebar.ejs') %>
 
-<section id="content">
-		
-<%- include('partials/publisher-navbar.ejs') %>
+    <section id="content">
 
-	<main>
-        
-        <% if (cancellations.length > 0) { %>
-            <div class="cancellation-requests">
-              <h2>Cancellation Requests</h2>
-              <ul>
-                <% cancellations.reverse().forEach(cancellation => { %>
-                  <li class="cancellation-request">
-                    <div class="header">
-                      <span class="booking-id">Booking #<%= cancellation.slotId %></span>
-                      <span class="created-at"><%= cancellation.createdAt %></span>
-                    </div>
-                    <div class="details">
-                      <p>Publishing Date: <%= cancellation.publishingDate %></p>
-                      <% if (cancellation && cancellation.file) { %>
-                        <p>File: Available</p>
-                      <% } else { %>
-                        <p>File: Not uploaded</p>
-                      <% } %>
-                    </div>
-                    <div class="actions">
-                      <form action="/publisher/refund/<%= cancellation.cancellationId %>/stripe-checkout" method="POST">
-                        <button class="refund-btn">Initiate Refund</button>
-                      </form>
-                    </div>
-                  </li>
-                <% }); %>
-              </ul>
-            </div>
-          <% } else { %>
-            <p>No new requests.</p>
-          <% } %>
-	
-	</main>
-</section>
-<script src="/javascripts/publisherDashboard.js"></script>
+      <%- include('partials/publisher-navbar.ejs') %>
+
+        <main>
+
+          <div class="cancelled_bookings">
+            <% if (cancellations.length> 0) { %>
+              <div class="cancellation-requests">
+                <h2>Cancellation Requests</h2>
+                <ul>
+                  <% cancellations.reverse().forEach(cancellation=> { %>
+                    <li class="cancellation-request">
+                      <div class="header">
+                        <span class="booking-id">Booking #<%= cancellation.slotId %></span>
+                        <span class="created-at">
+                          <%= cancellation.createdAt %>
+                        </span>
+                      </div>
+                      <div class="details">
+                        <p>Publishing Date: <%= cancellation.publishingDate %>
+                        </p>
+                        <% if (cancellation && cancellation.file) { %>
+                          <p>File: Available</p>
+                          <% } else { %>
+                            <p>File: Not uploaded</p>
+                            <% } %>
+                      </div>
+                      <div class="actions">
+                        <form action="/publisher/refund/<%= cancellation.cancellationId %>/stripe-checkout"
+                          method="POST">
+                          <button class="refund-btn">Initiate Refund</button>
+                        </form>
+                      </div>
+                    </li>
+                    <% }); %>
+                </ul>
+              </div>
+              <% } else { %>
+                <p>No new requests.</p>
+                <% } %>
+          </div>
+
+          <div class="refunded_bookings">
+            <% if (refunds.length> 0) { %>
+              <div class="cancellation-requests">
+                <h2>Refunded Requests</h2>
+                <ul>
+                  <% refunds.reverse().forEach(refund=> { %>
+                    <li class="cancellation-request">
+                      <div class="header">
+                        <span class="booking-id">Booking #<%= refund.slotId %></span>
+                        <span class="created-at">
+                          <%= refund.createdAt %>
+                        </span>
+                      </div>
+                      <div class="details">
+                        <p>Publishing Date: <%= refund.publishingDate %>
+                        </p>
+                        <p>Refund Id: <%= refund.cancellationId %>
+                        </p>
+                        <p>Payment Id: <%= refund.cancellationSessionId %>
+                        </p>
+                        <% if (refund && refund.file) { %>
+                          <p>File: Available</p>
+                          <% } else { %>
+                            <p>File: Not uploaded</p>
+                            <% } %>
+                      </div>
+                      <div class="actions">
+                        <span class="refunded-label">Refunded</span>
+                      </div>
+                    </li>
+                    <% }); %>
+                </ul>
+              </div>
+              <% } else { %>
+                <p>No refunded requests.</p>
+                <% } %>
+          </div>
+        </main>
+    </section>
+    <script src="/javascripts/publisherDashboard.js"></script>
 </body>
+
 </html>
