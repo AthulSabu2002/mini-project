@@ -1,32 +1,34 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
 
-        <!--=============== FAVICON ===============-->
-        <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!--=============== REMIX ICONS ===============-->
-        <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!--=============== FAVICON ===============-->
+    <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
 
-        <!--=============== CSS ===============-->
-        <link rel="stylesheet" href="/stylesheets/landingPage.css">
-        <link rel="stylesheet" href="/stylesheets/preloader.css" id="preloaderCss">
+    <!--=============== REMIX ICONS ===============-->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="/stylesheets/landingPage.css">
+    <link rel="stylesheet" href="/stylesheets/preloader.css" id="preloaderCss">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- Include jQuery UI -->
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/stylesheets/landingPageCalender.css">
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/stylesheets/landingPageCalender.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-        <title>Adcolumn</title>
-    </head>
-    <body>
+    <title>Adcolumn</title>
+</head>
+
+<body>
 
 
-        <!-- preloader section -->
-        <%- include('partials/preloader.ejs') %>
+    <!-- preloader section -->
+    <%- include('partials/preloader.ejs') %>
 
         <!--==================== HEADER ====================-->
         <header class="header" id="header">
@@ -60,7 +62,7 @@
                 </div>
 
                 <div class="nav__btns">
-                    
+
                     <a class="button button--flex signinbut" href="/auth/login">Login</a>
 
                     <div class="nav__toggle" id="nav-toggle">
@@ -78,12 +80,12 @@
 
                     <div class="home__data">
                         <h1 class="home__title">
-                            Empower Your Brand:  <br> Place Ads Easily.
+                            Empower Your Brand: <br> Place Ads Easily.
                         </h1>
                         <p class="home__description">
-                            Unlock the power of targeted newspaper advertising with our platform. 
+                            Unlock the power of targeted newspaper advertising with our platform.
                             Seamlessly book ad slots and reach your audience where it matters most.
-                            
+
                         </p>
                         <a href="#about" class="button button--flex">
                             Explore <i class="ri-arrow-right-down-line button__icon"></i>
@@ -119,13 +121,15 @@
                         </h2>
 
                         <p class="about__description">
-                            Welcome to our innovative newspaper ad management platform, your all-in-one solution for effortless advertising. Seamlessly streamline your advertising campaigns with our user-friendly interface designed to simplify the process from start to finish.
+                            Welcome to our innovative newspaper ad management platform, your all-in-one solution for
+                            effortless advertising. Seamlessly streamline your advertising campaigns with our
+                            user-friendly interface designed to simplify the process from start to finish.
                         </p>
 
                         <div class="about__details">
                             <p class="about__details-description">
                                 <i class="ri-checkbox-fill about__details-icon"></i>
-                                Ad Scheduling 
+                                Ad Scheduling
                             </p>
                             <p class="about__details-description">
                                 <i class="ri-checkbox-fill about__details-icon"></i>
@@ -166,14 +170,15 @@
                             <div class="steps__card-number">02</div>
                             <h3 class="steps__card-title">Jobs</h3>
                             <p class="steps__card-description">
-                                Attract qualified candidates by advertising your job openings.    </p>
+                                Attract qualified candidates by advertising your job openings. </p>
                         </div>
 
                         <div class="steps__card">
                             <div class="steps__card-number">03</div>
                             <h3 class="steps__card-title">Business</h3>
                             <p class="steps__card-description">
-                                Advertise your business for sale or lease to connect with interested buyers and investors.    </p>
+                                Advertise your business for sale or lease to connect with interested buyers and
+                                investors. </p>
                         </div>
                     </div>
                 </div>
@@ -182,7 +187,7 @@
             <!--==================== PRODUCTS ====================-->
             <section class="product section container" id="products">
                 <h2 class="section__title-center">
-                   Featured <br> Newspapers
+                    Featured <br> Newspapers
                 </h2>
 
                 <p class="product__description">
@@ -198,17 +203,19 @@
                         <h3 class="product__title">THE HINDU</h3>
                         <span class="product__price">$5.55</span>
 
-                       
+
                     </article>
 
                     <article class="product__card">
                         <div class="product__circle"></div>
 
                         <img src="/images/f12.jpg" alt="" class="product__img">
-                        <a href="/users/viewSlot/newspaper3"><h3 class="product__title">The Indian EXPRESS</h3></a>
+                        <a href="/users/viewSlot/newspaper3">
+                            <h3 class="product__title">The Indian EXPRESS</h3>
+                        </a>
                         <span class="product__price">$6.44</span>
 
-                       
+
                     </article>
 
                     <article class="product__card">
@@ -219,7 +226,7 @@
                         <h3 class="product__title">മലയാള മനോരമ</h3>
                         <span class="product__price">$7.99</span>
 
-                       
+
                     </article>
 
                     <article class="product__card">
@@ -230,7 +237,7 @@
                         <h3 class="product__title">മാതൃഭൂമി</h3>
                         <span class="product__price">$7.50</span>
 
-                       
+
                     </article>
 
                     <article class="product__card">
@@ -238,7 +245,9 @@
 
                         <img src="/images/f9.jpg" alt="" class="product__img">
 
-                        <a href="/users/viewSlot/newspaper1"><h3 class="product__title">दैनिक भास्कर</h3></a>
+                        <a href="/users/viewSlot/newspaper1">
+                            <h3 class="product__title">दैनिक भास्कर</h3>
+                        </a>
                         <span class="product__price">$4.99</span>
 
                     </article>
@@ -272,14 +281,14 @@
                         <div class="steps__card-number">2</div>
                         <h3 class="steps__card-title">Classified Ads</h3>
                         <p class="steps__card-description">
-                            Cost from ₹25 to ₹1070 per square centimeter.  </p>
+                            Cost from ₹25 to ₹1070 per square centimeter. </p>
                     </div>
 
                     <div class="steps__card">
                         <div class="steps__card-number">3</div>
                         <h3 class="steps__card-title">Obituary Ads</h3>
                         <p class="steps__card-description">
-                            Priced between ₹90 and ₹982 per square centimeter.    </p>
+                            Priced between ₹90 and ₹982 per square centimeter. </p>
                     </div>
                 </div>
 
@@ -295,24 +304,24 @@
                         <div class="steps__card-number">5</div>
                         <h3 class="steps__card-title">Quarter Page Ads</h3>
                         <p class="steps__card-description">
-                            Prices  range from ₹10,000 to ₹25,000, depending on the newspaper and placement    </p>
+                            Prices range from ₹10,000 to ₹25,000, depending on the newspaper and placement </p>
                     </div>
 
                     <div class="steps__card">
                         <div class="steps__card-number">6</div>
                         <h3 class="steps__card-title">Half Page Ads</h3>
                         <p class="steps__card-description">
-                            Generally cost between ₹25,000 and ₹50,000.    </p>
+                            Generally cost between ₹25,000 and ₹50,000. </p>
                     </div>
                 </div>
             </section>
 
             <!--==================== CONTACT ====================-->
-            <section class="contact section container" id="contact">                
+            <section class="contact section container" id="contact">
                 <div class="contact__container grid">
                     <div class="contact__box">
                         <h2 class="section__title">
-                            Reach out to us  <br> for any help and <br> information
+                            Reach out to us <br> for any help and <br> information
                         </h2>
 
                         <div class="contact__data">
@@ -337,27 +346,22 @@
                     <form class="form mainform" id="searchForm">
                         <div class="subform_1">
                             <div class="sub-div">
-                                <select name="destination" id="destination" class="form-control custom-select">                                    <option value="">Destination</option>
-                                    <option value="Mumbai">Mumbai</option>
-                                    <option value="Kochi">Kochi</option>
-                                    <option value="Hyderabad">Hyderabad</option>
-                                    <option value="Chennai">Chennai</option>
-                                    <option value="Delhi">Delhi</option>
-                                    <option value="bangalore">bangalore</option>
-                                    <option value="pune">pune</option>
-                                    <option value="Kolkata">Kolkata</option>
+                                <select name="destination" id="destination" class="form-control custom-select">
+                                    <option value="">Destination</option>
+                                    <option value="newspaper3">The Indian Express</option>
+                                    <option value="newspaper1">newspaper1</option>
                                 </select>
                             </div>
-                            <div class="sub-div">
+                            <div class=" sub-div">
                                 <input type="text" class="form-control Control1" id="datepicker" name="datepicker">
                             </div>
-                            
-                        </div>    
+
+                        </div>
                         <div class="subform_2">
                             <div class="">
-                                <input type="submit" class="submitbut" value="Search">
+                                <input type="submit" class="submitbut">
                             </div>
-                            
+
                         </div>
                         <div>
                             <p class="searchnsp">Search here for newspapers for a specific date</p>
@@ -378,16 +382,16 @@
                         For registering as a publisher <br> <a href="/publisher/request">Click here</a>
                     </h3>
 
-                  
+
                 </div>
-            
-                <div >
-                   
+
+                <div>
+
                     <h3 class="footer__title">
                         Already a Publisher? <br> <a href="/publisher/login">Click here</a>
                     </h3>
 
-                  
+
                 </div>
                 <!-- <div class="footer__content">
                     <h3 class="footer__title">Our Address</h3>
@@ -404,7 +408,7 @@
 
                     <ul class="footer__data">
                         <li class="footer__information">acolumn@gmail.com</li>
-                        
+
                         <div class="footer__social">
                             <a href="https://www.facebook.com/" class="footer__social-link">
                                 <i class="ri-facebook-fill"></i>
@@ -434,44 +438,35 @@
             </div>
 
         </footer>
-        
-        <a href="#" class="scrollup" id="scroll-up"> 
+
+        <a href="#" class="scrollup" id="scroll-up">
             <i class="ri-arrow-up-fill scrollup__icon"></i>
         </a>
 
         <!--=============== SCROLL REVEAL ===============-->
         <script src="/javascripts/scrollreveal.min.js"></script>
-        
+
         <!--=============== MAIN JS ===============-->
-       
+
         <script>
-         
-            $(document).ready(function() {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
-    
-        today = dd + '-' + mm + '-' + yyyy;
-        $("#datepicker").attr("placeholder", today);
-    
-        $("#datepicker").datepicker({
-          dateFormat: 'dd-mm-yy'
-        });
-      });
 
+            $(document).ready(function () {
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var yyyy = today.getFullYear();
 
-     
-    document.getElementById("searchForm").addEventListener("submit", function(event) {
-       var destination = document.getElementById("destination").value;
-         var datepicker = document.getElementById("datepicker").value;
-        if (destination === "" || datepicker === "") {
-            alert("Please select both destination and date");
-             event.preventDefault(); 
-         }
-    });
+                today = dd + '-' + mm + '-' + yyyy;
+                $("#datepicker").attr("placeholder", today);
+
+                $("#datepicker").datepicker({
+                    dateFormat: 'dd-mm-yy'
+                });
+            });
 
         </script>
-         <script src="/javascripts/landingPage.js"></script>
-    </body>
+        <script src="/javascripts/dates_search.js"></script>
+        <script src="/javascripts/landingPage.js"></script>
+</body>
+
 </html>
