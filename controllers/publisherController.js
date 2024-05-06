@@ -26,13 +26,13 @@ const renderDashboard = asyncHandler(async (req, res) => {
         const userId = req.cookies.userId;
         if (userId) {
             const publisher = await Publisher.findById(userId);
-            if (publisher){
+            if (publisher) {
                 const newspaperName = publisher.newspaperName;
 
                 const bookingsCount = await BookedSlots.countDocuments({ newspaperName });
 
                 const currentDate = new Date();
-                currentDate.setUTCHours(0, 0, 0, 0); 
+                currentDate.setUTCHours(0, 0, 0, 0);
 
                 const bookings = await BookedSlots.find({
                     newspaperName,
@@ -44,7 +44,7 @@ const renderDashboard = asyncHandler(async (req, res) => {
                     }
                 });
 
-                const cancelledBookings = await CancelledBookings.find({ 
+                const cancelledBookings = await CancelledBookings.find({
                     newspaperName,
                     $expr: {
                         $eq: [
@@ -57,18 +57,18 @@ const renderDashboard = asyncHandler(async (req, res) => {
 
                 const result = await BookedSlots.aggregate([
                     {
-                      $match: {
-                        newspaperName: newspaperName
-                      }
+                        $match: {
+                            newspaperName: newspaperName
+                        }
                     },
                     {
-                      $group: {
-                        _id: null,
-                        totalPrice: { $sum: "$price" }
-                      }
+                        $group: {
+                            _id: null,
+                            totalPrice: { $sum: "$price" }
+                        }
                     }
                 ]);
-                  
+
                 const totalPrice = result.length > 0 ? result[0].totalPrice : 0;
 
 
@@ -85,12 +85,12 @@ const renderDashboard = asyncHandler(async (req, res) => {
                         $count: "count"
                     }
                 ]);
-                
+
                 const count = distinctUsersCount.length > 0 ? distinctUsersCount[0].count : 0;
 
                 const formattedBookings = bookings.map(booking => {
-                    const createdAt = new Date(booking.createdAt).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).replace(/\//g, '-');
-                    const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+                    const createdAt = new Date(booking.createdAt).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\//g, '-');
+                    const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
                     return {
                         createdAt: createdAt,
                         publishingDate: publishingDate,
@@ -101,16 +101,16 @@ const renderDashboard = asyncHandler(async (req, res) => {
 
                 const formattedCancellations = cancelledBookings.map(cancelledBooking => {
                     const createdAt = new Date(cancelledBooking.createdAt)
-                                            .toLocaleString(undefined, {
-                                                day: '2-digit',
-                                                month: '2-digit',
-                                                year: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                second: '2-digit',
-                                            })
-                                            .replace(/(\d+)\/(\d+)\/(\d+)/, '$1-$2-$3');
-                                            const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+                        .toLocaleString(undefined, {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                        })
+                        .replace(/(\d+)\/(\d+)\/(\d+)/, '$1-$2-$3');
+                    const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
                     return {
                         createdAt: createdAt,
                         publishingDate: publishingDate,
@@ -119,17 +119,17 @@ const renderDashboard = asyncHandler(async (req, res) => {
                         file: cancelledBooking.file,
                         cancellationId: cancelledBooking._id
                     };
-                });        
+                });
 
 
-                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount, bookings: formattedBookings, cancelledBookings: formattedCancellations,  count: count, totalPrice: totalPrice });
+                res.render('publisherDashboard', { activeTab: 'dashboard', bookingsCount: bookingsCount, bookings: formattedBookings, cancelledBookings: formattedCancellations, count: count, totalPrice: totalPrice });
             }
-            else{
+            else {
                 res.redirect('/publisher/login');
             }
-            
+
         }
-        else{
+        else {
             res.redirect('/publisher/login');
         }
     } catch (error) {
@@ -154,7 +154,7 @@ const renderPublisherAccountDetails = asyncHandler(async (req, res) => {
                 res.status(500).send('Error fetching user');
             }
         }
-        else{
+        else {
             res.redirect('/publisher/login');
         }
     } catch (error) {
@@ -213,16 +213,16 @@ const renderSetBookings = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
-    
+
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
-        } 
-        
+            return res.redirect('/publisher/login');
+        }
+
         const layoutDates = await BookingDates.find({ publisher: userId });
-        
+
         res.render('setBookingDates', { layoutDates: layoutDates, activeTab: 'set-booking-date' });
     } catch (error) {
         console.error('Error fetching layout dates:', error);
@@ -235,29 +235,29 @@ const setBookingDates = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
-    
+
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
-        } 
-        
+            return res.redirect('/publisher/login');
+        }
+
         const { publishingDate, layoutDate, bookingCloseDate } = req.body;
-        
+
         if (!layoutDate || !bookingCloseDate) {
             return res.status(400).send('Layout date and booking close date are required');
         }
-        
+
         const newBookingDate = new BookingDates({
             publisher: userId,
             publishingDate: publishingDate,
             bookingOpenDate: layoutDate,
             bookingCloseDate: bookingCloseDate
         });
-        
+
         await newBookingDate.save();
-        
+
         res.redirect('/publisher/set-booking-date');
     } catch (error) {
         console.error('Error setting booking dates:', error);
@@ -270,13 +270,13 @@ const renderSlotsPricing = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
-    
+
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
-        } 
+            return res.redirect('/publisher/login');
+        }
 
         const newspaperName = user.newspaperName;
         console.log(newspaperName);
@@ -316,7 +316,7 @@ const SaveSlotsPricing = asyncHandler(async (req, res) => {
 
         if (existingSlotPrices) {
             existingSlotPrices.slots = slotPrice.map((price, index) => ({
-                name: `slot${index + 1}`,                
+                name: `slot${index + 1}`,
                 price: parseInt(price)
             }));
             await existingSlotPrices.save();
@@ -345,12 +345,12 @@ const viewLayout = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const email = user.email;
@@ -451,7 +451,7 @@ const sendBookedDetails = asyncHandler(async (req, res) => {
             newspaperName: newspaperName,
             publishingDate: publishingDateISO8601
         });
-  
+
         res.json(bookedSlots);
     } catch (error) {
 
@@ -469,12 +469,12 @@ const renderViewBookings = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const newspaperName = user.newspaperName;
@@ -483,16 +483,16 @@ const renderViewBookings = asyncHandler(async (req, res) => {
 
         const formattedBookings = bookings.map(booking => {
             const createdAt = new Date(booking.createdAt)
-                                    .toLocaleString(undefined, {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: '2-digit',
-                                    })
-                                    .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
-                                    const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+                .toLocaleString(undefined, {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                })
+                .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+            const publishingDate = new Date(booking.publishingDate).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
             return {
                 createdAt: createdAt,
                 publishingDate: publishingDate,
@@ -500,11 +500,11 @@ const renderViewBookings = asyncHandler(async (req, res) => {
                 newspaperName: newspaperName,
                 file: booking.file
             };
-        });        
+        });
 
         res.render('publisherViewBookings', { bookings: formattedBookings, activeTab: 'view-bookings' });
-        
-        
+
+
     } catch (error) {
         console.error('Error fetching layout:', error);
         res.status(500).send('Error fetching layout');
@@ -516,12 +516,12 @@ const renderCancelledBookings = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const newspaperName = user.newspaperName;
@@ -530,16 +530,16 @@ const renderCancelledBookings = asyncHandler(async (req, res) => {
 
         const formattedCancellations = cancelledBookings.map(cancelledBooking => {
             const createdAt = new Date(cancelledBooking.createdAt)
-                                    .toLocaleString(undefined, {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: '2-digit',
-                                    })
-                                    .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
-                                    const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/\//g, '-');
+                .toLocaleString(undefined, {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                })
+                .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+            const publishingDate = new Date(cancelledBooking.publishingDate).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
             return {
                 createdAt: createdAt,
                 publishingDate: publishingDate,
@@ -548,11 +548,36 @@ const renderCancelledBookings = asyncHandler(async (req, res) => {
                 file: cancelledBooking.file,
                 cancellationId: cancelledBooking._id
             };
-        });        
+        });
 
-        res.render('publisher_view_cancel_requests', { cancellations: formattedCancellations, activeTab: 'view-cancel-requests' });
-        
-        
+        const refundedBookings = await Refunded.find({ newspaperName });
+
+        const formattedRefunds = refundedBookings.map(refundedBooking => {
+            const createdAt = new Date(refundedBooking.createdAt)
+                .toLocaleString(undefined, {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                })
+                .replace(/(\d+)\/(\d+)\/(\d+)/, '$2-$1-$3');
+            const publishingDate = new Date(refundedBooking.publishingDate).toLocaleString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
+            return {
+                createdAt: createdAt,
+                publishingDate: publishingDate,
+                slotId: refundedBooking.slotId,
+                newspaperName: newspaperName,
+                file: refundedBooking.file,
+                cancellationId: refundedBooking._id,
+                cancellationSessionId: refundedBooking.cancellationSessionId
+            };
+        });
+
+        res.render('publisher_view_cancel_requests', { cancellations: formattedCancellations, refunds: formattedRefunds, activeTab: 'view-cancel-requests' });
+
+
     } catch (error) {
         console.error('Error fetching layout:', error);
         res.status(500).send('Error fetching layout');
@@ -564,12 +589,12 @@ const refundInitiation = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const cancellationId = String(req.params.cancellationId);
@@ -590,21 +615,21 @@ const refundInitiation = asyncHandler(async (req, res) => {
 
         const lineItems = [
             {
-              price_data: {
-                currency: 'inr',
-                product_data: {
-                  name: newspaperName,
-                  description: `Slot ${slotId} - ${newspaperName} (${cancellationDate})`,
+                price_data: {
+                    currency: 'inr',
+                    product_data: {
+                        name: newspaperName,
+                        description: `Slot ${slotId} - ${newspaperName} (${cancellationDate})`,
+                    },
+                    unit_amount: price * 100,
                 },
-                unit_amount: price * 100,
-              },
-              quantity: 1,
+                quantity: 1,
             },
-          ];
+        ];
 
-          console.log(lineItems);
-      
-          const session = await stripeGateway.checkout.sessions.create({
+        console.log(lineItems);
+
+        const session = await stripeGateway.checkout.sessions.create({
             currency: 'inr',
             payment_method_types: ['card'],
             mode: 'payment',
@@ -612,15 +637,15 @@ const refundInitiation = asyncHandler(async (req, res) => {
             cancel_url: `${PUBLISHER_DOMAIN}/refund/failure`,
             line_items: lineItems,
             billing_address_collection: 'required',
-          });
-      
-          const sessionId = session.id;
-          const url = session.url;
+        });
 
-          res.cookie('sessionId', sessionId, { httpOnly: true });
-          res.cookie('sessionUrl', url, { httpOnly: true });
+        const sessionId = session.id;
+        const url = session.url;
 
-          const newTemporaryRefund = new TemporaryRefund({
+        res.cookie('sessionId', sessionId, { httpOnly: true });
+        res.cookie('sessionUrl', url, { httpOnly: true });
+
+        const newTemporaryRefund = new TemporaryRefund({
             userId: cancelledBooking.userId,
             publishingDate: cancelledBooking.publishingDate,
             slotId: cancelledBooking.slotId,
@@ -629,14 +654,14 @@ const refundInitiation = asyncHandler(async (req, res) => {
             price: cancelledBooking.price,
             sessionId: cancelledBooking.sessionId,
             cancellationSessionId: sessionId,
-          });
+        });
 
-          await newTemporaryRefund.save();
+        await newTemporaryRefund.save();
 
-          res.redirect(url);
+        res.redirect(url);
 
     }
-    catch(error){
+    catch (error) {
         console.log("couldnt initiate refund!", error);
         res.redirect('/publisher/view-cancel-requests');
     }
@@ -647,17 +672,17 @@ const renderRefundSuccessPage = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         if (!userId) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const user = await Publisher.findById(userId);
         if (!user) {
-            return res.redirect('/publisher/login'); 
+            return res.redirect('/publisher/login');
         }
 
         const cancellationSessionId = req.cookies.sessionId;;
 
-        const temporaryRefundData = await TemporaryRefund.findOne({cancellationSessionId: cancellationSessionId});
+        const temporaryRefundData = await TemporaryRefund.findOne({ cancellationSessionId: cancellationSessionId });
 
         const newRefund = new Refunded({
             userId: temporaryRefundData.userId,
@@ -668,16 +693,18 @@ const renderRefundSuccessPage = asyncHandler(async (req, res) => {
             price: temporaryRefundData.price,
             sessionId: temporaryRefundData.sessionId,
             cancellationSessionId: cancellationSessionId,
-          });
+        });
 
-          await newRefund.save();
+        await newRefund.save();
 
-          await TemporaryRefund.deleteOne({ cancellationSessionId: cancellationSessionId });
+        await TemporaryRefund.deleteOne({ cancellationSessionId: cancellationSessionId });
 
-        res.render('refundSuccess', );
+        await CancelledBookings.deleteOne({ sessionId: temporaryRefundData.sessionId });
+
+        res.render('refundSuccess',);
 
     }
-    catch(error){
+    catch (error) {
         console.log(error);
     }
 });
@@ -687,9 +714,9 @@ const renderRefundSuccessPage = asyncHandler(async (req, res) => {
 const loginPublisher = asyncHandler(async (req, res) => {
     try {
         const { username, password } = req.body;
-        
+
         if (!username || !password) {
-          return res.status(500).send("<script>alert('username and password fields are mandatory'); window.location='/auth/login';</script>");
+            return res.status(500).send("<script>alert('username and password fields are mandatory'); window.location='/auth/login';</script>");
         }
         const user = await Publisher.findOne({ username }, 'username email password');
         if (user) {
@@ -702,9 +729,9 @@ const loginPublisher = asyncHandler(async (req, res) => {
                     }
                     req.session.loggedIn = true;
                     const userId = req.user.id;
-                    res.cookie('userId', userId, { 
+                    res.cookie('userId', userId, {
                         maxAge: 24 * 60 * 60 * 1000,
-                        httpOnly: true 
+                        httpOnly: true
                     });
                     return res.redirect('/publisher/dashboard');
                 });
@@ -725,23 +752,23 @@ const loginPublisher = asyncHandler(async (req, res) => {
 
 
 const logoutPublisher = asyncHandler(async (req, res) => {
-    req.logout(function(err) {
+    req.logout(function (err) {
         if (err) { return next(err); }
         req.session.loggedIn = false;
         req.session.destroy()
         res.clearCookie('userId');
         res.redirect('/publisher/login')
-      });
+    });
 });
 
 
-const renderSuccessPage = asyncHandler( async(req, res) => {
-    try{
-  
+const renderSuccessPage = asyncHandler(async (req, res) => {
+    try {
+
         const sessionId = req.session.sessionId;
-  
+
         const temporaryRequest = await TemporaryRequest.findOne({ sessionId: sessionId });
-    
+
         if (!temporaryRequest) {
             return res.status(404).send('Temporary request not found');
         }
@@ -771,30 +798,30 @@ const renderSuccessPage = asyncHandler( async(req, res) => {
             layout: temporaryRequest.layout,
             sessionId: sessionId
         });
-    
+
         await newRequest.save();
-    
+
         await TemporaryRequest.deleteOne({ sessionId: sessionId });
-    
-    
+
+
         res.render('bookingSuccess');
-        }catch(error){
+    } catch (error) {
         console.log(error);
-        }
-}); 
-
-
-const renderCancelPage = asyncHandler( async(req, res) => {
-    try{
-      const sessionId = req.session.sessionId;
-  
-      await TemporaryRequest.deleteOne({ sessionId: sessionId });
-  
-      res.send('failure');
-    }catch(error){
-      console.log(error);
     }
-}); 
+});
+
+
+const renderCancelPage = asyncHandler(async (req, res) => {
+    try {
+        const sessionId = req.session.sessionId;
+
+        await TemporaryRequest.deleteOne({ sessionId: sessionId });
+
+        res.send('failure');
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 
 
@@ -802,12 +829,12 @@ const renderCancelPage = asyncHandler( async(req, res) => {
 const publisherRequest = async (req, res) => {
     try {
 
-        const { fullName, organizationName, newspaperName, username, password, confirmPassword, 
-                mobileNumber, email, state, district, buildingName, pincode,
-                advertisementSlots, fileFormat, paymentmethods, customerService,
-                language,
-                bookingDeadline, cancellationRefundPolicy, contentGuidelines,
-                advertisementSubmissionGuidelines, cancellationDeadline } = req.body;
+        const { fullName, organizationName, newspaperName, username, password, confirmPassword,
+            mobileNumber, email, state, district, buildingName, pincode,
+            advertisementSlots, fileFormat, paymentmethods, customerService,
+            language,
+            bookingDeadline, cancellationRefundPolicy, contentGuidelines,
+            advertisementSubmissionGuidelines, cancellationDeadline } = req.body;
 
         if (!req.file) {
             console.error('No file uploaded');
@@ -832,30 +859,30 @@ const publisherRequest = async (req, res) => {
 
         const lineItems = [
             {
-              price_data: {
-                currency: 'inr',
-                product_data: {
-                  name: fullName,
-                  description: `${username} - ${newspaperName} (${organizationName})`, 
+                price_data: {
+                    currency: 'inr',
+                    product_data: {
+                        name: fullName,
+                        description: `${username} - ${newspaperName} (${organizationName})`,
+                    },
+                    unit_amount: 10000 * 100,
                 },
-                unit_amount: 10000 * 100,
-              },
-              quantity: 1, 
+                quantity: 1,
             }
-          ];
-          
-          const session = await stripeGateway.checkout.sessions.create({
+        ];
+
+        const session = await stripeGateway.checkout.sessions.create({
             currency: 'inr',
             payment_method_types: ['card'],
             mode: 'payment',
             success_url: `${PUBLISHER_DOMAIN}/publisher-request/success`,
             cancel_url: `${PUBLISHER_DOMAIN}/publisher-request/cancel`,
-            line_items: lineItems, 
+            line_items: lineItems,
             billing_address_collection: 'required'
-          });  
-          
-          req.session.sessionId = session.id;
-      
+        });
+
+        req.session.sessionId = session.id;
+
         const newTemporaryRequest = new TemporaryRequest({
             fullName,
             organizationName,
@@ -912,24 +939,25 @@ const deleteDate = asyncHandler(async (req, res) => {
 
 
 
-module.exports = {  loginPublisher,
-                    renderDashboard,
-                    renderSetBookings,
-                    setBookingDates,
-                    deleteDate,
-                    renderPublisherAccountDetails,
-                    updatePublisherAccountDetails,
-                    logoutPublisher, 
-                    publisherRequest, 
-                    viewLayout, 
-                    renderViewBookings, 
-                    renderBookedLayout,
-                    sendBookedDetails,
-                    renderSlotsPricing,
-                    SaveSlotsPricing,
-                    renderCancelledBookings,
-                    refundInitiation,
-                    renderSuccessPage,
-                    renderCancelPage,
-                    renderRefundSuccessPage
-                }
+module.exports = {
+    loginPublisher,
+    renderDashboard,
+    renderSetBookings,
+    setBookingDates,
+    deleteDate,
+    renderPublisherAccountDetails,
+    updatePublisherAccountDetails,
+    logoutPublisher,
+    publisherRequest,
+    viewLayout,
+    renderViewBookings,
+    renderBookedLayout,
+    sendBookedDetails,
+    renderSlotsPricing,
+    SaveSlotsPricing,
+    renderCancelledBookings,
+    refundInitiation,
+    renderSuccessPage,
+    renderCancelPage,
+    renderRefundSuccessPage
+}

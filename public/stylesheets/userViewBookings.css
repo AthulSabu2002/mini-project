@@ -122,6 +122,24 @@ h1 {
   transform: translateY(-1px);
 }
 
+.cancelled-label {
+  background-color: #dc3545; 
+  color: #fff; 
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.refunded-label {
+  background-color: #28a745;
+  color: #fff; 
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
 
 @media (max-width: 768px) {
   .container {

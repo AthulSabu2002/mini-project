@@ -3,27 +3,28 @@ const asyncHandler = require("express-async-handler");
 const async = require('async');
 const Users = require('../models/userModel');
 const {
-      loginUser, 
-      resetPassword, 
-      changePasswordRequest, 
-      changePassword, 
-      logoutUser, 
-      renderDashboard,
-      renderUserProfile,
-      updateUserProfile,
-      renderViewBookingsPage,  
-      verifyOtp,
-      registerUserWithOTP,
-      renderNewspaperInfo,
-      renderBookSlotByDate,
-      renderBookinglayout,
-      bookSlot,
-      renderSuccessPage,
-      renderCancelPage,
-      cancelBooking,
-      renderCancelConfirmationPage,
-      renderCancelBookingSuccess
-     } = require("../controllers/userController");
+  loginUser,
+  resetPassword,
+  changePasswordRequest,
+  changePassword,
+  logoutUser,
+  renderDashboard,
+  renderUserProfile,
+  updateUserProfile,
+  renderViewBookingsPage,
+  renderViewCancelledAndRefundsPage,
+  verifyOtp,
+  registerUserWithOTP,
+  renderNewspaperInfo,
+  renderBookSlotByDate,
+  renderBookinglayout,
+  bookSlot,
+  renderSuccessPage,
+  renderCancelPage,
+  cancelBooking,
+  renderCancelConfirmationPage,
+  renderCancelBookingSuccess
+} = require("../controllers/userController");
 
 
 const router = express.Router();
@@ -46,10 +47,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static("public"));
 
 const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 10 * 1024 * 1024, // 10 MB
-    },
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB
+  },
 }).single('file');
 
 // const authCheck = (req, res, next) => {
@@ -64,15 +65,15 @@ const upload = multer({
 
 const authCheck = asyncHandler(async (req, res, next) => {
   const userId = req.cookies.userId;
-  console.log("userId is : ",userId);
+  console.log("userId is : ", userId);
   if (!userId) {
-      return res.redirect('/users/login');
+    return res.redirect('/users/login');
   }
 
   const user = await Users.findById(userId);
   console.log(user);
   if (!user) {
-      return res.redirect('/users/login');
+    return res.redirect('/users/login');
   }
 
   next();
@@ -80,60 +81,60 @@ const authCheck = asyncHandler(async (req, res, next) => {
 
 
 
-router.route("/login").get((req,res) => {
-    try{
-      res.render("login");
-    }
-    catch(err){
-      res.send(err);
-      }
-  });
+router.route("/login").get((req, res) => {
+  try {
+    res.render("login");
+  }
+  catch (err) {
+    res.send(err);
+  }
+});
 
 
-router.route("/registerUserWithOTP").get((req,res) => {
-  try{
+router.route("/registerUserWithOTP").get((req, res) => {
+  try {
     res.render('register.ejs')
   }
-  catch(err){
+  catch (err) {
     res.send(err);
-    }
+  }
 });
 
 
 router.route("/forgot").get((req, res) => {
-  try{
+  try {
     res.render('forgot');
   }
-  catch(err){
+  catch (err) {
     res.send(err);
   }
 })
 
 router.route("/resetPassword").get((req, res) => {
-  try{
+  try {
     res.render('resetPassword');
   }
-  catch(err){
+  catch (err) {
     res.send(err);
   }
 })
 
-router.route("/verifyOtp").get((req, res) =>{
-    const userEmail = req.query.email;
-    res.render('user/verify-otp', { email: userEmail });
+router.route("/verifyOtp").get((req, res) => {
+  const userEmail = req.query.email;
+  res.render('user/verify-otp', { email: userEmail });
 });
 
-router.route("/login").post(urlencodedParser,loginUser);
+router.route("/login").post(urlencodedParser, loginUser);
 
-router.route("/forgot").post(urlencodedParser,resetPassword);
+router.route("/forgot").post(urlencodedParser, resetPassword);
 
-router.route("/verifyOtp").post(urlencodedParser,verifyOtp);
+router.route("/verifyOtp").post(urlencodedParser, verifyOtp);
 
-router.route("/registerUserWithOTP").post(urlencodedParser,registerUserWithOTP)
+router.route("/registerUserWithOTP").post(urlencodedParser, registerUserWithOTP)
 
-router.route("/reset/:token").post(urlencodedParser,changePassword);
+router.route("/reset/:token").post(urlencodedParser, changePassword);
 
-router.route("/reset/:token").get(urlencodedParser,changePasswordRequest);
+router.route("/reset/:token").get(urlencodedParser, changePasswordRequest);
 
 router.route("/dashboard").get(authCheck, renderDashboard);
 
@@ -142,6 +143,8 @@ router.route("/dashboard/view-profile").get(authCheck, renderUserProfile);
 router.route("/dashboard/profile/update-profile").post(urlencodedParser, authCheck, updateUserProfile);
 
 router.route("/dashboard/view-bookings").get(authCheck, renderViewBookingsPage);
+
+router.route("/dashboard/view-cancellation-refunds").get(authCheck, renderViewCancelledAndRefundsPage);
 
 router.route("/viewSlot/:layoutName").get(authCheck, renderNewspaperInfo);
 
