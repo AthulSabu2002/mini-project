@@ -286,6 +286,7 @@ body {
   max-height: calc(100vh - 56px);
   overflow-y: auto;
 }
+
 #content main .head-title {
   display: flex;
   align-items: center;
@@ -332,7 +333,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   grid-gap: 32px;
-  margin-top: 36px;
+  margin-top: 2px;
 }
 
 #content main .box-info li {
