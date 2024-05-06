@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,104 +10,133 @@
 	<link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
 	<title>Publisher</title>
 </head>
+
 <body>
 	<%- include('partials/publisher-sidebar.ejs') %>
-	<section id="content">
+		<section id="content">
 
-		<%- include('partials/publisher-navbar.ejs') %>
+			<%- include('partials/publisher-navbar.ejs') %>
 
-		<main>
-			<ul class="box-info">
-				<li>
-					<i class='bx bxs-calendar-check' ></i>
-					<span class="text">
-						<h3><%= bookingsCount %></h3>
-						<p>Bookings</p>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-group' ></i>
-					<span class="text">
-						<h3><%= count %></h3>
-						<p>Users</p>
-					</span>
-				</li>
-				<li>
-					<i class='bx bx-rupee'></i>
-					<span class="text">
-						<h3><%= totalPrice %></h3>
-						<p>Revenue</p>
-					</span>
-				</li>
-			</ul>
+				<main>
 
+					<ul class="box-info">
+						<li>
+							<i class='bx bxs-calendar-check'></i>
+							<span class="text">
+								<h3>
+									<%= bookingsCount %>
+								</h3>
+								<p>Bookings</p>
+							</span>
+						</li>
+						<li>
+							<i class='bx bxs-group'></i>
+							<span class="text">
+								<h3>
+									<%= count %>
+								</h3>
+								<p>Users</p>
+							</span>
+						</li>
+						<li>
+							<i class='bx bx-rupee'></i>
+							<span class="text">
+								<h3>
+									<%= totalPrice %>
+								</h3>
+								<p>Revenue</p>
+							</span>
+						</li>
+					</ul>
 
-			<div class="container">
-				<div class="row">
-				  <div class="col">
-					<div class="booking_section">
-					  <h2 class="booking_section-title">New Bookings</h2>
-					  <div class="booking_data">
-						<% if (bookings.length > 0) { %>
-						  <% bookings.reverse().forEach(booking => { %>
-							<div class="booking_card new">
-							  <div class="booking_info">
-								<div class="avatar">
-								  <i class="fas fa-user-circle"></i>
-								</div>
-								<div>
-								  <h4><%= booking.slotId %></h4>
-								  <p>Booked At : <%= booking.createdAt %></p>
-								  <p>Publishing Date: <%= booking.publishingDate %></p>
-								</div>
-							  </div>
-							  <div class="booking_details">
-								<span class="status pending">New</span>
-							  </div>
-							</div>
-						  <% }); %>
-						<% } else { %>
-						  <p>No new bookings.</p>
-						<% } %>
-					  </div>
+					<div class="data-chart-container">
+						<div class="overview-chart-container">
+							<canvas id="myOverviewChart"></canvas>
+						</div>
+						<div class="chart-container">
+							<canvas id="bookingsChart"></canvas>
+						</div>
 					</div>
-				  </div>
-				  <div class="col">
-					<div class="cancelled_section">
-					  <h2 class="cancelled_section-title">Cancelled Bookings</h2>
-					  <div class="cancelled_data">
-						<% if (cancelledBookings.length > 0) { %>
-						  <% cancelledBookings.reverse().forEach(booking => { %>
-							<div class="booking_card cancelled">
-							  <div class="booking_info">
-								<div class="avatar">
-								  <i class="fas fa-user-circle"></i>
+
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<div class="booking_section">
+									<h2 class="booking_section-title">New Bookings</h2>
+									<div class="booking_data">
+										<% if (bookings.length> 0) { %>
+											<% bookings.reverse().forEach(booking=> { %>
+												<div class="booking_card new">
+													<div class="booking_info">
+														<div class="avatar">
+															<i class="fas fa-user-circle"></i>
+														</div>
+														<div>
+															<h4>
+																<%= booking.slotId %>
+															</h4>
+															<p>Booked At : <%= booking.createdAt %>
+															</p>
+															<p>Publishing Date: <%= booking.publishingDate %>
+															</p>
+														</div>
+													</div>
+													<div class="booking_details">
+														<span class="status pending">New</span>
+													</div>
+												</div>
+												<% }); %>
+													<% } else { %>
+														<p>No new bookings.</p>
+														<% } %>
+									</div>
 								</div>
-								<div>
-								  <h4><%= booking.slotId %></h4>
-								  <p>Cancelled At : <%= booking.createdAt %></p>
-								  <p>Publishing Date : <%= booking.publishingDate %></p>
-								</div>
-							  </div>
-							  <div class="booking_details">
-								<span class="status cancelled">Cancelled</span>
-							  </div>
 							</div>
-						  <% }); %>
-						<% } else { %>
-						  <p>No cancelled bookings.</p>
-						<% } %>
-					  </div>
+							<div class="col">
+								<div class="cancelled_section">
+									<h2 class="cancelled_section-title">Cancelled Bookings</h2>
+									<div class="cancelled_data">
+										<% if (cancelledBookings.length> 0) { %>
+											<% cancelledBookings.reverse().forEach(booking=> { %>
+												<div class="booking_card cancelled">
+													<div class="booking_info">
+														<div class="avatar">
+															<i class="fas fa-user-circle"></i>
+														</div>
+														<div>
+															<h4>
+																<%= booking.slotId %>
+															</h4>
+															<p>Cancelled At : <%= booking.createdAt %>
+															</p>
+															<p>Publishing Date : <%= booking.publishingDate %>
+															</p>
+														</div>
+													</div>
+													<div class="booking_details">
+														<span class="status cancelled">Cancelled</span>
+													</div>
+												</div>
+												<% }); %>
+													<% } else { %>
+														<p>No cancelled bookings.</p>
+														<% } %>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
 					</div>
-				  </div>
-				</div>
-			  </div>
-		</main>
-	</section>
-	
-    <script src="/javascripts/publisherDashboard.js"></script>
-	<script>
-		const socket = io();
-	</script>
+				</main>
+		</section>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="/javascripts/publisherDashboard.js"></script>
+		<script src="/javascripts/dataVisualization.js"></script>
+		<script>
+			const socket = io();
+		</script>
 </body>
+
 </html>
