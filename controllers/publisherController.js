@@ -804,7 +804,7 @@ const renderSuccessPage = asyncHandler(async (req, res) => {
         await TemporaryRequest.deleteOne({ sessionId: sessionId });
 
 
-        res.render('bookingSuccess');
+        res.render('publisher_request_success', { sessionId: sessionId });
     } catch (error) {
         console.log(error);
     }
