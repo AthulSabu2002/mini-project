@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const async = require('async');
 const stripe = require('stripe');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
 
 const Request = require("../models/requestModel");
 const Layout = require("../models/newsPaperLayout");
@@ -16,6 +17,7 @@ const CancelledBookings = require('../models/cancelledBookingModel');
 const TemporaryRefund = require('../models/temporaryRefundsModel');
 const Refunded = require('../models/refundedItemsModel');
 const User = require('../models/userModel');
+const RejectSlotBoooking = require('../models/rejected_bookings');
 
 let stripeGateway = stripe(process.env.stripe_api)
 let PUBLISHER_DOMAIN = process.env.PUBLISHER_DOMAIN
@@ -569,11 +571,24 @@ const rejectBooking = asyncHandler(async (req, res) => {
             return res.redirect('/publisher/login');
         }
 
-        const newspaperName = user.newspaperName;
-        const { email, subject, description, bookingId } = req.body;
+        var { email, subject, description, bookingId } = req.body;
 
-        console.log(req.body);
+        bookingId = new mongoose.Types.ObjectId(bookingId);
 
+        const booking = await BookedSlots.findById(bookingId);
+
+        const rejectedBooking = new RejectSlotBoooking({
+            userId: booking.userId,
+            publishingDate: booking.publishingDate,
+            slotId: booking.slotId,
+            newspaperName: booking.newspaperName,
+            file: booking.file,
+            price: booking.price,
+        });
+
+        rejectedBooking.save();
+
+        await BookedSlots.deleteOne({ _id: bookingId });
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -596,6 +611,7 @@ const rejectBooking = asyncHandler(async (req, res) => {
                 res.json({ success: false, error: error.message });
             } else {
                 console.log('Email sent: ' + info.response);
+
                 res.json({ success: true });
             }
         });
