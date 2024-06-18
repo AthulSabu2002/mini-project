@@ -243,6 +243,7 @@ async function sendOTPEmail(email, otp) {
     }
   });
 
+
   const emailContent = otp_reg_emailTemplate.replace('{OTP_PLACEHOLDER}', otp);
 
   const mailOptions = {

@@ -1,60 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publisher</title>
-    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-	  <link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
-    <link rel="stylesheet" href="/stylesheets/download-link.css">
-    <link rel="stylesheet" href="/stylesheets/view-booking.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publisher</title>
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/stylesheets/publisherDashboard.css">
+  <link rel="stylesheet" href="/stylesheets/download-link.css">
+  <link rel="stylesheet" href="/stylesheets/view-booking.css">
 </head>
+
 <body>
-<%- include('partials/publisher-sidebar.ejs') %>
+  <%- include('partials/publisher-sidebar.ejs') %>
 
-<section id="content">
-		
-<%- include('partials/publisher-navbar.ejs') %>
+    <section id="content">
 
-	<main>
-        
-					<div class="bookings-container">
-            <% if (bookings.length > 0) { %>
-              <% bookings.reverse().forEach(booking => { %>
+      <%- include('partials/publisher-navbar.ejs') %>
+
+        <main>
+
+          <div class="bookings-container">
+            <% if (bookings.length> 0) { %>
+              <% bookings.reverse().forEach(booking=> { %>
                 <div class="booking-card">
                   <div class="booking-header">
-                    <h3 class="booking-title">Booking #<%= booking.slotId %></h3>
-                    <p class="booking-date"><%= booking.createdAt %></p>
+                    <h3 class="booking-title">Booking #<%= booking.slotId %>
+                    </h3>
+
+                    <p class="booking-date">
+                      <%= booking.createdAt %>
+                    </p>
                   </div>
                   <div class="booking-body">
-                    <p class="booking-details">Publishing Date: <%= booking.publishingDate %></p>
+                    <p class="booking-details">Publishing Date: <%= booking.publishingDate %>
+                    </p>
+                    <p class="booking-date">
+                      ID : <%= booking.id %>
+                    </p>
                     <div class="booking-file">
                       <% if (booking && booking.file) { %>
-                        <a href="data:<%= booking.file.contentType %>;base64,<%= booking.file.data.toString('base64') %>" download="ad.jpeg" class="download-link">
+                        <a href="data:<%= booking.file.contentType %>;base64,<%= booking.file.data.toString('base64') %>"
+                          download="ad.jpeg" class="download-link">
                           <i class="fas fa-download"></i>
                           <span>Download AD</span>
                         </a>
-                      <% } else { %>
-                        <p>No file uploaded</p>
-                      <% } %>
+                        <% } else { %>
+                          <p>No file uploaded</p>
+                          <% } %>
                     </div>
                   </div>
                   <div class="booking-footer">
-                    <form action="/publisher/view-layout/<%= booking.newspaperName %>/<%= booking.publishingDate %>" method="POST">
+                    <form action="/publisher/view-layout/<%= booking.newspaperName %>/<%= booking.publishingDate %>"
+                      method="POST">
                       <button type="submit" class="btn-view">View</button>
                     </form>
-                    
+                    <% const [month, day, year]=booking.publishingDate.split('-').map(Number); const publishingDate=new
+                      Date(year, month - 1, day); // month - 1 because JavaScript months are zero-indexed const
+                      currentDate=new Date(); if (currentDate < publishingDate) { %>
+                      <a href="/publisher/reject/<%= booking.id %>" class="btn-cancel">Reject</a>
+                      <% } %>
                   </div>
                 </div>
-              <% }); %>
-            <% } else { %>
-              <p class="no-bookings">No new requests.</p>
-            <% } %>
+                <% }); %>
+                  <% } else { %>
+                    <p class="no-bookings">No new requests.</p>
+                    <% } %>
           </div>
-	
-	</main>
-</section>
-<script src="/javascripts/publisherDashboard.js"></script>
+        </main>
+    </section>
+    <script src="/javascripts/publisherDashboard.js"></script>
 </body>
+
 </html>
