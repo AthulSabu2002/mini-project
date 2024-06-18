@@ -15,6 +15,7 @@ const TemporaryRequest = require('../models/temporaryPublisherRequest');
 const CancelledBookings = require('../models/cancelledBookingModel');
 const TemporaryRefund = require('../models/temporaryRefundsModel');
 const Refunded = require('../models/refundedItemsModel');
+const User = require('../models/userModel');
 
 let stripeGateway = stripe(process.env.stripe_api)
 let PUBLISHER_DOMAIN = process.env.PUBLISHER_DOMAIN
@@ -498,7 +499,8 @@ const renderViewBookings = asyncHandler(async (req, res) => {
                 publishingDate: publishingDate,
                 slotId: booking.slotId,
                 newspaperName: newspaperName,
-                file: booking.file
+                file: booking.file,
+                id: booking._id
             };
         });
 
@@ -511,6 +513,99 @@ const renderViewBookings = asyncHandler(async (req, res) => {
     }
 });
 
+
+const renderRejectBooking = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+
+        if (!userId) {
+            return res.redirect('/publisher/login');
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login');
+        }
+
+        const newspaperName = user.newspaperName;
+
+        var booking_id = req.params.booking_id;
+        console.log(booking_id);
+
+        if (!booking_id) {
+            return res.redirect('/publisher/login');
+        }
+
+        booking_id = new mongoose.Types.ObjectId(booking_id);
+
+        const booking = await BookedSlots.findById(booking_id);
+
+        const booked_userId = booking.userId;
+
+        const booked_user = await User.findById(booked_userId);
+
+        const user_email = booked_user.email;
+
+        console.log(booked_user);
+
+        res.render('publisher-ad-rejection', { user_email: user_email, booking_id: booking_id, newspaperName: newspaperName });
+    }
+    catch (error) {
+        console.error('Error fetching layout:', error);
+        res.status(500).send('Error fetching layout');
+    }
+});
+
+const rejectBooking = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+
+        if (!userId) {
+            return res.redirect('/publisher/login');
+        }
+
+        const user = await Publisher.findById(userId);
+        if (!user) {
+            return res.redirect('/publisher/login');
+        }
+
+        const newspaperName = user.newspaperName;
+        const { email, subject, description, bookingId } = req.body;
+
+        console.log(req.body);
+
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.MYEMAIL,
+                pass: process.env.APP_PASSWORD,
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.MYEMAIL,
+            to: email,
+            subject: subject,
+            text: `${description}\n\nBooking ID: ${bookingId}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                res.json({ success: false, error: error.message });
+            } else {
+                console.log('Email sent: ' + info.response);
+                res.json({ success: true });
+            }
+        });
+
+    }
+    catch (error) {
+        console.error('Error fetching layout:', error);
+        res.status(500).send('Error rejecting ad');
+    }
+});
 
 const renderCancelledBookings = asyncHandler(async (req, res) => {
     try {
@@ -951,6 +1046,8 @@ module.exports = {
     publisherRequest,
     viewLayout,
     renderViewBookings,
+    renderRejectBooking,
+    rejectBooking,
     renderBookedLayout,
     sendBookedDetails,
     renderSlotsPricing,

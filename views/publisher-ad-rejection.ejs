@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Rejection Notification</title>
+    <link rel="stylesheet" href="/stylesheets/publisher-ad-rejection.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Ad Rejection Notification</h1>
+        <form id="rejectionForm">
+            <div class="form-group">
+                <label for="email">User's Email</label>
+                <input type="email" id="email" placeholder="Enter user's email" value=<%=user_email%> required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" placeholder="Enter subject" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" placeholder="Enter rejection description"
+                    required>Dear User,
+
+                    We regret to inform you that your ad booking with ID <%= booking_id %> cannot be placed in our newspaper. The content of your ad violates our advertising policies.
+                    
+                    Specifically, the advertisement contains [PROVIDE DETAILS ABOUT THE VIOLATION, e.g., offensive language, inappropriate content, false claims, etc.].
+                    
+                    We strive to maintain a family-friendly environment and ensure that all advertisements comply with our standards and legal requirements. Therefore, we cannot proceed with publishing your ad as submitted.
+                    
+                    Please review our advertising guidelines and consider modifying your ad accordingly. Once the ad complies with our policies, you' re welcome to resubmit it for
+                    consideration. Thank you for your understanding. Best regards, <%= newspaperName %> publisher</textarea>
+            </div>
+            <button type="submit" class="btn">Send</button>
+        </form>
+    </div>
+
+
+    <script>
+        function getBookingIdFromURL() {
+            const pathArray = window.location.pathname.split('/');
+            return pathArray[pathArray.length - 1];
+        }
+
+        document.getElementById('rejectionForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const description = document.getElementById('description').value;
+            const bookingId = getBookingIdFromURL();
+            console.log(bookingId);
+
+            fetch('/publisher/reject/reject-booking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    subject: subject,
+                    description: description,
+                    bookingId: bookingId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Email sent successfully!');
+                    } else {
+                        alert('Failed to send email.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while sending the email.');
+                });
+        });
+    </script>
+</body>
+
+</html>

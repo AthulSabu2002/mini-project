@@ -5,27 +5,29 @@ const multer = require('multer');
 
 
 const {
-    loginPublisher,
-    logoutPublisher,
-    renderDashboard,
-    renderSetBookings,
-    setBookingDates,
-    deleteDate,
-    renderPublisherAccountDetails,
-    updatePublisherAccountDetails,
-    publisherRequest,
-    renderSuccessPage,
-    renderCancelPage,
-    viewRequest,
-    viewLayout,
-    renderViewBookings,
-    renderBookedLayout,
-    sendBookedDetails,
-    renderSlotsPricing,
-    SaveSlotsPricing,
-    renderCancelledBookings,
-    refundInitiation,
-    renderRefundSuccessPage
+  loginPublisher,
+  logoutPublisher,
+  renderDashboard,
+  renderSetBookings,
+  setBookingDates,
+  deleteDate,
+  renderPublisherAccountDetails,
+  updatePublisherAccountDetails,
+  publisherRequest,
+  renderSuccessPage,
+  renderCancelPage,
+  viewRequest,
+  viewLayout,
+  renderViewBookings,
+  renderRejectBooking,
+  rejectBooking,
+  renderBookedLayout,
+  sendBookedDetails,
+  renderSlotsPricing,
+  SaveSlotsPricing,
+  renderCancelledBookings,
+  refundInitiation,
+  renderRefundSuccessPage
 } = require("../controllers/publisherController");
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true })
@@ -35,14 +37,14 @@ const storage = multer.memoryStorage();
 
 
 const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 10 * 1024 * 1024,
-    },
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
 }).single('layout');
 
 
-router.get('/login', function(req, res, next) {
+router.get('/login', function (req, res, next) {
   res.render('publisherLogin')
 });
 
@@ -50,7 +52,7 @@ router.get('/login', function(req, res, next) {
 router.route('/dashboard').get(urlencodedParser, renderDashboard);
 
 
-router.get('/request', function(req, res, next) {
+router.get('/request', function (req, res, next) {
   res.render('publisherRequest')
 });
 
@@ -68,6 +70,10 @@ router.route('/close-booking-date/:id').post(deleteDate);
 router.route('/view-layout').get(viewLayout);
 
 router.route('/view-bookings').get(renderViewBookings);
+
+router.route('/reject/:booking_id').get(renderRejectBooking);
+
+router.route('/reject/reject-booking').post(rejectBooking);
 
 router.route('/view-cancel-requests').get(renderCancelledBookings)
 
