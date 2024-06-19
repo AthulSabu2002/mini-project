@@ -47,8 +47,13 @@
 
         <section class="news-area-1">
             <div id="slot1" class="ad-area-3 <%= bookedSlotIds.includes('slot1') ? 'booked' : 'unbooked' %>">
-                <span class="<%= bookedSlotIds.includes('slot1') ? 'price-tag-none' : 'price-tag' %> ">
-                    &#8377;<%= prices.slot1_price%>
+                <div class="slot-info">
+                    <span class="<%= bookedSlotIds.includes('slot1') ? 'price-tag-none' : 'price-tag' %>">
+                        &#8377;<%= prices.slot1_price%>
+                    </span>
+                    <span class="<%= bookedSlotIds.includes('slot1') ? 'price-tag-none' : 'dimensions' %>">300
+                        X 300 in pixels</span>
+                </div>
             </div>
 
         </section>
@@ -148,6 +153,8 @@
                 <span class="<%= bookedSlotIds.includes('slot2') ? 'price-tag-none' : 'price-tag' %> ">
                     &#8377;<%= prices.slot2_price%>
                 </span>
+                <span class="<%= bookedSlotIds.includes('slot2') ? 'price-tag-none' : 'dimensions' %>">300
+                    X 300 in pixels</span>
             </div>
         </section>
 
@@ -156,6 +163,8 @@
                 <span class="<%= bookedSlotIds.includes('slot3') ? 'price-tag-none' : 'price-tag' %> ">
                     &#8377;<%= prices.slot3_price%>
                 </span>
+                <span class="<%= bookedSlotIds.includes('slot3') ? 'price-tag-none' : 'dimensions' %>">300
+                    X 300 in pixels</span>
             </div>
             <div class="p-5">
                 <h3>Section 1.10.32 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC</h3>

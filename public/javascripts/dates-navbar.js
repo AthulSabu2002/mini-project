@@ -4,7 +4,7 @@ function populateNavbar() {
 
   for (let i = 0; i < 7; i++) {
     const currentDayDate = new Date(currentDate);
-    currentDayDate.setDate(currentDate.getDate() + i);
+    currentDayDate.setDate(currentDate.getDate() + i + 1);
 
     const dayLine = currentDayDate.toLocaleString('default', { weekday: 'short' });
     const dateLine = currentDayDate.getDate();

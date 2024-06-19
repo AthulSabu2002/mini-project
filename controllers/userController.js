@@ -564,14 +564,11 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
     if (booking) {
 
       const priceData = await SlotPrices.findOne({ newspaperName: layoutName });
-      console.log(priceData);
 
       const prices = {};
       priceData.slots.forEach((slot, index) => {
         prices[`slot${index + 1}_price`] = slot.price;
       });
-
-      console.log(prices);
 
       const bookedSlots = await BookedSlots.find({
         newspaperName: layoutName,

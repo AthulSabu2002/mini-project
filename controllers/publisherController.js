@@ -532,7 +532,6 @@ const renderRejectBooking = asyncHandler(async (req, res) => {
         const newspaperName = user.newspaperName;
 
         var booking_id = req.params.booking_id;
-        console.log(booking_id);
 
         if (!booking_id) {
             return res.redirect('/publisher/login');
@@ -548,7 +547,6 @@ const renderRejectBooking = asyncHandler(async (req, res) => {
 
         const user_email = booked_user.email;
 
-        console.log(booked_user);
 
         res.render('publisher-ad-rejection', { user_email: user_email, booking_id: booking_id, newspaperName: newspaperName });
     }
