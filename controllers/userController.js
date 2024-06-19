@@ -563,6 +563,16 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
 
     if (booking) {
 
+      const priceData = await SlotPrices.findOne({ newspaperName: layoutName });
+      console.log(priceData);
+
+      const prices = {};
+      priceData.slots.forEach((slot, index) => {
+        prices[`slot${index + 1}_price`] = slot.price;
+      });
+
+      console.log(prices);
+
       const bookedSlots = await BookedSlots.find({
         newspaperName: layoutName,
         publishingDate: publishingDateISO8601
@@ -570,7 +580,7 @@ const renderBookinglayout = asyncHandler(async (req, res) => {
 
       const bookedSlotIds = bookedSlots.map(slot => slot.slotId);
 
-      res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds });
+      res.render(layoutName, { publishingDate: publishingDateOldFormat, bookedSlotIds: bookedSlotIds, prices: prices });
 
     } else {
 

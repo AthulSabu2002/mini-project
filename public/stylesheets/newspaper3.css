@@ -832,5 +832,41 @@ display: inline-block;
       background-color: #19a1d7;
     }
     
+    .price-tag-none{
+      display: none;
+    }
     
-/* end of dialog box css */
+    .price-tag {
+      background-color: #fff;
+      color: #333;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .price-tag::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ff6b6b;
+      margin-right: 8px;
+      vertical-align: middle;
+      transition: all 0.3s ease;
+    }
+    
+    .price-tag:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .price-tag:hover::before {
+      background-color: #ff3333;
+    }
