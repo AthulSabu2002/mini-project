@@ -11,32 +11,40 @@
 
                     <div class="input-field">
                         <label for="fullName">Full Name</label>
-                        <input id="fullName" name="fullName" type="text" placeholder="Enter your name" value="<%= publisher && publisher.fullName ? publisher.fullName : '' %>">
+                        <input id="fullName" name="fullName" type="text" placeholder="Enter your name"
+                            value="<%= publisher && publisher.fullName ? publisher.fullName : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="organizationName">Organization Name</label>
-                        <input id="organizationName" name="organizationName" type="text" placeholder="Enter organization name" value="<%= publisher && publisher.organizationName ? publisher.organizationName : '' %>">
+                        <input id="organizationName" name="organizationName" type="text"
+                            placeholder="Enter organization name"
+                            value="<%= publisher && publisher.organizationName ? publisher.organizationName : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="newspaperName">Newspaper Name</label>
-                        <input id="newspaperName" name="newspaperName" type="text" placeholder="Enter Newspaper Name" value="<%= publisher && publisher.newspaperName ? publisher.newspaperName : '' %>">
+                        <input id="newspaperName" name="newspaperName" type="text" placeholder="Enter Newspaper Name"
+                            value="<%= publisher && publisher.newspaperName ? publisher.newspaperName : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="username">Create a username</label>
-                        <input id="username" name="username" type="text" placeholder="Username" value="<%= publisher && publisher.username ? publisher.username : '' %>">
+                        <input id="username" name="username" type="text" placeholder="Username"
+                            value="<%= publisher && publisher.username ? publisher.username : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="password">Create a password</label>
-                        <input id="password" name="password" type="password" placeholder="Password" value="<%= publisher && publisher.password ? publisher.password : '' %>">
+                        <input id="password" name="password" type="password" placeholder="Password"
+                            value="<%= publisher && publisher.password ? publisher.password : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="confirmPassword">Confirm Password</label>
-                        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm password" value="<%= publisher && publisher.password ? publisher.password : '' %>">
+                        <input id="confirmPassword" name="confirmPassword" type="password"
+                            placeholder="Confirm password"
+                            value="<%= publisher && publisher.password ? publisher.password : '' %>">
                     </div>
                 </div>
             </div>
@@ -47,32 +55,38 @@
                 <div class="fields">
                     <div class="input-field">
                         <label for="mobileNumber">Mobile Number</label>
-                        <input id="mobileNumber" name="mobileNumber" type="number" placeholder="Enter Mobile Number" value="<%= publisher && publisher.mobileNumber ? publisher.mobileNumber : '' %>">
+                        <input id="mobileNumber" name="mobileNumber" type="number" placeholder="Enter Mobile Number"
+                            value="<%= publisher && publisher.mobileNumber ? publisher.mobileNumber : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="email">Email</label>
-                        <input id="email" name="email" type="email" placeholder="Enter Your Email" value="<%= publisher && publisher.email ? publisher.email : '' %>">
+                        <input id="email" name="email" type="email" placeholder="Enter Your Email"
+                            value="<%= publisher && publisher.email ? publisher.email : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="state">State</label>
-                        <input id="state" name="state" type="text" placeholder="Enter your state" value="<%= publisher && publisher.state ? publisher.state : '' %>">
+                        <input id="state" name="state" type="text" placeholder="Enter your state"
+                            value="<%= publisher && publisher.state ? publisher.state : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="district">District</label>
-                        <input id="district" name="district" type="text" placeholder="Enter your district" value="<%= publisher && publisher.district ? publisher.district : '' %>">
+                        <input id="district" name="district" type="text" placeholder="Enter your district"
+                            value="<%= publisher && publisher.district ? publisher.district : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="buildingName">Building name</label>
-                        <input id="buildingName" name="buildingName" type="text" placeholder="Enter building name" value="<%= publisher && publisher.buildingName ? publisher.buildingName : '' %>">
+                        <input id="buildingName" name="buildingName" type="text" placeholder="Enter building name"
+                            value="<%= publisher && publisher.buildingName ? publisher.buildingName : '' %>">
                     </div>
-                    
+
                     <div class="input-field">
                         <label for="pincode">Pin Code</label>
-                        <input id="pincode" name="pincode" type="text" placeholder="Enter Pin Code" value="<%= publisher && publisher.pincode ? publisher.pincode : '' %>">
+                        <input id="pincode" name="pincode" type="text" placeholder="Enter Pin Code"
+                            value="<%= publisher && publisher.pincode ? publisher.pincode : '' %>">
                     </div>
                 </div>
 
@@ -92,38 +106,50 @@
                 <div class="fields">
                     <div class="input-field">
                         <label for="advertisementSlots">Types of advertisement slots</label>
-                        <input id="advertisementSlots" name="advertisementSlots" type="text" placeholder="display ads, classified ads..." value="<%= publisher && publisher.advertisementSlots ? publisher.advertisementSlots : '' %>">
+                        <input id="advertisementSlots" name="advertisementSlots" type="text"
+                            placeholder="display ads, classified ads..."
+                            value="<%= publisher && publisher.advertisementSlots ? publisher.advertisementSlots : '' %>">
                     </div>
-                    
-                    <div class="input-field">
-                        <label for="fileFormat">Accepted file formats</label>
-                        <input id="fileFormat" name="fileFormat" type="text" placeholder="PDF, JPEG, etc." value="<%= publisher && publisher.fileFormat ? publisher.fileFormat : '' %>">
-                    </div>
-                    
-                    <div class="input-field">
-                        <label for="paymentmethods">Accepted payment methods</label>
-                        <input id="paymentmethods" name="paymentmethods" type="text" placeholder="credit card, bank transfer, etc." value="<%= publisher && publisher.paymentmethods ? publisher.paymentmethods : '' %>">
-                    </div>
-                    
-                    <div class="input-field">
-                        <label for="customerService">Customer support contact</label>
-                        <input id="customerService" name="customerService" type="number" placeholder="Enter mobile number" value="<%= publisher && publisher.customerService ? publisher.customerService : '' %>">
-                    </div> 
 
                     <div class="input-field">
-                        <label for="layout">Uploaded PDF:</label>
-                        <% if (publisher && publisher.layout) { %>
-                            <a href="data:<%= publisher.layout.contentType %>;base64,<%= publisher.layout.data.toString('base64') %>" download="layout.pdf">Download PDF</a>
-                        <% } else { %>
-                            <p>No PDF file uploaded</p>
-                        <% } %>
+                        <label for="fileFormat">Accepted file formats</label>
+                        <input id="fileFormat" name="fileFormat" type="text" placeholder="PDF, JPEG, etc."
+                            value="<%= publisher && publisher.fileFormat ? publisher.fileFormat : '' %>">
                     </div>
-                     
-                    
+
+                    <div class="input-field">
+                        <label for="paymentmethods">Accepted payment methods</label>
+                        <input id="paymentmethods" name="paymentmethods" type="text"
+                            placeholder="credit card, bank transfer, etc."
+                            value="<%= publisher && publisher.paymentmethods ? publisher.paymentmethods : '' %>">
+                    </div>
+
+                    <div class="input-field">
+                        <label for="layout">Uploaded Publisher Id:</label>
+                        <% if (publisher && publisher.publicationId) { %>
+                            <a href="data:<%= publisher.publicationId.contentType %>;base64,<%= publisher.publicationId.data.toString('base64') %>"
+                                download="publicationId.pdf">Download PDF</a>
+                            <% } else { %>
+                                <p>No PDF file uploaded</p>
+                                <% } %>
+                    </div>
+
+                    <div class="input-field">
+                        <label for="layout">Uploaded Layout:</label>
+                        <% if (publisher && publisher.layout) { %>
+                            <a href="data:<%= publisher.layout.contentType %>;base64,<%= publisher.layout.data.toString('base64') %>"
+                                download="layout.pdf">Download PDF</a>
+                            <% } else { %>
+                                <p>No PDF file uploaded</p>
+                                <% } %>
+                    </div>
+
+
                     <div class="input-field">
                         <label for="customerService">Newspaper Language</label>
-                        <input id="language" name="language" type="text" placeholder="Enter newspaper language" value="<%= publisher && publisher.language ? publisher.language : '' %>">
-                    </div>  
+                        <input id="language" name="language" type="text" placeholder="Enter newspaper language"
+                            value="<%= publisher && publisher.language ? publisher.language : '' %>">
+                    </div>
                 </div>
             </div>
 
@@ -133,27 +159,43 @@
                 <div class="fields">
                     <div class="input-field">
                         <label for="bookingDeadline">Deadline For Booking</label>
-                        <input id="bookingDeadline" name="bookingDeadline" type="text" placeholder="1, 2, 3... days before" value="<%= publisher && publisher.bookingDeadline ? publisher.bookingDeadline : '' %>">
+                        <input id="bookingDeadline" name="bookingDeadline" type="text"
+                            placeholder="1, 2, 3... days before"
+                            value="<%= publisher && publisher.bookingDeadline ? publisher.bookingDeadline : '' %>">
                     </div>
-                
+
                     <div class="input-field">
                         <label for="cancellationRefundPolicy">Cancellation & Refund policy</label>
-                        <input id="cancellationRefundPolicy" name="cancellationRefundPolicy" type="text" placeholder="Refund Policy" value="<%= publisher && publisher.cancellationRefundPolicy ? publisher.cancellationRefundPolicy : '' %>">
+                        <input id="cancellationRefundPolicy" name="cancellationRefundPolicy" type="text"
+                            placeholder="Refund Policy"
+                            value="<%= publisher && publisher.cancellationRefundPolicy ? publisher.cancellationRefundPolicy : '' %>">
                     </div>
-                
+
                     <div class="input-field">
                         <label for="contentGuidelines">Content Guidelines</label>
-                        <input id="contentGuidelines" name="contentGuidelines" type="text" placeholder="Guidelines if any" value="<%= publisher && publisher.contentGuidelines ? publisher.contentGuidelines : '' %>">
+                        <input id="contentGuidelines" name="contentGuidelines" type="text"
+                            placeholder="Guidelines if any"
+                            value="<%= publisher && publisher.contentGuidelines ? publisher.contentGuidelines : '' %>">
                     </div>
-                
+
                     <div class="input-field">
                         <label for="advertisementSubmissionGuidelines">Guidelines for submitting advertisement</label>
-                        <input id="advertisementSubmissionGuidelines" name="advertisementSubmissionGuidelines" type="text" placeholder="Guidelines if any" value="<%= publisher && publisher.advertisementSubmissionGuidelines ? publisher.advertisementSubmissionGuidelines : '' %>">
+                        <input id="advertisementSubmissionGuidelines" name="advertisementSubmissionGuidelines"
+                            type="text" placeholder="Guidelines if any"
+                            value="<%= publisher && publisher.advertisementSubmissionGuidelines ? publisher.advertisementSubmissionGuidelines : '' %>">
                     </div>
-                
+
+                    <div class="input-field">
+                        <label for="customerService">Customer support contact</label>
+                        <input id="customerService" name="customerService" type="number"
+                            placeholder="Enter mobile number"
+                            value="<%= publisher && publisher.customerService ? publisher.customerService : '' %>">
+                    </div>
+
                     <div class="input-field">
                         <label for="cancellationDeadline">Deadline for cancelling or making changes to bookings</label>
-                        <input id="cancellationDeadline" name="cancellationDeadline" type="text" placeholder="If any.." value="<%= publisher && publisher.cancellationDeadline ? publisher.cancellationDeadline : '' %>">
+                        <input id="cancellationDeadline" name="cancellationDeadline" type="text" placeholder="If any.."
+                            value="<%= publisher && publisher.cancellationDeadline ? publisher.cancellationDeadline : '' %>">
                     </div>
                 </div>
 

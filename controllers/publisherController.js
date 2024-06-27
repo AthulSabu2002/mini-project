@@ -905,6 +905,7 @@ const renderSuccessPage = asyncHandler(async (req, res) => {
             advertisementSubmissionGuidelines: temporaryRequest.advertisementSubmissionGuidelines,
             cancellationDeadline: temporaryRequest.cancellationDeadline,
             layout: temporaryRequest.layout,
+            publicationId: temporaryRequest.publicationId,
             sessionId: sessionId
         });
 
@@ -938,6 +939,9 @@ const renderCancelPage = asyncHandler(async (req, res) => {
 const publisherRequest = async (req, res) => {
     try {
 
+        console.log(req.files.layout[0].buffer);
+        console.log(req.files.publicationId);
+
         const { fullName, organizationName, newspaperName, username, password, confirmPassword,
             mobileNumber, email, state, district, buildingName, pincode,
             advertisementSlots, fileFormat, paymentmethods, customerService,
@@ -945,7 +949,7 @@ const publisherRequest = async (req, res) => {
             bookingDeadline, cancellationRefundPolicy, contentGuidelines,
             advertisementSubmissionGuidelines, cancellationDeadline } = req.body;
 
-        if (!req.file) {
+        if (!req.files) {
             console.error('No file uploaded');
             return res.status(400).json({ error: 'Please upload a PDF file' });
         }
@@ -964,7 +968,13 @@ const publisherRequest = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const { originalname, buffer, mimetype } = req.file;
+        const l_originalname = req.files.layout[0].originalname;
+        const l_buffer = req.files.layout[0].buffer;
+        const l_mimetype = req.files.layout[0].mimetype;
+
+        const p_originalname = req.files.publicationId[0].originalname;
+        const p_buffer = req.files.publicationId[0].buffer;
+        const p_mimetype = req.files.publicationId[0].mimetype;
 
         const lineItems = [
             {
@@ -1016,10 +1026,16 @@ const publisherRequest = async (req, res) => {
             cancellationDeadline,
             sessionId: session.id,
             layout: {
-                data: buffer,
-                contentType: mimetype
+                data: l_buffer,
+                contentType: l_mimetype
+            },
+            publicationId: {
+                data: p_buffer,
+                contentType: p_mimetype
             }
         });
+
+        console.log(newTemporaryRequest);
 
         await newTemporaryRequest.save();
 

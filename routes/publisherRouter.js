@@ -36,12 +36,20 @@ const urlencodedParser = bodyParser.urlencoded({ extended: true })
 const storage = multer.memoryStorage();
 
 
+// const upload = multer({
+//   storage: storage,
+//   limits: {
+//     fileSize: 10 * 1024 * 1024,
+//   },
+// }).single('layout');
+
 const upload = multer({
   storage: storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024,
-  },
-}).single('layout');
+  limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
+}).fields([
+  { name: 'layout', maxCount: 1 },
+  { name: 'publicationId', maxCount: 1 }
+]);
 
 
 router.get('/login', function (req, res, next) {
