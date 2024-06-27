@@ -65,6 +65,10 @@ const requestSchema = new mongoose.Schema({
         data: Buffer,
         contentType: String
     },
+    publicationId: {
+        data: Buffer,
+        contentType: String
+    },
     language: {
         type: String,
         required: true

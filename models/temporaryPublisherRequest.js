@@ -61,6 +61,10 @@ const temporaryRequestSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    publicationId: {
+        data: Buffer,
+        contentType: String
+    },
     layout: {
         data: Buffer,
         contentType: String

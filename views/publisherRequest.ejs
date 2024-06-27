@@ -1,199 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publisher Request Form</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/publisherRequest.css">
 </head>
+
 <body>
     <div class="container">
 
         <header>Registration</header>
-    
+
         <form action="#" id="publisherRequestForm">
             <!-- first page -->
             <div class="form first">
                 <div class="details personal">
                     <span class="title">Personal Details</span>
-    
+
                     <div class="fields">
                         <div class="input-field">
                             <label for="fullName">Full Name</label>
                             <input id="fullName" name="fullName" type="text" placeholder="Enter your name">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="organizationName">Organization Name</label>
-                            <input id="organizationName" name="organizationName" type="text" placeholder="Enter organization name">
+                            <input id="organizationName" name="organizationName" type="text"
+                                placeholder="Enter organization name">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="newspaperName">Newspaper Name</label>
-                            <input id="newspaperName" name="newspaperName" type="text" placeholder="Enter Newspaper Name">
+                            <input id="newspaperName" name="newspaperName" type="text"
+                                placeholder="Enter Newspaper Name">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="username">Create a username</label>
                             <input id="username" name="username" type="text" placeholder="Username">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="password">Create a password</label>
                             <input id="password" name="password" type="password" placeholder="Password">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="confirmPassword">Confirm Password</label>
-                            <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm password">
+                            <input id="confirmPassword" name="confirmPassword" type="password"
+                                placeholder="Confirm password">
                         </div>
-                        
+
                     </div>
                 </div>
-    
-    
+
+
                 <div class="details ID">
                     <span class="title">Contact Details</span>
-    
+
                     <div class="fields">
                         <div class="input-field">
                             <label for="mobileNumber">Mobile Number</label>
-                            <input id="mobileNumber" name="mobileNumber" type="number" placeholder="Enter Mobile Number">
+                            <input id="mobileNumber" name="mobileNumber" type="number"
+                                placeholder="Enter Mobile Number">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="email">Email</label>
                             <input id="email" name="email" type="email" placeholder="Enter Your Email">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="state">State</label>
                             <input id="state" name="state" type="text" placeholder="Enter your state">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="district">District</label>
                             <input id="district" name="district" type="text" placeholder="Enter your district">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="buildingName">Building name</label>
                             <input id="buildingName" name="buildingName" type="text" placeholder="Enter building name">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="pincode">Pin Code</label>
                             <input id="pincode" name="pincode" type="text" placeholder="Enter Pin Code">
                         </div>
-                        
-    
+
+
                     </div>
-    
+
                     <button class="nextBtn">
                         <span class="btnText">Next</span>
                         <i class='bx bxs-right-arrow'></i>
                     </button>
-    
+
                 </div>
             </div>
             <!-- first page ends -->
-    
-    
+
+
             <!-- second page -->
             <div class="form second">
                 <div class="details address">
                     <span class="title">Advertisement Specifications</span>
-    
+
                     <div class="fields">
                         <div class="input-field">
                             <label for="advertisementSlots">Types of advertisement slots</label>
-                            <input id="advertisementSlots" name="advertisementSlots" type="text" placeholder="display ads, classified ads...">
+                            <input id="advertisementSlots" name="advertisementSlots" type="text"
+                                placeholder="display ads, classified ads...">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="fileFormat">Accepted file formats</label>
                             <input id="fileFormat" name="fileFormat" type="text" placeholder="PDF, JPEG, etc.">
                         </div>
-                        
+
                         <div class="input-field">
                             <label for="paymentmethods">Accepted payment methods</label>
-                            <input id="paymentmethods" name="paymentmethods" type="text" placeholder="credit card, bank transfer, etc.">
+                            <input id="paymentmethods" name="paymentmethods" type="text"
+                                placeholder="credit card, bank transfer, etc.">
                         </div>
-                        
+
                         <div class="input-field">
-                            <label for="customerService">Customer support contact</label>
-                            <input id="customerService" name="customerService" type="number" placeholder="Enter mobile number">
-                        </div>   
+                            <label for="layout">Id that shows you are a publisher</label>
+                            <input id="publicationId" name="publicationId" accept=".pdf" type="file"
+                                placeholder="upload pdf">
+                        </div>
 
                         <div class="input-field">
                             <label for="layout">Upload a pdf with your layout</label>
                             <input id="layout" name="layout" accept=".pdf" type="file" placeholder="upload pdf">
-                        </div> 
-                        
+                        </div>
+
                         <div class="input-field">
                             <label for="customerService">Newspaper Language</label>
                             <input id="language" name="language" type="text" placeholder="Enter newspaper language">
-                        </div>   
-    
+                        </div>
+
                     </div>
                 </div>
-    
-    
+
+
                 <div class="details ID">
                     <span class="title">Procedures for booking advertisements</span>
-    
+
                     <div class="fields">
                         <div class="input-field">
                             <label for="bookingDeadline">Deadline For Booking</label>
-                            <input id="bookingDeadline" name="bookingDeadline" type="text" placeholder="1, 2, 3... days before">
+                            <input id="bookingDeadline" name="bookingDeadline" type="text"
+                                placeholder="1, 2, 3... days before">
                         </div>
-                    
+
                         <div class="input-field">
                             <label for="cancellationRefundPolicy">Cancellation & Refund policy</label>
-                            <input id="cancellationRefundPolicy" name="cancellationRefundPolicy" type="text" placeholder="Refund Policy">
+                            <input id="cancellationRefundPolicy" name="cancellationRefundPolicy" type="text"
+                                placeholder="Refund Policy">
                         </div>
-                    
+
                         <div class="input-field">
                             <label for="contentGuidelines">Content Guidelines</label>
-                            <input id="contentGuidelines" name="contentGuidelines" type="text" placeholder="Guidelines if any">
+                            <input id="contentGuidelines" name="contentGuidelines" type="text"
+                                placeholder="Guidelines if any">
                         </div>
-                    
+
                         <div class="input-field">
-                            <label for="advertisementSubmissionGuidelines">Guidelines for submitting advertisement</label>
-                            <input id="advertisementSubmissionGuidelines" name="advertisementSubmissionGuidelines" type="text" placeholder="Guidelines if any">
+                            <label for="advertisementSubmissionGuidelines">Guidelines for submitting
+                                advertisement</label>
+                            <input id="advertisementSubmissionGuidelines" name="advertisementSubmissionGuidelines"
+                                type="text" placeholder="Guidelines if any">
                         </div>
-                    
+
                         <div class="input-field">
-                            <label for="cancellationDeadline">Deadline for cancelling or making changes to bookings</label>
-                            <input id="cancellationDeadline" name="cancellationDeadline" type="text" placeholder="If any..">
+                            <label for="customerService">Customer support contact</label>
+                            <input id="customerService" name="customerService" type="number"
+                                placeholder="Enter mobile number">
+                        </div>
+
+                        <div class="input-field">
+                            <label for="cancellationDeadline">Deadline for cancelling or making changes to
+                                bookings</label>
+                            <input id="cancellationDeadline" name="cancellationDeadline" type="text"
+                                placeholder="If any..">
                         </div>
                     </div>
-                    
-    
-    
+
+
+
                     <div class="buttons">
-    
+
                         <button class="backBtn">
                             <i class='bx bxs-right-arrow'></i>
                             <span class="btnText">Back</span>
                         </button>
-    
+
                         <button class="nextBtn" type="submit">
                             <span class="btnText">Submit</span>
                             <i class='bx bxs-right-arrow'></i>
                         </button>
-    
+
                     </div>
-    
+
                 </div>
             </div>
             <!-- second page ends -->
         </form>
     </div>
-    
-    
+
+
     <script src="/javascripts/form.js"></script>
     <script src="/javascripts/publisherRequest.js"></script>
 </body>
+
 </html>

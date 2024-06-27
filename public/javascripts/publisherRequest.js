@@ -1,5 +1,5 @@
-document.getElementById('publisherRequestForm').addEventListener('submit', function(event) {
-    event.preventDefault(); 
+document.getElementById('publisherRequestForm').addEventListener('submit', function (event) {
+    event.preventDefault();
 
     try {
         const fullName = document.getElementById('fullName').value;
@@ -59,28 +59,33 @@ document.getElementById('publisherRequestForm').addEventListener('submit', funct
         const pdfFile = document.getElementById('layout').files[0];
         formData.append('layout', pdfFile);
 
+        const publicationid = document.getElementById('publicationId').files[0];
+        formData.append('publicationId', publicationid);
+
+        console.log(formData);
+
         // Print form data to console
         for (var pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
+            console.log(pair[0] + ', ' + pair[1]);
         }
 
         fetch('/publisher/stripe-checkout', {
             method: 'POST',
             body: formData,
         })
-        .then((response) =>
+            .then((response) =>
                 response.json()
-        )
-        .then((url) => {
-            location.href = url;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            console.log('Error occurred');
-            location.href = '/publisher/request'
-        });
+            )
+            .then((url) => {
+                location.href = url;
+            })
+            .catch(error => {
+                console.log('Error:', error);
+                console.log('Error occurred');
+                location.href = '/publisher/request'
+            });
     } catch (error) {
-        console.error('Error:', error);
+        console.log('Error:', error);
         console.log(error.message || 'An error occurred');
         location.href = '/publisher/request'
     }
