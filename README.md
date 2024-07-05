@@ -58,7 +58,7 @@ This website allows users to book slots in newspapers for advertising purposes. 
 - MongoDB
 - Passport.js (for authentication)
 - EJS (Embedded JavaScript) for views
-- Bootstrap for styling
+- Bootstrap and css for styling
 - Other dependencies as listed in `package.json`
 
 
