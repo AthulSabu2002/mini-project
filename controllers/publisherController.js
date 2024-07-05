@@ -413,11 +413,19 @@ const renderBookedLayout = asyncHandler(async (req, res) => {
             };
         });
 
+        const priceData = await SlotPrices.findOne({ newspaperName: newspaperName });
+
+        const prices = {};
+        priceData.slots.forEach((slot, index) => {
+            prices[`slot${index + 1}_price`] = slot.price;
+        });
+
         const bookedLayout = `${newspaperName}-booked`;
         res.render(bookedLayout, {
             publishingDate: publishingDateOldFormat,
             bookedSlotDetails: slotAdDetails,
-            bookedSlotIds: bookedSlotIds
+            bookedSlotIds: bookedSlotIds,
+            prices: prices
         });
 
     } catch (error) {
