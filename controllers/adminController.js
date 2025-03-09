@@ -19,6 +19,8 @@ const loginAdmin = asyncHandler(async (req, res) => {
         const user = await Admin.findOne({ username }, 'username email password');
   
         if (user) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            console.log('Entered password hash:', hashedPassword);
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (isPasswordValid) {
                 req.login(user, (err) => {

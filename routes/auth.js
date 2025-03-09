@@ -7,37 +7,43 @@ router.get('/login', function(req, res, next) {
     res.render('login');
 });
 
-router.get('/google', passport.authenticate('google',{
-    scope: ['email','profile']
-}))
+router.get('/google', passport.authenticate('google', {
+    scope: ['email', 'profile'],
+    prompt: 'select_account'
+}));
 
-
-router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
-    if (req.user) {
-        const googleId = req.user.googleId;
-        const requserId = req.user._id;
-        const userId = requserId.toString();
-        console.log(userId);
-        if (googleId) {
-            req.session.loggedIn = true;
-            res.cookie('userId', userId, {
-                maxAge: 24 * 60 * 60 * 1000,
-                httpOnly: true
-            });
-            res.redirect('/users/dashboard/')
+router.get('/google/redirect', 
+    passport.authenticate('google', { 
+        failureRedirect: '/auth/login',
+        failureFlash: true 
+    }), 
+    (req, res) => {
+        if (!req.user) {
+            return res.redirect('/auth/login');
         }
+        
+        const userId = req.user._id.toString();
+        req.session.loggedIn = true;
+        res.cookie('userId', userId, {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production'
+        });
+        res.redirect('/users/dashboard/');
     }
-})
+);
 
-
-
-router.get('/logout', (req, res) => {
+router.get('/logout', (req, res, next) => {
     req.logout(function(err) {
         if (err) { return next(err); }
         req.session.loggedIn = false;
-        req.session.destroy()
-        res.redirect('/auth/login')
-      });
-})
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Session destruction error:', err);
+            }
+            res.redirect('/auth/login');
+        });
+    });
+});
 
 module.exports = router;
