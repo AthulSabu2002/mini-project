@@ -5,53 +5,55 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const dotenv = require('dotenv').config();
 const User = require('../models/userModel');
 
+// Update serialization to use user.id
 passport.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-    User.findById(id).then((user) => {
-        done(null, user);
-    }).catch(err => done(err));
+    User.findById(id)
+        .then((user) => {
+            done(null, user);
+        })
+        .catch(err => done(err));
 });
-
 
 passport.use(
     new GoogleStrategy({
-        clientID: process.env.clientID,
-        clientSecret: process.env.clientSecret,
-        callbackURL: process.env.CALLBACK_URL,
-    }, (accessToken, refreshToken, profile, done) => {
-
-        console.log('passport-callback-function-fired');
-
-        User.findOne({ googleId: profile.id }).then((currentUser) => {
+        clientID: process.env.GOOGLE_CLIENT_ID, // Update env variable name
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Update env variable name
+        callbackURL: process.env.GOOGLE_CALLBACK_URL, // Update env variable name
+        passReqToCallback: true
+    }, async (req, accessToken, refreshToken, profile, done) => {
+        try {
+            const currentUser = await User.findOne({ googleId: profile.id });
             if (currentUser) {
-                done(null, currentUser);
-            } else {
-                User.findOne({ email: profile.emails ? profile.emails[0].value : null }).then((userWithEmail) => {
-                    if (userWithEmail) {
-                        userWithEmail.googleId = profile.id;
-                        userWithEmail.save().then((updatedUser) => {
-                            console.log('Existing user updated with Google ID');
-                            done(null, updatedUser);
-                        }).catch(err => done(err));
-                    } else {
-                        new User({
-                            username: profile.displayName,
-                            googleId: profile.id,
-                            email: profile.emails ? profile.emails[0].value : null
-                        }).save().then((newUser) => {
-                            console.log('New user saved to database');
-                            done(null, newUser);
-                        }).catch(err => done(err));
-                    }
-                }).catch(err => done(err));
+                return done(null, currentUser);
             }
-        }).catch(err => done(err));
+
+            const userWithEmail = await User.findOne({ 
+                email: profile.emails ? profile.emails[0].value : null 
+            });
+            
+            if (userWithEmail) {
+                userWithEmail.googleId = profile.id;
+                const updatedUser = await userWithEmail.save();
+                console.log('Existing user updated with Google ID');
+                return done(null, updatedUser);
+            }
+
+            const newUser = await new User({
+                username: profile.displayName,
+                googleId: profile.id,
+                email: profile.emails ? profile.emails[0].value : null
+            }).save();
+            
+            console.log('New user saved to database');
+            return done(null, newUser);
+        } catch (err) {
+            return done(err);
+        }
     })
 );
-
-
 
 module.exports = router;
