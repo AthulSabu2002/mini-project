@@ -387,7 +387,7 @@ const renderBookedLayout = asyncHandler(async (req, res) => {
         const newspaperName = req.params.newspaperName;
         const publishingDateOldFormat = req.params.publishingDate;
 
-        const [month, day, year] = publishingDateOldFormat.split('-');
+        const [day, month, year] = publishingDateOldFormat.split('-');
 
         const paddedDay = day.length < 2 ? day.padStart(2, '0') : day;
         const paddedMonth = month.length < 2 ? month.padStart(2, '0') : month;
@@ -450,7 +450,7 @@ const sendBookedDetails = asyncHandler(async (req, res) => {
         const newspaperName = req.params.newspaperName;
         const publishingDateOldFormat = req.params.publishingDate;
 
-        const [month, day, year] = publishingDateOldFormat.split('-');
+        const [day, month, year] = publishingDateOldFormat.split('-');
 
         const paddedDay = day.length < 2 ? day.padStart(2, '0') : day;
         const paddedMonth = month.length < 2 ? month.padStart(2, '0') : month;
