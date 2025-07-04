@@ -18,7 +18,7 @@ This website allows users to book slots in newspapers for advertising purposes. 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/projectname.git
+   git clone https://github.com/AthulSabu2002/mini-project.git
    ```
 2. Navigate to the project directory:
    ```bash
