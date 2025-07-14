@@ -89,7 +89,7 @@ const renderAddPublisher = asyncHandler(async (req, res) => {
             advertisementSubmissionGuidelines: 'No specific guidelines',
             cancellationDeadline: '1 day before'
         };
-        res.render('addPublisher', { publisher: defaultPublisher, activeTab: 'add-publisher' })
+        res.render('publisherRequest', { publisher: defaultPublisher, activeTab: 'add-publisher' })
     } catch (error) {
         console.error('Error fetching requests:', error);
         res.status(500).send('Error fetching requests');
@@ -204,6 +204,7 @@ const saveAdSlots = asyncHandler(async (req, res) => {
 
 
 const addPublisher = asyncHandler(async (req, res) => {
+    console.log("aadasd");
     try {
         const { username, email, newspaperName } = req.body;
 
